@@ -6,6 +6,7 @@ import {
   type Answer, type Lang, type Result,
 } from './src/scoring';
 import { t } from './src/i18n';
+import { fetchReport, saveScreening } from './src/supabase';
 
 type Step = 'consent' | 'age' | 'quiz' | 'result';
 
@@ -17,18 +18,36 @@ export default function App() {
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
   const [result, setResult] = useState<Result | null>(null);
+  const [screeningId, setScreeningId] = useState<string | null>(null);
+  const [report, setReport] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const qs = useMemo(() => questionsForAge(months), [months]);
   const s = t[lang];
 
   const restart = () => {
     setStep('age'); setIndex(0); setAnswers({}); setResult(null); setMonthsText('');
+    setScreeningId(null); setReport(null); setError(null);
   };
 
   const answer = (a: Answer) => {
     const next = { ...answers, [qs[index].id]: a };
     setAnswers(next);
     if (index + 1 < qs.length) setIndex(index + 1);
-    else { setResult(score(months, next)); setStep('result'); }
+    else {
+      const r = score(months, next);
+      setResult(r); setStep('result');
+      saveScreening(months, next, r).then(setScreeningId).catch(() => setError(s.saveFailed));
+    }
+  };
+
+  const getReport = async () => {
+    if (!screeningId) return;
+    setBusy(true); setError(null);
+    const res = await fetchReport(screeningId, 'short', lang);
+    setBusy(false);
+    if ('content' in res) setReport(res.content);
+    else setError(res.error === 'busy' ? s.reportBusy : s.reportFailed);
   };
 
   const monthsNum = parseInt(monthsText, 10);
@@ -95,6 +114,13 @@ export default function App() {
                 ))}
               </>
             )}
+            {report ? (
+              <View style={st.report}><Text style={st.p}>{report}</Text></View>
+            ) : (
+              <Btn label={busy ? s.reportLoading : s.getReport} onPress={getReport}
+                disabled={busy || !screeningId} />
+            )}
+            {error && <Text style={st.error}>{error}</Text>}
             <Text style={st.note}>{s.disclaimer}</Text>
             <Btn label={s.again} onPress={restart} outline />
           </>
@@ -133,6 +159,8 @@ const st = StyleSheet.create({
   btnOutline: { backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#5b3cc4' },
   btnOutlineText: { color: '#5b3cc4' },
   link: { color: '#5b3cc4', textAlign: 'center', marginTop: 6 },
+  report: { backgroundColor: '#fff', borderRadius: 12, padding: 16, borderWidth: 1, borderColor: '#e6e0f7' },
+  error: { color: '#c62828', fontSize: 14 },
   badge: { padding: 18, borderRadius: 14, alignItems: 'center' },
   badgeText: { color: '#fff', fontSize: 20, fontWeight: '700' },
 });

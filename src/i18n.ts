@@ -4,6 +4,7 @@ interface Strings {
   title: string; intro: string; disclaimer: string; consent: string; agree: string;
   ageQ: string; ageInvalid: string; ageTooYoung: string; ageTooOld: string; start: string;
   back: string; focus: string; again: string; limitedAge: string;
+  getReport: string; reportLoading: string; reportFailed: string; reportBusy: string; saveFailed: string;
   risk: Record<Risk, string>; next: Record<Risk, string>;
 }
 
@@ -22,6 +23,11 @@ export const t: Record<Lang, Strings> = {
     back: 'Önceki soru',
     focus: 'Dikkat çeken alanlar',
     again: 'Yeni tarama',
+    getReport: 'Kişisel raporumu oluştur',
+    reportLoading: 'Rapor hazırlanıyor…',
+    reportFailed: 'Rapor şu an hazırlanamadı. Lütfen biraz sonra tekrar deneyin.',
+    reportBusy: 'Şu an yoğunluk var, lütfen bir dakika sonra tekrar deneyin.',
+    saveFailed: 'Sonuç kaydedilemedi. İnternet bağlantınızı kontrol edin.',
     limitedAge: '12 aydan küçük bebeklerde tarama sonuçları sınırlıdır. Birkaç ay sonra tekrar etmeniz önerilir.',
     risk: { low: 'Düşük olasılık', medium: 'Orta olasılık', high: 'Yüksek olasılık' },
     next: {
@@ -44,6 +50,11 @@ export const t: Record<Lang, Strings> = {
     back: 'Previous question',
     focus: 'Areas to watch',
     again: 'New screening',
+    getReport: 'Create my personal report',
+    reportLoading: 'Preparing your report…',
+    reportFailed: "The report couldn't be prepared right now. Please try again shortly.",
+    reportBusy: "We're busy right now, please try again in a minute.",
+    saveFailed: "The result couldn't be saved. Please check your internet connection.",
     limitedAge: 'Screening results are limited for babies under 12 months. Repeating it in a few months is recommended.',
     risk: { low: 'Low likelihood', medium: 'Medium likelihood', high: 'High likelihood' },
     next: {
