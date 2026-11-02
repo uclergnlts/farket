@@ -3,9 +3,28 @@ import {
   answerLabels, domains, questionsForAge, score, type Answer, type Lang, type Result,
 } from './scoring.ts';
 import { LANG_NAMES, t } from './i18n.ts';
-import { emailReport, fetchReport, saveScreening, type Sex } from './api.ts';
+import { emailReport, saveScreening, type Sex } from './api.ts';
 
-type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done';
+type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
+
+/** Lemon Squeezy hosted checkout for the $9.99 detailed report. */
+const CHECKOUT_URL = 'https://ucler.lemonsqueezy.com/checkout/buy/664f6fb7-1692-44c0-9019-57e71ff46a69';
+
+/** Sends the parent to checkout; the webhook emails the detailed report after payment. */
+function goToCheckout(screeningId: string, lang: Lang, email?: string) {
+  const u = new URL(CHECKOUT_URL);
+  u.searchParams.set('checkout[custom][screening_id]', screeningId);
+  if (email) u.searchParams.set('checkout[email]', email);
+  u.searchParams.set('locale', lang);
+  location.href = u.toString();
+}
+
+/** A link from the report email: ?offer=detailed&s=<screening id>. */
+function offerFromUrl(): string | null {
+  const p = new URLSearchParams(location.search);
+  const id = p.get('s');
+  return p.get('offer') === 'detailed' && id && /^[0-9a-f-]{36}$/i.test(id) ? id : null;
+}
 
 /** Age ranges offered to parents; questions are picked for the range's typical age. */
 const AGE_RANGES: { range: [number, number]; months: number }[] = [
@@ -26,7 +45,7 @@ function initialLang(): Lang {
 
 export default function App() {
   const [lang, setLang] = useState<Lang>(initialLang);
-  const [step, setStep] = useState<Step>('home');
+  const [step, setStep] = useState<Step>(() => (offerFromUrl() ? 'offer' : 'home'));
   const [age, setAge] = useState<(typeof AGE_RANGES)[number] | null>(null);
   const [sex, setSex] = useState<Sex | null>(null);
   const [index, setIndex] = useState(0);
@@ -36,10 +55,8 @@ export default function App() {
   const [marketing, setMarketing] = useState(false);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState<boolean | null>(null);
-  const [screeningId, setScreeningId] = useState<string | null>(null);
-  const [report, setReport] = useState<string | null>(null);
+  const [screeningId, setScreeningId] = useState<string | null>(offerFromUrl);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const s = t[lang];
   const months = age?.months ?? 0;
   const qs = useMemo(() => questionsForAge(months), [months]);
@@ -52,9 +69,16 @@ export default function App() {
 
   useEffect(() => { window.scrollTo(0, 0); }, [step, index]);
 
+  // Coming back from checkout with the browser's back button re-enables the offer button.
+  useEffect(() => {
+    const reset = () => setBusy(false);
+    window.addEventListener('pageshow', reset);
+    return () => window.removeEventListener('pageshow', reset);
+  }, []);
+
   const restart = () => {
     setStep('age'); setAge(null); setSex(null); setIndex(0); setAnswers({}); setResult(null);
-    setSent(null); setScreeningId(null); setReport(null); setError(null);
+    setSent(null); setScreeningId(null); setBusy(false);
   };
 
   const answer = (a: Answer) => {
@@ -67,7 +91,7 @@ export default function App() {
 
   const send = async () => {
     if (!age || !sex || !result || !EMAIL.test(email.trim())) return;
-    setSending(true); setError(null);
+    setSending(true);
     try {
       const id = await saveScreening({
         ageRange: age.range, months, sex, email: email.trim(), marketing, language: lang, answers, result,
@@ -81,15 +105,22 @@ export default function App() {
     setStep('done');
   };
 
-  const getDetailed = async () => {
+  const getDetailed = () => {
     if (!screeningId) return;
-    setBusy(true); setError(null);
-    // TODO(stripe): send the parent to Stripe Checkout first; the report unlocks after payment.
-    const res = await fetchReport(screeningId, 'detailed', lang);
-    setBusy(false);
-    if ('content' in res) setReport(res.content);
-    else setError(res.error === 'busy' ? s.reportBusy : s.reportFailed);
+    setBusy(true);
+    goToCheckout(screeningId, lang, EMAIL.test(email.trim()) ? email.trim() : undefined);
   };
+
+  const offerCard = (
+    <div className="offers no-print">
+      <h3>{s.offerTitle}</h3>
+      <p>{s.offerText}</p>
+      <button className="primary" disabled={busy || !screeningId} onClick={getDetailed}>
+        {busy ? s.reportLoading : s.offerButton}
+      </button>
+      <p className="muted center">{s.offerNote}</p>
+    </div>
+  );
 
   const flow: Step[] = ['age', 'sex', 'quiz', 'email'];
   const progress = step === 'quiz' && qs.length ? 20 + (index / qs.length) * 70
@@ -196,44 +227,20 @@ export default function App() {
             <p className="lead">{s.nextStep[result.risk]}</p>
             {result.limitedAge && <p className="note">{s.limitedAge}</p>}
 
-            {report ? (
-              <article className="report">
-                <Markdownish text={report} />
-                <button className="secondary no-print" onClick={() => window.print()}>{s.print}</button>
-              </article>
-            ) : (
-              <div className="offers no-print">
-                <h3>{s.offerTitle}</h3>
-                <p>{s.offerText}</p>
-                <button className="primary" disabled={busy || !screeningId} onClick={getDetailed}>
-                  {busy ? s.reportLoading : s.offerButton}
-                </button>
-                <p className="muted center">{s.offerNote}</p>
-              </div>
-            )}
-            {error && <p className="error">{error}</p>}
+            {offerCard}
             <p className="note">{s.disclaimer}</p>
             <button className="link no-print" onClick={restart}>{s.again}</button>
+          </section>
+        )}
+        {step === 'offer' && (
+          <section>
+            {offerCard}
+            <p className="note">{s.disclaimer}</p>
+            <button className="link no-print" onClick={() => setStep('home')}>{s.again}</button>
           </section>
         )}
       </main>
       <footer className="muted center no-print">{s.disclaimer}</footer>
     </div>
-  );
-}
-
-/** Renders the AI report's light markdown (headings, bullets, bold) without HTML injection. */
-function Markdownish({ text }: { text: string }) {
-  const bold = (line: string) => line.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 ? <strong key={i}>{part}</strong> : part));
-  return (
-    <>
-      {text.split('\n').map((raw, i) => {
-        const line = raw.trim();
-        if (!line) return null;
-        if (line.startsWith('#')) return <h3 key={i}>{bold(line.replace(/^#+\s*/, ''))}</h3>;
-        if (/^[-*•]\s/.test(line)) return <p key={i} className="bullet">• {bold(line.slice(2))}</p>;
-        return <p key={i}>{bold(line)}</p>;
-      })}
-    </>
   );
 }

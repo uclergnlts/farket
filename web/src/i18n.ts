@@ -81,7 +81,7 @@ export const t: Record<Lang, Strings> = {
     offerTitle: 'Want the detailed development report?',
     offerText: 'Every area explained with your own answers, activities to try at home, and a summary page to bring to your doctor.',
     offerButton: 'Get the detailed report · $9.99',
-    offerNote: 'One-time payment. Written by AI from your answers; not a diagnosis.',
+    offerNote: 'One-time payment. The report arrives by email within a few minutes. Written by AI from your answers; not a diagnosis.',
     months: ['January','February','March','April','May','June','July','August','September','October','November','December'],
   },
   es: {
@@ -141,7 +141,7 @@ export const t: Record<Lang, Strings> = {
     offerTitle: '¿Quiere el informe detallado del desarrollo?',
     offerText: 'Cada área explicada con sus propias respuestas, actividades para hacer en casa y una hoja resumen para llevar a su médico.',
     offerButton: 'Obtener el informe detallado · 9,99 $',
-    offerNote: 'Pago único. Escrito por IA a partir de sus respuestas; no es un diagnóstico.',
+    offerNote: 'Pago único. El informe llega a su correo en pocos minutos. Escrito por IA a partir de sus respuestas; no es un diagnóstico.',
     months: ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'],
   },
   ar: {
@@ -201,7 +201,7 @@ export const t: Record<Lang, Strings> = {
     offerTitle: 'هل تريد تقرير النمو المفصّل؟',
     offerText: 'شرح لكل مجال بناءً على إجاباتك، وأنشطة يمكن تجربتها في المنزل، وصفحة ملخص لأخذها إلى طبيبك.',
     offerButton: 'احصل على التقرير المفصّل · 9.99 $',
-    offerNote: 'دفعة واحدة. يكتبه الذكاء الاصطناعي بناءً على إجاباتك؛ وهو ليس تشخيصًا.',
+    offerNote: 'دفعة واحدة. يصل التقرير إلى بريدك الإلكتروني خلال دقائق. يكتبه الذكاء الاصطناعي بناءً على إجاباتك؛ وهو ليس تشخيصًا.',
     months: ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'],
   },
 };
