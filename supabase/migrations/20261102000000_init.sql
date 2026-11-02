@@ -51,8 +51,11 @@ create table public.purchases (
 
 create index on public.children (user_id);
 create index on public.screenings (user_id, created_at desc);
+create index on public.screenings (child_id);
 create index on public.reports (screening_id);
+create index on public.reports (user_id);
 create index on public.purchases (user_id, screening_id);
+create index on public.purchases (screening_id);
 
 alter table public.children enable row level security;
 alter table public.screenings enable row level security;
@@ -66,7 +69,10 @@ create policy "own children" on public.children
 create policy "own screenings select" on public.screenings
   for select to authenticated using ((select auth.uid()) = user_id);
 create policy "own screenings insert" on public.screenings
-  for insert to authenticated with check ((select auth.uid()) = user_id);
+  for insert to authenticated with check (
+    (select auth.uid()) = user_id
+    and exists (select 1 from public.children c where c.id = child_id and c.user_id = (select auth.uid()))
+  );
 create policy "own screenings delete" on public.screenings
   for delete to authenticated using ((select auth.uid()) = user_id);
 

@@ -2,7 +2,7 @@
 // POST { screening_id: string, kind: "short" | "detailed", language: "tr" | "en" }
 // Requires the user's Supabase JWT. Secrets: ANTHROPIC_API_KEY.
 // REQUIRE_PURCHASE=true makes the function refuse unpaid reports (turn on with step 3).
-import Anthropic from "npm:@anthropic-ai/sdk";
+import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const MODEL = "claude-opus-5-5";
