@@ -15,3 +15,9 @@ npm test          # puanlama testleri
 npm run typecheck
 npm start         # Expo geliştirme sunucusu
 ```
+
+## Sunucu (Supabase)
+
+- Veritabanı şeması: `supabase/migrations/` (her kullanıcı yalnızca kendi verisini görür)
+- Yapay zeka raporu: `supabase/functions/report` (Claude API). Gerekli gizli anahtar: `ANTHROPIC_API_KEY`.
+  `REQUIRE_PURCHASE=true` ayarlanınca ödemesi doğrulanmamış rapor üretilmez.
