@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createClient } from '@supabase/supabase-js';
 import bank from './data/sorular.json';
-import type { Answer, Lang, Result } from './scoring';
+import { questions, type Answer, type Lang, type Result } from './scoring';
 
 // Publishable key: safe to ship in the app; RLS protects the data.
 const SUPABASE_URL = 'https://ljvgqhszuepcestwmmet.supabase.co';
@@ -41,7 +41,11 @@ export async function saveScreening(
     child_id: childId,
     age_months: months,
     question_version: bank.version,
-    answers,
+    // Question text travels with the answer so the AI report can explain each one.
+    answers: questions.filter((q) => answers[q.id]).map((q) => ({
+      id: q.id, domain: q.domain, question: q.en, answer: answers[q.id],
+      concerning_when: q.reverse ? 'yes' : 'no',
+    })),
     risk: result.risk,
     ratio: result.ratio,
     regression: result.regression,

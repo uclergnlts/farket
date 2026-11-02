@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import {
   answerLabels, domains, MAX_MONTHS, MIN_MONTHS, questionsForAge, score,
@@ -7,6 +7,10 @@ import {
 } from './src/scoring';
 import { t } from './src/i18n';
 import { fetchReport, saveScreening } from './src/supabase';
+import { buy, getPrices, type ReportKind } from './src/purchases';
+import type { PurchasesStoreProduct } from 'react-native-purchases';
+
+const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 type Step = 'consent' | 'age' | 'quiz' | 'result';
 
@@ -20,6 +24,7 @@ export default function App() {
   const [result, setResult] = useState<Result | null>(null);
   const [screeningId, setScreeningId] = useState<string | null>(null);
   const [report, setReport] = useState<string | null>(null);
+  const [prices, setPrices] = useState<Partial<Record<ReportKind, PurchasesStoreProduct>>>({});
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const qs = useMemo(() => questionsForAge(months), [months]);
@@ -41,10 +46,26 @@ export default function App() {
     }
   };
 
-  const getReport = async () => {
+  useEffect(() => {
+    if (screeningId) getPrices().then(setPrices).catch(() => setPrices({}));
+  }, [screeningId]);
+
+  const getReport = async (kind: ReportKind) => {
     if (!screeningId) return;
-    setBusy(true); setError(null);
-    const res = await fetchReport(screeningId, 'short', lang);
+    setError(null);
+    const product = prices[kind];
+    if (product) {
+      const paid = await buy(product);
+      if (paid === 'cancelled') return;
+      if (paid === 'failed') { setError(s.purchaseFailed); return; }
+    }
+    setBusy(true);
+    // The store confirms the purchase to our server a few seconds after payment.
+    let res = await fetchReport(screeningId, kind, lang);
+    for (let i = 0; i < 6 && 'error' in res && res.error === 'payment_required' && product; i++) {
+      await wait(2500);
+      res = await fetchReport(screeningId, kind, lang);
+    }
     setBusy(false);
     if ('content' in res) setReport(res.content);
     else setError(res.error === 'busy' ? s.reportBusy : s.reportFailed);
@@ -117,8 +138,12 @@ export default function App() {
             {report ? (
               <View style={st.report}><Text style={st.p}>{report}</Text></View>
             ) : (
-              <Btn label={busy ? s.reportLoading : s.getReport} onPress={getReport}
-                disabled={busy || !screeningId} />
+              <>
+                <Btn label={busy ? s.reportLoading : `${s.shortReport}${prices.short ? ` · ${prices.short.priceString}` : ''}`}
+                  onPress={() => getReport('short')} disabled={busy || !screeningId} />
+                <Btn label={`${s.detailedReport}${prices.detailed ? ` · ${prices.detailed.priceString}` : ''}`}
+                  onPress={() => getReport('detailed')} disabled={busy || !screeningId} outline />
+              </>
             )}
             {error && <Text style={st.error}>{error}</Text>}
             <Text style={st.note}>{s.disclaimer}</Text>

@@ -4,7 +4,7 @@ interface Strings {
   title: string; intro: string; disclaimer: string; consent: string; agree: string;
   ageQ: string; ageInvalid: string; ageTooYoung: string; ageTooOld: string; start: string;
   back: string; focus: string; again: string; limitedAge: string;
-  getReport: string; reportLoading: string; reportFailed: string; reportBusy: string; saveFailed: string;
+  shortReport: string; detailedReport: string; purchaseFailed: string; reportLoading: string; reportFailed: string; reportBusy: string; saveFailed: string;
   risk: Record<Risk, string>; next: Record<Risk, string>;
 }
 
@@ -23,7 +23,9 @@ export const t: Record<Lang, Strings> = {
     back: 'Önceki soru',
     focus: 'Dikkat çeken alanlar',
     again: 'Yeni tarama',
-    getReport: 'Kişisel raporumu oluştur',
+    shortReport: 'Kişisel kısa rapor',
+    detailedReport: 'Detaylı rapor ve öneriler',
+    purchaseFailed: 'Ödeme tamamlanamadı. Ücret alınmadı, lütfen tekrar deneyin.',
     reportLoading: 'Rapor hazırlanıyor…',
     reportFailed: 'Rapor şu an hazırlanamadı. Lütfen biraz sonra tekrar deneyin.',
     reportBusy: 'Şu an yoğunluk var, lütfen bir dakika sonra tekrar deneyin.',
@@ -50,7 +52,9 @@ export const t: Record<Lang, Strings> = {
     back: 'Previous question',
     focus: 'Areas to watch',
     again: 'New screening',
-    getReport: 'Create my personal report',
+    shortReport: 'Personal short report',
+    detailedReport: 'Detailed report and tips',
+    purchaseFailed: "The payment didn't go through. You weren't charged, please try again.",
     reportLoading: 'Preparing your report…',
     reportFailed: "The report couldn't be prepared right now. Please try again shortly.",
     reportBusy: "We're busy right now, please try again in a minute.",

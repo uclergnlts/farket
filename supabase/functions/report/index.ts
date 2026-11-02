@@ -12,8 +12,10 @@ const LANGUAGES: Record<string, string> = {
 
 const SYSTEM = `You write a parent-facing report for an early autism screening app.
 You receive the child's age in months, a risk level (low/medium/high) already computed
-by the app, the most concerning developmental areas, the questions with the parent's
-answers, the report type and the output language.
+by the app, the most concerning developmental areas, the report type, the output language
+and the answers: each has the question (in English), the parent's answer (yes / sometimes
+/ no) and concerning_when, the answer that is a sign worth watching ("sometimes" is a
+milder sign).
 
 Rules:
 - Never diagnose. Never say the child has or does not have autism. Talk about
@@ -69,12 +71,25 @@ Deno.serve(async (req) => {
   if (cached.data) return json({ content: cached.data.content, cached: true });
 
   if (Deno.env.get("REQUIRE_PURCHASE") === "true") {
-    const product = kind === "short" ? "short_report" : "detailed_report";
-    const products = kind === "short" ? [product, "detailed_report"] : [product];
-    const { data: paid } = await admin.from("purchases").select("id")
-      .eq("user_id", user.id).eq("screening_id", screening_id)
-      .in("product", products).eq("verified", true).limit(1);
-    if (!paid?.length) return json({ error: "payment_required" }, 402);
+    // A detailed-report purchase also unlocks the short report of the same screening.
+    const products = kind === "short" ? ["short_report", "detailed_report"] : ["detailed_report"];
+    const valid = () => admin.from("purchases").select("id, product")
+      .eq("user_id", user.id).in("product", products).eq("verified", true).eq("refunded", false);
+
+    const { data: attached } = await valid().eq("screening_id", screening_id).limit(1);
+    if (!attached?.length) {
+      // Spend one unused credit on this screening (exact product first).
+      const { data: unused } = await valid().is("screening_id", null).order("created_at").limit(10);
+      const pick = (unused ?? []).sort((a, b) =>
+        Number(b.product === products[0]) - Number(a.product === products[0]));
+      let claimed = false;
+      for (const p of pick) {
+        const { data } = await admin.from("purchases").update({ screening_id })
+          .eq("id", p.id).is("screening_id", null).select("id");
+        if (data?.length) { claimed = true; break; }
+      }
+      if (!claimed) return json({ error: "payment_required" }, 402);
+    }
   }
 
   const input = {
