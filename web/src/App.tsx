@@ -1,12 +1,21 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-  ageInMonths, answerLabels, domains, MAX_MONTHS, MIN_MONTHS, questionsForAge, score,
-  type Answer, type Lang, type Result,
+  answerLabels, domains, questionsForAge, score, type Answer, type Lang, type Result,
 } from './scoring.ts';
 import { LANG_NAMES, t } from './i18n.ts';
-import { fetchReport, saveScreening, type ReportKind } from './api.ts';
+import { emailReport, fetchReport, saveScreening, type Sex } from './api.ts';
 
-type Step = 'home' | 'consent' | 'age' | 'quiz' | 'result';
+type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done';
+
+/** Age ranges offered to parents; questions are picked for the range's typical age. */
+const AGE_RANGES: { range: [number, number]; months: number }[] = [
+  { range: [6, 11], months: 9 },
+  { range: [12, 17], months: 15 },
+  { range: [18, 23], months: 20 },
+  { range: [24, 35], months: 30 },
+  { range: [36, 48], months: 42 },
+];
+const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 function initialLang(): Lang {
   const fromUrl = new URLSearchParams(location.search).get('lang');
@@ -18,19 +27,21 @@ function initialLang(): Lang {
 export default function App() {
   const [lang, setLang] = useState<Lang>(initialLang);
   const [step, setStep] = useState<Step>('home');
-  const now = useMemo(() => new Date(), []);
-  const [birthYear, setBirthYear] = useState<number | ''>('');
-  const [birthMonth, setBirthMonth] = useState<number | ''>('');
-  const [preterm, setPreterm] = useState(false);
-  const [months, setMonths] = useState(0);
+  const [age, setAge] = useState<(typeof AGE_RANGES)[number] | null>(null);
+  const [sex, setSex] = useState<Sex | null>(null);
   const [index, setIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
   const [result, setResult] = useState<Result | null>(null);
+  const [email, setEmail] = useState('');
+  const [marketing, setMarketing] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState<boolean | null>(null);
   const [screeningId, setScreeningId] = useState<string | null>(null);
   const [report, setReport] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const s = t[lang];
+  const months = age?.months ?? 0;
   const qs = useMemo(() => questionsForAge(months), [months]);
 
   useEffect(() => {
@@ -41,37 +52,48 @@ export default function App() {
 
   useEffect(() => { window.scrollTo(0, 0); }, [step, index]);
 
-  const ageMonths = birthYear !== '' && birthMonth !== ''
-    ? ageInMonths(new Date(birthYear, birthMonth - 1, 15), now, preterm ? 34 : 40) : null;
-  const ageMsg = ageMonths === null ? null
-    : ageMonths < MIN_MONTHS ? s.ageTooYoung : ageMonths > MAX_MONTHS ? s.ageTooOld : null;
-  const years = Array.from({ length: 5 }, (_, i) => now.getFullYear() - i);
-
   const restart = () => {
-    setStep('age'); setIndex(0); setAnswers({}); setResult(null);
-    setScreeningId(null); setReport(null); setError(null);
+    setStep('age'); setAge(null); setSex(null); setIndex(0); setAnswers({}); setResult(null);
+    setSent(null); setScreeningId(null); setReport(null); setError(null);
   };
 
   const answer = (a: Answer) => {
     const next = { ...answers, [qs[index].id]: a };
     setAnswers(next);
     if (index + 1 < qs.length) { setIndex(index + 1); return; }
-    const r = score(months, next);
-    setResult(r); setStep('result');
-    saveScreening({ year: Number(birthYear), month: Number(birthMonth), preterm }, months, next, r)
-      .then(setScreeningId).catch(() => setError(s.saveFailed));
+    setResult(score(months, next));
+    setStep('email');
   };
 
-  const getReport = async (kind: ReportKind) => {
+  const send = async () => {
+    if (!age || !sex || !result || !EMAIL.test(email.trim())) return;
+    setSending(true); setError(null);
+    try {
+      const id = await saveScreening({
+        ageRange: age.range, months, sex, email: email.trim(), marketing, language: lang, answers, result,
+      });
+      setScreeningId(id);
+      setSent(await emailReport(id));
+    } catch {
+      setSent(false);
+    }
+    setSending(false);
+    setStep('done');
+  };
+
+  const getDetailed = async () => {
     if (!screeningId) return;
     setBusy(true); setError(null);
-    const res = await fetchReport(screeningId, kind, lang);
+    // TODO(stripe): send the parent to Stripe Checkout first; the report unlocks after payment.
+    const res = await fetchReport(screeningId, 'detailed', lang);
     setBusy(false);
     if ('content' in res) setReport(res.content);
     else setError(res.error === 'busy' ? s.reportBusy : s.reportFailed);
   };
 
-  const progress = step === 'quiz' && qs.length ? ((index) / qs.length) * 100 : 0;
+  const flow: Step[] = ['age', 'sex', 'quiz', 'email'];
+  const progress = step === 'quiz' && qs.length ? 20 + (index / qs.length) * 70
+    : step === 'age' ? 5 : step === 'sex' ? 12 : step === 'email' ? 95 : 0;
 
   return (
     <div className="page">
@@ -83,7 +105,7 @@ export default function App() {
           {(Object.keys(LANG_NAMES) as Lang[]).map((l) => <option key={l} value={l}>{LANG_NAMES[l]}</option>)}
         </select>
       </header>
-      {step === 'quiz' && <div className="bar no-print"><div style={{ width: `${progress}%` }} /></div>}
+      {flow.includes(step) && <div className="bar no-print"><div style={{ width: `${progress}%` }} /></div>}
 
       <main className="card">
         {step === 'home' && (
@@ -91,50 +113,38 @@ export default function App() {
             <p className="eyebrow">{s.tagline}</p>
             <h1>{s.heroTitle}</h1>
             <p className="lead">{s.heroText}</p>
-            <ol className="how">
-              <li>{s.how1}</li><li>{s.how2}</li><li>{s.how3}</li>
-            </ol>
-            <button className="primary" onClick={() => setStep('consent')}>{s.start}</button>
+            <ol className="how"><li>{s.how1}</li><li>{s.how2}</li><li>{s.how3}</li></ol>
+            <button className="primary" onClick={() => setStep('age')}>{s.start}</button>
             <p className="muted center">{s.minutes}</p>
-          </section>
-        )}
-
-        {step === 'consent' && (
-          <section>
-            <h2>{s.consentTitle}</h2>
-            <p className="note">{s.disclaimer}</p>
-            <p>{s.consent}</p>
-            <button className="primary" onClick={() => setStep('age')}>{s.agree}</button>
-            <button className="link" onClick={() => setStep('home')}>{s.back}</button>
           </section>
         )}
 
         {step === 'age' && (
           <section>
-            <h2>{s.ageTitle}</h2>
-            <p className="muted">{s.ageHelp}</p>
-            <div className="row">
-              <label>{s.month}
-                <select value={birthMonth} onChange={(e) => setBirthMonth(e.target.value ? Number(e.target.value) : '')}>
-                  <option value="">—</option>
-                  {s.months.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
-                </select>
-              </label>
-              <label>{s.year}
-                <select value={birthYear} onChange={(e) => setBirthYear(e.target.value ? Number(e.target.value) : '')}>
-                  <option value="">—</option>
-                  {years.map((y) => <option key={y} value={y}>{y}</option>)}
-                </select>
-              </label>
+            <h2>{s.ageRangeTitle}</h2>
+            <p className="muted">{s.ageRangeHelp}</p>
+            <div className="answers">
+              {AGE_RANGES.map((a) => (
+                <button key={a.months} className={age === a ? 'answer picked' : 'answer'}
+                  onClick={() => { setAge(a); setIndex(0); setAnswers({}); setStep('sex'); }}>
+                  {s.monthsLabel(a.range[0], a.range[1])}
+                </button>
+              ))}
             </div>
-            <label className="check">
-              <input type="checkbox" checked={preterm} onChange={(e) => setPreterm(e.target.checked)} /> {s.preterm}
-            </label>
-            {ageMsg && <p className="note">{ageMsg}</p>}
-            <button className="primary" disabled={ageMonths === null || !!ageMsg}
-              onClick={() => { setMonths(ageMonths!); setIndex(0); setAnswers({}); setStep('quiz'); }}>
-              {s.next}
-            </button>
+            <p className="muted">{s.ageTooYoung}</p>
+          </section>
+        )}
+
+        {step === 'sex' && (
+          <section>
+            <h2>{s.sexTitle}</h2>
+            <div className="answers">
+              {(['boy', 'girl', 'unspecified'] as Sex[]).map((x) => (
+                <button key={x} className={sex === x ? 'answer picked' : 'answer'}
+                  onClick={() => { setSex(x); setStep('quiz'); }}>{s[x]}</button>
+              ))}
+            </div>
+            <button className="link" onClick={() => setStep('age')}>{s.back}</button>
           </section>
         )}
 
@@ -148,22 +158,43 @@ export default function App() {
                   onClick={() => answer(a)}>{answerLabels[a][lang]}</button>
               ))}
             </div>
-            <button className="link" onClick={() => (index > 0 ? setIndex(index - 1) : setStep('age'))}>{s.back}</button>
+            <button className="link" onClick={() => (index > 0 ? setIndex(index - 1) : setStep('sex'))}>{s.back}</button>
           </section>
         )}
 
-        {step === 'result' && result && (
+        {step === 'email' && (
           <section>
-            <h2 className="no-print">{s.resultTitle}</h2>
+            <h2>{s.emailTitle}</h2>
+            <p>{s.emailText}</p>
+            <form onSubmit={(e) => { e.preventDefault(); send(); }}>
+              <input className="input" type="email" inputMode="email" autoComplete="email" required
+                placeholder={s.emailPlaceholder} value={email} onChange={(e) => setEmail(e.target.value)} />
+              {email && !EMAIL.test(email.trim()) && <p className="error">{s.emailInvalid}</p>}
+              <label className="check">
+                <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} /> {s.marketing}
+              </label>
+              <button className="primary" type="submit" disabled={sending || !EMAIL.test(email.trim())}>
+                {sending ? s.sending : s.sendReport}
+              </button>
+            </form>
+            <p className="muted">{s.emailPrivacy}</p>
+            <p className="note">{s.disclaimer}</p>
+          </section>
+        )}
+
+        {step === 'done' && result && (
+          <section>
+            {sent ? (
+              <>
+                <h2>{s.sentTitle}</h2>
+                <p>{s.sentText(email.trim())}</p>
+              </>
+            ) : <p className="note">{s.notSent}</p>}
+
+            <h3>{s.quickResult}</h3>
             <div className={`badge ${result.risk}`}>{s.risk[result.risk]}</div>
             <p className="lead">{s.nextStep[result.risk]}</p>
             {result.limitedAge && <p className="note">{s.limitedAge}</p>}
-            {result.topDomains.length > 0 && (
-              <>
-                <h3>{s.focus}</h3>
-                <ul>{result.topDomains.slice(0, 3).map((d) => <li key={d.domain}>{domains[d.domain][lang]}</li>)}</ul>
-              </>
-            )}
 
             {report ? (
               <article className="report">
@@ -172,15 +203,12 @@ export default function App() {
               </article>
             ) : (
               <div className="offers no-print">
-                <h3>{s.reportTitle}</h3>
-                <p className="muted">{s.reportPitch}</p>
-                <button className="offer" disabled={busy || !screeningId} onClick={() => getReport('short')}>
-                  <strong>{s.shortReport}</strong><span>{s.shortDesc}</span>
+                <h3>{s.offerTitle}</h3>
+                <p>{s.offerText}</p>
+                <button className="primary" disabled={busy || !screeningId} onClick={getDetailed}>
+                  {busy ? s.reportLoading : s.offerButton}
                 </button>
-                <button className="offer featured" disabled={busy || !screeningId} onClick={() => getReport('detailed')}>
-                  <strong>{s.detailedReport}</strong><span>{s.detailedDesc}</span>
-                </button>
-                {busy && <p className="muted center">{s.reportLoading}</p>}
+                <p className="muted center">{s.offerNote}</p>
               </div>
             )}
             {error && <p className="error">{error}</p>}

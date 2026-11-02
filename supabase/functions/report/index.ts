@@ -1,46 +1,13 @@
-// Generates the parent-facing AI report for a screening and stores it.
-// POST { screening_id: string, kind: "short" | "detailed", language: "tr" | "en" }
+// Returns the AI report for a screening (generating and storing it the first time).
+// POST { screening_id: string, kind: "short" | "detailed", language: "en" | "es" | "ar" }
 // Requires the user's Supabase JWT. Secrets: ANTHROPIC_API_KEY.
-// REQUIRE_PURCHASE=true makes the function refuse unpaid reports (turn on with step 3).
-import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
+// The short report is free. With REQUIRE_PURCHASE=true the detailed report needs a
+// verified purchase, which is attached to the screening the first time it is used.
 import { createClient } from "npm:@supabase/supabase-js@2";
-
-const MODEL = "claude-opus-5-5";
-const LANGUAGES: Record<string, string> = {
-  tr: "Turkish", en: "English", es: "Spanish", ru: "Russian", ar: "Arabic",
-};
-
-const SYSTEM = `You write a parent-facing report for an early autism screening app.
-You receive the child's age in months, a risk level (low/medium/high) already computed
-by the app, the most concerning developmental areas, the report type, the output language
-and the answers: each has the question (in English), the parent's answer (yes / sometimes
-/ no) and concerning_when, the answer that is a sign worth watching ("sometimes" is a
-milder sign).
-
-Rules:
-- Never diagnose. Never say the child has or does not have autism. Talk about
-  "signs worth discussing with a professional".
-- Never change the risk level you were given.
-- Warm, calm, non-alarming, plain language, no medical jargon. Address the parent directly.
-- Short report: at most 150 words, plain paragraphs, no headings.
-- Detailed report: at most 900 words, with short headings: what the results mean,
-  each concerning area explained with the parent's own answers, age-appropriate
-  activities to try at home, when to screen again, what to tell the doctor.
-- Always end with the recommended next step for the risk level:
-  low = repeat the screening in 3-6 months; medium = share the results with the
-  pediatrician at the next visit; high = book an appointment with a developmental
-  specialist or child psychiatrist soon.
-- If a loss of previously gained skills was reported, clearly say this should be
-  discussed with a doctor soon, whatever the risk level.
-- No medication, diet, supplement or treatment advice.
-- Write only in the requested language.`;
-
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), {
-    status, headers: { "Content-Type": "application/json" },
-  });
+import { generateReport, json, LANGUAGES, preflight } from "../_shared/generate.ts";
 
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") return preflight();
   if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
   const auth = req.headers.get("Authorization");
@@ -54,7 +21,6 @@ Deno.serve(async (req) => {
   }
 
   const url = Deno.env.get("SUPABASE_URL")!;
-  // Reads as the user (RLS), writes with the service role.
   const asUser = createClient(url, Deno.env.get("SUPABASE_ANON_KEY")!, {
     global: { headers: { Authorization: auth } },
   });
@@ -65,25 +31,16 @@ Deno.serve(async (req) => {
 
   const { data: s } = await asUser.from("screenings").select("*").eq("id", screening_id).single();
   if (!s) return json({ error: "not_found" }, 404);
+  const { data: child } = await asUser.from("children").select("sex").eq("id", s.child_id).single();
 
-  const cached = await admin.from("reports").select("content")
-    .eq("screening_id", screening_id).eq("kind", kind).eq("language", language).maybeSingle();
-  if (cached.data) return json({ content: cached.data.content, cached: true });
-
-  if (Deno.env.get("REQUIRE_PURCHASE") === "true") {
-    // A detailed-report purchase also unlocks the short report of the same screening.
-    const products = kind === "short" ? ["short_report", "detailed_report"] : ["detailed_report"];
-    const valid = () => admin.from("purchases").select("id, product")
-      .eq("user_id", user.id).in("product", products).eq("verified", true).eq("refunded", false);
-
+  if (kind === "detailed" && Deno.env.get("REQUIRE_PURCHASE") === "true") {
+    const valid = () => admin.from("purchases").select("id")
+      .eq("user_id", user.id).eq("product", "detailed_report").eq("verified", true).eq("refunded", false);
     const { data: attached } = await valid().eq("screening_id", screening_id).limit(1);
     if (!attached?.length) {
-      // Spend one unused credit on this screening (exact product first).
       const { data: unused } = await valid().is("screening_id", null).order("created_at").limit(10);
-      const pick = (unused ?? []).sort((a, b) =>
-        Number(b.product === products[0]) - Number(a.product === products[0]));
       let claimed = false;
-      for (const p of pick) {
+      for (const p of unused ?? []) {
         const { data } = await admin.from("purchases").update({ screening_id })
           .eq("id", p.id).is("screening_id", null).select("id");
         if (data?.length) { claimed = true; break; }
@@ -92,39 +49,7 @@ Deno.serve(async (req) => {
     }
   }
 
-  const input = {
-    report_type: kind,
-    output_language: LANGUAGES[language],
-    child_age_months: s.age_months,
-    risk_level: s.risk,
-    loss_of_skills_reported: s.regression,
-    most_concerning_areas: s.top_domains,
-    answers: s.answers,
-  };
-
-  const client = new Anthropic();
-  let content = "";
-  try {
-    const response = await client.beta.messages.create({
-      model: MODEL,
-      max_tokens: kind === "short" ? 4000 : 16000,
-      output_config: { effort: kind === "short" ? "low" : "medium" },
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
-      system: SYSTEM,
-      messages: [{ role: "user", content: JSON.stringify(input) }],
-    });
-    if (response.stop_reason === "refusal") return json({ error: "generation_failed" }, 502);
-    for (const block of response.content) if (block.type === "text") content += block.text;
-  } catch (e) {
-    if (e instanceof Anthropic.RateLimitError) return json({ error: "busy" }, 503);
-    if (e instanceof Anthropic.APIError) return json({ error: "generation_failed", status: e.status }, 502);
-    throw e;
-  }
-  if (!content.trim()) return json({ error: "generation_failed" }, 502);
-
-  await admin.from("reports").insert({
-    user_id: user.id, screening_id, kind, language, content, model: MODEL,
-  });
-  return json({ content, cached: false });
+  const res = await generateReport(admin, user.id, s, child?.sex ?? null, kind, language);
+  if ("error" in res) return json({ error: res.error }, res.error === "busy" ? 503 : 502);
+  return json({ content: res.content });
 });

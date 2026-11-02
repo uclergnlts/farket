@@ -16,20 +16,22 @@ async function ensureSession(): Promise<void> {
   if (error) throw error;
 }
 
-export async function saveScreening(
-  birth: { year: number; month: number; preterm: boolean },
-  months: number, answers: Record<string, Answer>, result: Result,
-): Promise<string> {
+export type Sex = 'boy' | 'girl' | 'unspecified';
+
+export async function saveScreening(input: {
+  ageRange: [number, number]; months: number; sex: Sex; email: string; marketing: boolean;
+  language: Lang; answers: Record<string, Answer>; result: Result;
+}): Promise<string> {
   await ensureSession();
-  const { data: child, error: childErr } = await supabase.from('children').insert({
-    nickname: 'child', birth_year: birth.year, birth_month: birth.month,
-    gestation_weeks: birth.preterm ? 34 : 40,
-  }).select('id').single();
+  const { data: child, error: childErr } = await supabase.from('children')
+    .insert({ nickname: 'child', sex: input.sex }).select('id').single();
   if (childErr) throw childErr;
 
+  const { answers, result } = input;
   const { data, error } = await supabase.from('screenings').insert({
     child_id: child.id,
-    age_months: months,
+    age_months: input.months,
+    age_range: `${input.ageRange[0]}-${input.ageRange[1]}`,
     question_version: bank.version,
     // Question text travels with the answer so the AI report can explain each one.
     answers: questions.filter((q) => answers[q.id]).map((q) => ({
@@ -40,9 +42,18 @@ export async function saveScreening(
     ratio: result.ratio,
     regression: result.regression,
     top_domains: result.topDomains,
+    email: input.email,
+    marketing_consent: input.marketing,
+    language: input.language,
   }).select('id').single();
   if (error) throw error;
   return data.id as string;
+}
+
+/** Writes the free report and emails it. Resolves to whether the email went out. */
+export async function emailReport(screeningId: string): Promise<boolean> {
+  const { data, error } = await supabase.functions.invoke('email-report', { body: { screening_id: screeningId } });
+  return !error && data?.sent === true;
 }
 
 export type ReportKind = 'short' | 'detailed';
