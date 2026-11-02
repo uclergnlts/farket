@@ -1,0 +1,317 @@
+{
+ "version": "0.2.0",
+ "status": "draft-needs-clinical-review",
+ "source_note": "Original items written for this app, informed by public developmental milestone domains (CDC 'Learn the Signs. Act Early.', AAP early red flags). Not M-CHAT items. Not a validated instrument.",
+ "answers": {
+  "yes": {
+   "en": "Yes, usually",
+   "es": "Sí, normalmente",
+   "ar": "نعم، عادةً"
+  },
+  "sometimes": {
+   "en": "Sometimes",
+   "es": "A veces",
+   "ar": "أحيانًا"
+  },
+  "no": {
+   "en": "No, rarely or never",
+   "es": "No, rara vez o nunca",
+   "ar": "لا، نادرًا أو أبدًا"
+  }
+ },
+ "scoring": {
+  "positive_item": {
+   "yes": 0,
+   "sometimes": 1,
+   "no": 2
+  },
+  "reverse_item": {
+   "yes": 2,
+   "sometimes": 1,
+   "no": 0
+  }
+ },
+ "domains": {
+  "social": {
+   "en": "Social interaction",
+   "es": "Interacción social",
+   "ar": "التفاعل الاجتماعي"
+  },
+  "communication": {
+   "en": "Communication and language",
+   "es": "Comunicación y lenguaje",
+   "ar": "التواصل واللغة"
+  },
+  "play": {
+   "en": "Play and imitation",
+   "es": "Juego e imitación",
+   "ar": "اللعب والتقليد"
+  },
+  "behavior": {
+   "en": "Repetitive behavior and sensory responses",
+   "es": "Conductas repetitivas y respuestas sensoriales",
+   "ar": "السلوك التكراري والاستجابات الحسية"
+  },
+  "regression": {
+   "en": "Loss of skills",
+   "es": "Pérdida de habilidades",
+   "ar": "فقدان المهارات"
+  }
+ },
+ "questions": [
+  {
+   "id": "q01",
+   "domain": "social",
+   "minMonths": 6,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": true,
+   "en": "Does your child look at your eyes when you talk or play with them?",
+   "es": "¿Su hijo le mira a los ojos cuando usted le habla o juega con él?",
+   "ar": "هل ينظر طفلك إلى عينيك عندما تتحدث إليه أو تلعب معه؟"
+  },
+  {
+   "id": "q02",
+   "domain": "social",
+   "minMonths": 6,
+   "maxMonths": 18,
+   "reverse": false,
+   "critical": false,
+   "en": "When you smile at your child, do they smile back at you?",
+   "es": "Cuando usted le sonríe, ¿su hijo le devuelve la sonrisa?",
+   "ar": "عندما تبتسم لطفلك، هل يبادلك الابتسامة؟"
+  },
+  {
+   "id": "q03",
+   "domain": "social",
+   "minMonths": 9,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": true,
+   "en": "When you call your child's name (and they are not absorbed in something like TV), do they turn or respond?",
+   "es": "Cuando dice el nombre de su hijo (y no está absorto en algo como la televisión), ¿se gira o responde?",
+   "ar": "عندما تنادي طفلك باسمه (وهو غير منشغل بشيء مثل التلفاز)، هل يلتفت إليك أو يستجيب؟"
+  },
+  {
+   "id": "q04",
+   "domain": "communication",
+   "minMonths": 6,
+   "maxMonths": 14,
+   "reverse": false,
+   "critical": false,
+   "en": "Does your child babble with repeated syllables such as \"ba-ba\" or \"ma-ma\"?",
+   "es": "¿Su hijo balbucea con sílabas repetidas como \"ba-ba\" o \"ma-ma\"?",
+   "ar": "هل يناغي طفلك بمقاطع مكررة مثل \"با-با\" أو \"ما-ما\"؟"
+  },
+  {
+   "id": "q05",
+   "domain": "social",
+   "minMonths": 9,
+   "maxMonths": 24,
+   "reverse": false,
+   "critical": false,
+   "en": "Does your child enjoy back-and-forth games like peekaboo and want them to continue?",
+   "es": "¿A su hijo le gustan los juegos de ida y vuelta como el cucú-tras y quiere que continúen?",
+   "ar": "هل يستمتع طفلك بالألعاب التبادلية مثل لعبة الاختباء (بيكابو) ويريد أن تستمر؟"
+  },
+  {
+   "id": "q06",
+   "domain": "communication",
+   "minMonths": 12,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": true,
+   "en": "Does your child point with a finger to show you something interesting (not only to get something they want)?",
+   "es": "¿Su hijo señala con el dedo para mostrarle algo interesante (no solo para pedir algo que quiere)?",
+   "ar": "هل يشير طفلك بإصبعه ليريك شيئًا مثيرًا للاهتمام (وليس فقط ليطلب شيئًا يريده)؟"
+  },
+  {
+   "id": "q07",
+   "domain": "communication",
+   "minMonths": 12,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": false,
+   "en": "Does your child use gestures like waving bye-bye or shaking their head?",
+   "es": "¿Su hijo usa gestos como decir adiós con la mano o negar con la cabeza?",
+   "ar": "هل يستخدم طفلك إيماءات مثل التلويح للوداع أو هز الرأس؟"
+  },
+  {
+   "id": "q08",
+   "domain": "social",
+   "minMonths": 12,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": true,
+   "en": "When you point at something, does your child look where you are pointing?",
+   "es": "Cuando usted señala algo, ¿su hijo mira hacia donde usted señala?",
+   "ar": "عندما تشير إلى شيء ما، هل ينظر طفلك إلى حيث تشير؟"
+  },
+  {
+   "id": "q09",
+   "domain": "social",
+   "minMonths": 12,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": true,
+   "en": "Does your child bring or hold up objects just to show them to you?",
+   "es": "¿Su hijo le trae o le enseña objetos solo para mostrárselos?",
+   "ar": "هل يحضر طفلك الأشياء أو يرفعها فقط ليريك إياها؟"
+  },
+  {
+   "id": "q10",
+   "domain": "play",
+   "minMonths": 12,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": false,
+   "en": "Does your child copy what you do (clapping, pretending to talk on the phone, household tasks)?",
+   "es": "¿Su hijo imita lo que usted hace (aplaudir, fingir que habla por teléfono, tareas de la casa)?",
+   "ar": "هل يقلّد طفلك ما تفعله (التصفيق، التظاهر بالتحدث بالهاتف، أعمال المنزل)؟"
+  },
+  {
+   "id": "q11",
+   "domain": "communication",
+   "minMonths": 16,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": true,
+   "en": "Does your child use at least a few words with meaning?",
+   "es": "¿Su hijo usa al menos algunas palabras con significado?",
+   "ar": "هل يستخدم طفلك بضع كلمات على الأقل يفهم معناها؟"
+  },
+  {
+   "id": "q12",
+   "domain": "communication",
+   "minMonths": 18,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": false,
+   "en": "Does your child follow a simple request without gestures, like \"bring the ball\"?",
+   "es": "¿Su hijo sigue una petición sencilla sin gestos, como \"trae la pelota\"?",
+   "ar": "هل ينفّذ طفلك طلبًا بسيطًا دون إشارات، مثل \"أحضر الكرة\"؟"
+  },
+  {
+   "id": "q13",
+   "domain": "play",
+   "minMonths": 18,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": false,
+   "en": "Does your child play pretend, such as feeding a doll or driving a toy car with \"vroom\" sounds?",
+   "es": "¿Su hijo juega a imaginar, como dar de comer a un muñeco o conducir un coche de juguete haciendo \"brum\"?",
+   "ar": "هل يلعب طفلك ألعابًا تخيلية، مثل إطعام دمية أو قيادة سيارة لعبة مع صوت \"بررم\"؟"
+  },
+  {
+   "id": "q14",
+   "domain": "social",
+   "minMonths": 18,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": false,
+   "en": "Is your child interested in other children (watches them, approaches them, smiles at them)?",
+   "es": "¿Le interesan a su hijo otros niños (los observa, se acerca a ellos, les sonríe)?",
+   "ar": "هل يهتم طفلك بالأطفال الآخرين (يراقبهم، يقترب منهم، يبتسم لهم)؟"
+  },
+  {
+   "id": "q15",
+   "domain": "social",
+   "minMonths": 15,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": false,
+   "en": "When something new or surprising happens, does your child look at your face to see how you react?",
+   "es": "Cuando ocurre algo nuevo o sorprendente, ¿su hijo mira su cara para ver cómo reacciona usted?",
+   "ar": "عندما يحدث شيء جديد أو مفاجئ، هل ينظر طفلك إلى وجهك ليرى كيف تتفاعل؟"
+  },
+  {
+   "id": "q16",
+   "domain": "communication",
+   "minMonths": 24,
+   "maxMonths": 48,
+   "reverse": false,
+   "critical": true,
+   "en": "Does your child spontaneously combine two words like \"more milk\" or \"mommy come\" (not just repeating what they heard)?",
+   "es": "¿Su hijo combina espontáneamente dos palabras, como \"más leche\" o \"mamá ven\" (no solo repitiendo lo que oyó)?",
+   "ar": "هل يجمع طفلك من تلقاء نفسه بين كلمتين مثل \"حليب أكثر\" أو \"ماما تعالي\" (وليس مجرد تكرار ما سمعه)؟"
+  },
+  {
+   "id": "q17",
+   "domain": "communication",
+   "minMonths": 24,
+   "maxMonths": 48,
+   "reverse": true,
+   "critical": false,
+   "en": "Does your child repeat words or phrases they heard over and over, regardless of meaning (e.g. lines from ads)?",
+   "es": "¿Su hijo repite una y otra vez palabras o frases que ha oído, sin importar su significado (por ejemplo, frases de anuncios)?",
+   "ar": "هل يكرر طفلك كلمات أو عبارات سمعها مرارًا وتكرارًا بغض النظر عن معناها (مثل عبارات الإعلانات)؟"
+  },
+  {
+   "id": "q18",
+   "domain": "behavior",
+   "minMonths": 12,
+   "maxMonths": 48,
+   "reverse": true,
+   "critical": false,
+   "en": "Does your child spend long periods doing the same thing repeatedly, like lining up toys or spinning wheels?",
+   "es": "¿Su hijo pasa mucho tiempo haciendo lo mismo una y otra vez, como poner juguetes en fila o hacer girar ruedas?",
+   "ar": "هل يقضي طفلك وقتًا طويلًا في فعل الشيء نفسه بشكل متكرر، مثل صفّ الألعاب أو تدوير العجلات؟"
+  },
+  {
+   "id": "q19",
+   "domain": "behavior",
+   "minMonths": 12,
+   "maxMonths": 48,
+   "reverse": true,
+   "critical": false,
+   "en": "Does your child often make unusual repeated movements like hand flapping, spinning, or rocking?",
+   "es": "¿Su hijo hace a menudo movimientos repetidos poco habituales, como aletear las manos, girar sobre sí mismo o balancearse?",
+   "ar": "هل يقوم طفلك كثيرًا بحركات متكررة غير معتادة مثل رفرفة اليدين أو الدوران حول نفسه أو التأرجح؟"
+  },
+  {
+   "id": "q20",
+   "domain": "behavior",
+   "minMonths": 12,
+   "maxMonths": 48,
+   "reverse": true,
+   "critical": false,
+   "en": "Does your child overreact to everyday sounds (vacuum, hair dryer) or cover their ears?",
+   "es": "¿Su hijo reacciona en exceso a sonidos cotidianos (aspiradora, secador) o se tapa los oídos?",
+   "ar": "هل يتفاعل طفلك بشكل مبالغ فيه مع الأصوات اليومية (المكنسة الكهربائية، مجفف الشعر) أو يغطي أذنيه؟"
+  },
+  {
+   "id": "q21",
+   "domain": "behavior",
+   "minMonths": 24,
+   "maxMonths": 48,
+   "reverse": true,
+   "critical": false,
+   "en": "Does a small change in routine (a different route, a different cup) cause very long meltdowns?",
+   "es": "¿Un pequeño cambio en la rutina (otro camino, otro vaso) le provoca rabietas muy largas?",
+   "ar": "هل يسبب تغيير بسيط في الروتين (طريق مختلف، كوب مختلف) نوبات بكاء طويلة جدًا؟"
+  },
+  {
+   "id": "q22",
+   "domain": "behavior",
+   "minMonths": 18,
+   "maxMonths": 48,
+   "reverse": true,
+   "critical": false,
+   "en": "Is your child unusually intensely focused on parts of objects (spinning things, lights) or one particular topic?",
+   "es": "¿Su hijo se fija de forma inusualmente intensa en partes de objetos (cosas que giran, luces) o en un tema concreto?",
+   "ar": "هل يركّز طفلك بشكل مكثف وغير معتاد على أجزاء من الأشياء (أشياء تدور، أضواء) أو على موضوع واحد معين؟"
+  },
+  {
+   "id": "q23",
+   "domain": "regression",
+   "minMonths": 6,
+   "maxMonths": 48,
+   "reverse": true,
+   "critical": true,
+   "redFlag": true,
+   "en": "Has your child stopped doing something they used to do (words, eye contact, smiling, play)?",
+   "es": "¿Su hijo ha dejado de hacer algo que antes hacía (palabras, contacto visual, sonreír, jugar)?",
+   "ar": "هل توقف طفلك عن فعل شيء كان يفعله من قبل (كلمات، تواصل بصري، ابتسام، لعب)؟"
+  }
+ ]
+}

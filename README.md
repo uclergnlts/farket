@@ -21,3 +21,14 @@ npm start         # Expo geliştirme sunucusu
 - Veritabanı şeması: `supabase/migrations/` (her kullanıcı yalnızca kendi verisini görür)
 - Yapay zeka raporu: `supabase/functions/report` (Claude API). Gerekli gizli anahtar: `ANTHROPIC_API_KEY`.
   `REQUIRE_PURCHASE=true` ayarlanınca ödemesi doğrulanmamış rapor üretilmez.
+
+## Web sitesi (`web/`)
+
+İngilizce, İspanyolca ve Arapça (sağdan sola) adım adım tarama sitesi. Vite + React + TypeScript.
+
+```bash
+cd web
+npm install
+npm run dev     # yerelde çalıştır
+npm run build   # yayın dosyaları web/dist içine
+```
