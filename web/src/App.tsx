@@ -15,6 +15,12 @@ const COOKIE_TEXT: Record<Lang, { text: string; yes: string; no: string }> = {
   ar: { text: 'نستخدم ملف تعريف ارتباط من Meta (فيسبوك) لقياس إعلاناتنا. لا تتم مشاركة إجاباتك أو نتائجك أبدًا.', yes: 'موافق', no: 'رفض' },
 };
 
+const HERO_ALT: Record<Lang, string> = {
+  en: 'A Farket question on a phone screen',
+  es: 'Una pregunta de Farket en la pantalla de un teléfono',
+  ar: 'سؤال من Farket على شاشة هاتف',
+};
+
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
 
 /** Lemon Squeezy hosted checkout for the $9.99 detailed report. */
@@ -197,6 +203,8 @@ export default function App() {
             <p className="lead">{HERO[lang].text}</p>
             <button className="primary big" onClick={startCheck}>{s.start}</button>
             <p className="stat">{HERO[lang].stat}</p>
+            <img className="hero-phone" src={`/hero-phone-${lang}.webp`} width={260} height={357}
+              alt={HERO_ALT[lang]} />
             <ol className="steps">{HERO[lang].steps.map((x) => <li key={x}>{x}</li>)}</ol>
           </section>
         )}
