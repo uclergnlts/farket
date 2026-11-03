@@ -4,7 +4,7 @@
 // Answers, results, age, sex and email are never sent to Meta.
 
 /** "Farket Pixel" in Meta Events Manager (Ucler business portfolio). Empty = off: nothing loads, no banner. */
-export const PIXEL_ID = '956917537156142';
+export const PIXEL_ID: string = '956917537156142';
 
 const CONSENT_KEY = 'cookie_consent'; // 'yes' | 'no'
 
