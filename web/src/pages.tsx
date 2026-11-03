@@ -5,7 +5,7 @@ export type PageId = 'privacy' | 'terms' | 'refund' | 'sample';
 export const PAGE_IDS: PageId[] = ['sample', 'privacy', 'terms', 'refund'];
 
 /** Where parents write for questions, data deletion and refunds. */
-export const CONTACT_EMAIL = 'rapor@uclergnlts.com';
+export const CONTACT_EMAIL = 'uclergnlts_0101@hotmail.com';
 const UPDATED = '2026-11-03';
 const PRICE = '$9.99';
 
@@ -84,7 +84,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         ] },
         { h: 'Free and paid parts', p: [
           'The screening, your result and your personal report are free. The result and the advice to see a specialist are never behind a payment.',
-          `The detailed development report is an optional one-time purchase (${PRICE}, prices shown at checkout include applicable taxes). It is a digital product delivered by email, normally within a few minutes. There is no subscription and no recurring charge.`,
+          `The detailed development report is an optional one-time purchase (${PRICE}, prices shown at checkout include applicable taxes). It is a digital product delivered by email, normally within a few minutes. There is no subscription and no recurring charge. Because each report is personalized, sales are final; see our Refund Policy.`,
           'Payments are processed by Lemon Squeezy, our reseller and merchant of record, which also handles taxes and invoices. Their buyer terms apply to the payment.',
         ] },
         { h: 'Acceptable use', p: [
@@ -104,16 +104,22 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
     },
     refund: {
       title: 'Refund Policy',
-      intro: `The detailed development report costs ${PRICE} as a one-time payment. We want you to be happy with it.`,
+      intro: `The detailed development report costs ${PRICE} as a one-time payment.`,
       sections: [
-        { h: '14-day refund', p: [
-          'If you are not satisfied with your detailed report for any reason, ask for a refund within 14 days of purchase and we will refund you in full.',
+        { h: 'All sales are final', p: [
+          'Each detailed report is written specifically for your child’s answers and is delivered right after payment, so it cannot be returned. For this reason we do not offer refunds once the report has been delivered, including for a change of mind.',
+          'By completing the purchase you agree that the report is delivered immediately and that you lose the right to withdraw from the purchase once delivery has started, where the law allows this.',
+        ] },
+        { h: 'When we do refund', p: [
+          'You were charged but never received the report, and we are unable to send it to you.',
+          'You were charged more than once for the same report.',
+          'Nothing in this policy limits rights you have under the consumer law of your country.',
         ] },
         { h: 'Report not delivered', p: [
-          'If your report has not arrived within 24 hours (please check your spam folder first), write to us. We will send it again or refund you in full, as you prefer.',
+          'If your report has not arrived within 24 hours (please check your spam folder first), write to us. We will send it again, and if we cannot deliver it we will refund you in full.',
         ] },
         { h: 'How to ask', p: [
-          `Email ${C} with the email address you used and, if you have it, your order number. You can also reply to your Lemon Squeezy receipt email.`,
+          `Email ${C} with the email address you used and your order number. You can also reply to your Lemon Squeezy receipt email.`,
           'Refunds go back to your original payment method through Lemon Squeezy. Depending on your bank, they usually appear within 5 to 10 business days.',
         ] },
         { h: 'No subscriptions', p: [
@@ -206,7 +212,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         ] },
         { h: 'Partes gratuitas y de pago', p: [
           'La revisión, su resultado y su informe personal son gratuitos. El resultado y la recomendación de ver a un especialista nunca están detrás de un pago.',
-          `El informe detallado del desarrollo es una compra única y opcional (${PRICE}; los precios en el pago incluyen los impuestos aplicables). Es un producto digital que se entrega por correo, normalmente en pocos minutos. No hay suscripción ni cargos recurrentes.`,
+          `El informe detallado del desarrollo es una compra única y opcional (${PRICE}; los precios en el pago incluyen los impuestos aplicables). Es un producto digital que se entrega por correo, normalmente en pocos minutos. No hay suscripción ni cargos recurrentes. Como cada informe es personalizado, las ventas son definitivas; consulte nuestra Política de reembolso.`,
           'Los pagos los procesa Lemon Squeezy, nuestro revendedor y comerciante registrado, que también gestiona impuestos y facturas. Sus condiciones para compradores se aplican al pago.',
         ] },
         { h: 'Uso aceptable', p: [
@@ -226,16 +232,22 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
     },
     refund: {
       title: 'Política de reembolso',
-      intro: `El informe detallado del desarrollo cuesta ${PRICE} en un pago único. Queremos que quede satisfecho.`,
+      intro: `El informe detallado del desarrollo cuesta ${PRICE} en un pago único.`,
       sections: [
-        { h: 'Reembolso en 14 días', p: [
-          'Si no está satisfecho con su informe detallado por cualquier motivo, pida el reembolso dentro de los 14 días posteriores a la compra y le devolveremos el importe completo.',
+        { h: 'Todas las ventas son definitivas', p: [
+          'Cada informe detallado se escribe específicamente a partir de las respuestas sobre su hijo y se entrega justo después del pago, por lo que no puede devolverse. Por eso no ofrecemos reembolsos una vez entregado el informe, tampoco por cambio de opinión.',
+          'Al completar la compra acepta que el informe se entregue de inmediato y que pierde el derecho de desistimiento una vez iniciada la entrega, cuando la ley lo permite.',
+        ] },
+        { h: 'Cuándo sí reembolsamos', p: [
+          'Se le cobró pero nunca recibió el informe y no podemos enviárselo.',
+          'Se le cobró más de una vez por el mismo informe.',
+          'Nada de esta política limita los derechos que le otorga la ley de consumo de su país.',
         ] },
         { h: 'Informe no recibido', p: [
-          'Si su informe no ha llegado en 24 horas (revise primero la carpeta de spam), escríbanos. Se lo volveremos a enviar o le devolveremos el dinero, como prefiera.',
+          'Si su informe no ha llegado en 24 horas (revise primero la carpeta de spam), escríbanos. Se lo volveremos a enviar y, si no podemos entregarlo, le devolveremos el importe completo.',
         ] },
         { h: 'Cómo pedirlo', p: [
-          `Escriba a ${C} con el correo que usó y, si lo tiene, su número de pedido. También puede responder al correo de recibo de Lemon Squeezy.`,
+          `Escriba a ${C} con el correo que usó y su número de pedido. También puede responder al correo de recibo de Lemon Squeezy.`,
           'El reembolso vuelve a su método de pago original a través de Lemon Squeezy. Según su banco, suele aparecer en 5 a 10 días hábiles.',
         ] },
         { h: 'Sin suscripciones', p: [
@@ -326,7 +338,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         ] },
         { h: 'الأجزاء المجانية والمدفوعة', p: [
           'الفحص ونتيجتك وتقريرك الشخصي مجانية. ولا تُوضع النتيجة ونصيحة مراجعة المختص خلف أي دفع أبدًا.',
-          `تقرير النمو المفصّل عملية شراء اختيارية لمرة واحدة (${PRICE}، وتشمل الأسعار المعروضة عند الدفع الضرائب المطبّقة). وهو منتج رقمي يُرسل بالبريد الإلكتروني، عادةً خلال دقائق. لا يوجد اشتراك ولا رسوم متكررة.`,
+          `تقرير النمو المفصّل عملية شراء اختيارية لمرة واحدة (${PRICE}، وتشمل الأسعار المعروضة عند الدفع الضرائب المطبّقة). وهو منتج رقمي يُرسل بالبريد الإلكتروني، عادةً خلال دقائق. لا يوجد اشتراك ولا رسوم متكررة. ولأن كل تقرير مخصّص، فإن جميع المبيعات نهائية؛ راجع سياسة الاسترداد.`,
           'تتولى Lemon Squeezy معالجة المدفوعات بصفتها البائع والتاجر المسجّل، وتتولى أيضًا الضرائب والفواتير. وتسري شروطها الخاصة بالمشترين على عملية الدفع.',
         ] },
         { h: 'الاستخدام المقبول', p: [
@@ -346,16 +358,22 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
     },
     refund: {
       title: 'سياسة الاسترداد',
-      intro: `يكلّف تقرير النمو المفصّل ${PRICE} بدفعة واحدة. نريدك أن تكون راضيًا عنه.`,
+      intro: `يكلّف تقرير النمو المفصّل ${PRICE} بدفعة واحدة.`,
       sections: [
-        { h: 'استرداد خلال 14 يومًا', p: [
-          'إذا لم تكن راضيًا عن تقريرك المفصّل لأي سبب، فاطلب الاسترداد خلال 14 يومًا من الشراء وسنعيد إليك المبلغ كاملًا.',
+        { h: 'جميع المبيعات نهائية', p: [
+          'يُكتب كل تقرير مفصّل خصيصًا بناءً على إجاباتك عن طفلك ويُسلَّم فور الدفع، لذا لا يمكن إرجاعه. ولهذا لا نقدّم استردادًا بعد تسليم التقرير، بما في ذلك في حال تغيير رأيك.',
+          'بإتمام الشراء، توافق على تسليم التقرير فورًا وعلى أنك تفقد حق العدول عن الشراء بمجرد بدء التسليم، حيث يسمح القانون بذلك.',
+        ] },
+        { h: 'متى نعيد المبلغ', p: [
+          'إذا خُصم المبلغ ولم يصلك التقرير أبدًا ولم نتمكن من إرساله إليك.',
+          'إذا خُصم المبلغ أكثر من مرة للتقرير نفسه.',
+          'لا يحدّ أي شيء في هذه السياسة من حقوقك بموجب قانون حماية المستهلك في بلدك.',
         ] },
         { h: 'لم يصل التقرير', p: [
-          'إذا لم يصل تقريرك خلال 24 ساعة (يرجى التحقق من مجلد الرسائل غير المرغوب فيها أولًا)، فراسلنا. سنعيد إرساله أو نعيد إليك المبلغ كاملًا، حسب رغبتك.',
+          'إذا لم يصل تقريرك خلال 24 ساعة (يرجى التحقق من مجلد الرسائل غير المرغوب فيها أولًا)، فراسلنا. سنعيد إرساله، وإذا تعذّر تسليمه فسنعيد إليك المبلغ كاملًا.',
         ] },
         { h: 'كيف تطلب الاسترداد', p: [
-          `راسلنا على ${C} بالبريد الإلكتروني الذي استخدمته، ورقم الطلب إن وُجد. ويمكنك أيضًا الرد على رسالة الإيصال من Lemon Squeezy.`,
+          `راسلنا على ${C} بالبريد الإلكتروني الذي استخدمته ورقم الطلب. ويمكنك أيضًا الرد على رسالة الإيصال من Lemon Squeezy.`,
           'يُعاد المبلغ إلى وسيلة الدفع الأصلية عبر Lemon Squeezy، ويظهر عادةً خلال 5 إلى 10 أيام عمل حسب البنك.',
         ] },
         { h: 'لا اشتراكات', p: [
