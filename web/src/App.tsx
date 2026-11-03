@@ -5,6 +5,7 @@ import {
 import { LANG_NAMES, t } from './i18n.ts';
 import { emailReport, saveScreening, type Sex } from './api.ts';
 import { SEO, langPath } from './seo.ts';
+import { HomeSections } from './home.tsx';
 import { FooterLinks, InfoPage, PAGE_LABELS, pageFromHash, type PageId } from './pages.tsx';
 
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
@@ -269,6 +270,7 @@ export default function App() {
         )}
         </>}
       </main>
+      {!page && step === 'home' && <HomeSections lang={lang} start={() => setStep('age')} startLabel={s.start} />}
       <footer className="muted center no-print">
         <p>{s.disclaimer}</p>
         <FooterLinks lang={lang} />
