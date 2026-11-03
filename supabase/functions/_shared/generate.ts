@@ -72,9 +72,13 @@ export async function generateReport(
       system: SYSTEM,
       messages: [{ role: "user", content: JSON.stringify(input) }],
     });
-    if (response.stop_reason === "refusal") return { error: "generation_failed" };
+    if (response.stop_reason === "refusal") {
+      console.error("refusal", JSON.stringify(response.stop_details));
+      return { error: "generation_failed" };
+    }
     for (const block of response.content) if (block.type === "text") content += block.text;
   } catch (e) {
+    console.error("anthropic error", e instanceof Anthropic.APIError ? `${e.status} ${e.message}` : String(e));
     if (e instanceof Anthropic.RateLimitError) return { error: "busy" };
     if (e instanceof Anthropic.APIError) return { error: "generation_failed" };
     throw e;
