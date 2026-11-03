@@ -17,6 +17,12 @@ const COOKIE_TEXT: Record<Lang, { text: string; yes: string; no: string }> = {
   ar: { text: 'نستخدم ملف تعريف ارتباط من Meta (فيسبوك) لقياس إعلاناتنا. لا تتم مشاركة إجاباتك أو نتائجك أبدًا.', yes: 'موافق', no: 'رفض' },
 };
 
+const HERO_ALT: Record<Lang, string> = {
+  en: 'A Farket question on a phone screen',
+  es: 'Una pregunta de Farket en la pantalla de un teléfono',
+  ar: 'سؤال من Farket على شاشة هاتف',
+};
+
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
 
 /** Lemon Squeezy hosted checkout for the $9.99 detailed report. */
@@ -202,6 +208,8 @@ export default function App() {
             <p className="lead">{HERO[lang].text}</p>
             <button className="primary big" onClick={startCheck}>{s.start}</button>
             <p className="stat">{HERO[lang].stat}</p>
+            <img className="hero-phone" src={`/hero-phone-${lang}.webp`} width={260} height={357}
+              alt={HERO_ALT[lang]} />
             <ol className="steps">{HERO[lang].steps.map((x) => <li key={x}>{x}</li>)}</ol>
           </section>
         )}
@@ -266,6 +274,7 @@ export default function App() {
             </form>
             <p className="muted">{s.emailPrivacy}</p>
             <p className="note">{s.disclaimer}</p>
+            <button className="link" onClick={() => { setIndex(qs.length - 1); setStep('quiz'); }}>{s.back}</button>
           </section>
         )}
 
@@ -299,7 +308,7 @@ export default function App() {
       </main>
       {!page && step === 'home' && <HomeSections lang={lang} start={startCheck} startLabel={s.start} />}
       <footer className="muted center no-print">
-        <p>{s.disclaimer}</p>
+        {(page || !['email', 'done', 'offer'].includes(step)) && <p>{s.disclaimer}</p>}
         <FooterLinks lang={lang} />
       </footer>
       {askCookies && (
