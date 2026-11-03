@@ -9,6 +9,13 @@ import { emailReport, saveScreening, type Sex } from './api.ts';
 import { SEO, langPath } from './seo.ts';
 import { HERO, HomeSections } from './home.tsx';
 import { FooterLinks, InfoPage, PAGE_LABELS, pageFromHash, type PageId } from './pages.tsx';
+import { loadPixel, needsConsent, setConsent, track } from './pixel.ts';
+
+const COOKIE_TEXT: Record<Lang, { text: string; yes: string; no: string }> = {
+  en: { text: 'We use a Meta (Facebook) cookie to measure our ads. Your answers and results are never shared.', yes: 'Accept', no: 'Decline' },
+  es: { text: 'Usamos una cookie de Meta (Facebook) para medir nuestros anuncios. Sus respuestas y resultados nunca se comparten.', yes: 'Aceptar', no: 'Rechazar' },
+  ar: { text: 'نستخدم ملف تعريف ارتباط من Meta (فيسبوك) لقياس إعلاناتنا. لا تتم مشاركة إجاباتك أو نتائجك أبدًا.', yes: 'موافق', no: 'رفض' },
+};
 
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
 
@@ -71,6 +78,7 @@ export default function App() {
   const [screeningId, setScreeningId] = useState<string | null>(offerFromUrl);
   const [busy, setBusy] = useState(false);
   const [page, setPage] = useState<PageId | null>(pageFromHash);
+  const [askCookies, setAskCookies] = useState(needsConsent);
   const s = t[lang];
   const months = age?.months ?? 0;
   const qs = useMemo(() => questionsForAge(months), [months]);
@@ -88,6 +96,11 @@ export default function App() {
   }, [lang, s]);
 
   useEffect(() => { window.scrollTo(0, 0); }, [step, index, page]);
+
+  // Ad measurement: only for visitors who accepted cookies (see pixel.ts).
+  useEffect(() => { loadPixel(); }, []);
+  const decideCookies = (v: 'yes' | 'no') => { setConsent(v); setAskCookies(false); };
+  const startCheck = () => { track('StartCheck'); setStep('age'); };
 
   // Policy and sample pages live at #privacy, #terms, #refund and #sample.
   useEffect(() => {
@@ -128,6 +141,7 @@ export default function App() {
         ageRange: age.range, months, sex, email: email.trim(), marketing, language: lang, answers, result,
       });
       setScreeningId(id);
+      track('Lead');
       setSent(await emailReport(id));
     } catch {
       setSent(false);
@@ -139,6 +153,7 @@ export default function App() {
   const getDetailed = () => {
     if (!screeningId) return;
     setBusy(true);
+    track('InitiateCheckout');
     goToCheckout(screeningId, lang, EMAIL.test(email.trim()) ? email.trim() : undefined);
   };
 
@@ -185,7 +200,7 @@ export default function App() {
             <ul className="chips">{HERO[lang].chips.map((c) => <li key={c}>{c}</li>)}</ul>
             <h1>{HERO[lang].title}</h1>
             <p className="lead">{HERO[lang].text}</p>
-            <button className="primary big" onClick={() => setStep('age')}>{s.start}</button>
+            <button className="primary big" onClick={startCheck}>{s.start}</button>
             <p className="stat">{HERO[lang].stat}</p>
             <ol className="steps">{HERO[lang].steps.map((x) => <li key={x}>{x}</li>)}</ol>
           </section>
@@ -282,11 +297,20 @@ export default function App() {
         )}
         </>}
       </main>
-      {!page && step === 'home' && <HomeSections lang={lang} start={() => setStep('age')} startLabel={s.start} />}
+      {!page && step === 'home' && <HomeSections lang={lang} start={startCheck} startLabel={s.start} />}
       <footer className="muted center no-print">
         <p>{s.disclaimer}</p>
         <FooterLinks lang={lang} />
       </footer>
+      {askCookies && (
+        <div className="cookie no-print" role="dialog" aria-live="polite">
+          <p>{COOKIE_TEXT[lang].text} <a href="#privacy">{PAGE_LABELS[lang].privacy}</a></p>
+          <div>
+            <button className="secondary" onClick={() => decideCookies('no')}>{COOKIE_TEXT[lang].no}</button>
+            <button className="secondary accept" onClick={() => decideCookies('yes')}>{COOKIE_TEXT[lang].yes}</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
