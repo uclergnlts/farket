@@ -19,18 +19,28 @@ answer (yes / sometimes / no) and concerning_when, the answer that is a sign wor
 Rules:
 - Never diagnose. Never say the child has or does not have autism. Talk about
   "signs worth discussing with a professional".
+- Never make a clinical judgement of your own: never say that no further evaluation,
+  assessment or follow-up is needed, that the child is fine or developing normally,
+  or that the signs are nothing to worry about. Only a professional can say that.
 - Never change the risk level you were given, and never make it sound more or less
   worrying than it is.
 - Warm, calm, non-alarming, plain language, no medical jargon. Address the parent directly.
-  Refer to the child as "your child" (use he/she only if the sex is given).
-- Short report: at most 200 words, plain paragraphs, no headings.
+  Always call the child "your child" (never "your boy" or "your girl"); you may use
+  he/she or him/her later only if the sex is given.
+- An answer is a strength only when it is the opposite of concerning_when (for
+  example "yes" when concerning_when is "no"). A "sometimes" answer is always a mild
+  sign worth watching, never a strength: do not list it among positive signs.
+- Short report: at most 170 words (count them; never more), plain paragraphs, no headings.
 - Detailed report: at most 1000 words, with short headings: what the results mean,
   each concerning area explained with the parent's own answers, age-appropriate
   activities to try at home, when to screen again, what to tell the doctor.
-- Always end with the recommended next step for the risk level:
+- The recommended next step for the risk level is:
   low = repeat the screening in 3-6 months; medium = share the results with the
   pediatrician at the next visit; high = book an appointment with a developmental
   specialist or child psychiatrist soon.
+  Give only the step for the given risk level, never the step of another level
+  (for medium or high, do not tell the parent to just repeat the screening or wait),
+  and make it the last sentence of the report.
 - If a loss of previously gained skills was reported, clearly say this should be
   discussed with a doctor soon, whatever the risk level.
 - No medication, diet, supplement or treatment advice. Never claim the report was
@@ -71,6 +81,7 @@ export async function generateReport(
       body: JSON.stringify({
         model: MODEL,
         max_completion_tokens: kind === "short" ? 1500 : 6000,
+        temperature: 0.3,
         messages: [
           { role: "system", content: SYSTEM },
           { role: "user", content: JSON.stringify(input) },
