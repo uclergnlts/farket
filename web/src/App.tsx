@@ -3,6 +3,8 @@ import {
   answerLabels, domains, questionsForAge, score, type Answer, type Lang, type Result,
 } from './scoring.ts';
 import { LANG_NAMES, t } from './i18n.ts';
+
+const LANG_SHORT: Record<Lang, string> = { en: 'EN', es: 'ES', ar: 'عربي' };
 import { emailReport, saveScreening, type Sex } from './api.ts';
 import { SEO, langPath } from './seo.ts';
 import { HERO, HomeSections } from './home.tsx';
@@ -162,13 +164,16 @@ export default function App() {
         <button className="brand" onClick={() => { if (page) closePage(); setStep('home'); }}>
           <span className="logo" aria-hidden>●</span> {s.brand}
         </button>
-        <select aria-label="Language" value={lang} onChange={(e) => {
-          const l = e.target.value as Lang;
-          document.cookie = `lang=${l}; path=/; max-age=31536000; samesite=lax`;
-          setLang(l);
-        }}>
-          {(Object.keys(LANG_NAMES) as Lang[]).map((l) => <option key={l} value={l}>{LANG_NAMES[l]}</option>)}
-        </select>
+        <nav className="langs" aria-label="Language">
+          {(Object.keys(LANG_NAMES) as Lang[]).map((l) => (
+            <button key={l} lang={l} title={LANG_NAMES[l]} aria-pressed={lang === l}
+              className={lang === l ? 'on' : undefined}
+              onClick={() => {
+                document.cookie = `lang=${l}; path=/; max-age=31536000; samesite=lax`;
+                setLang(l);
+              }}>{LANG_SHORT[l]}</button>
+          ))}
+        </nav>
       </header>
       {!page && flow.includes(step) && <div className="bar no-print"><div style={{ width: `${progress}%` }} /></div>}
 
