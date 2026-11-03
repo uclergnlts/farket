@@ -44,7 +44,10 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'To calculate your screening result, write your personal report and email it to you.',
           'To deliver the detailed report you paid for, and to handle refunds and support requests.',
           'To send occasional tips about child development, only if you ticked that box. You can unsubscribe at any time.',
-          'We do not sell your data, and we do not use it for advertising.',
+          'We do not sell your data. Your answers, results, your child’s details and your email are never shared with advertisers.',
+        ] },
+        { h: 'Cookies and ads', p: [
+          'If you click “Accept” on the cookie notice, we use the Meta (Facebook) Pixel to measure our ads. It only records that a page was visited, that a check was started, that a report was requested and that the checkout button was clicked. If you decline, it is not loaded. You can change your mind by clearing this site’s data in your browser.',
         ] },
         { h: 'Legal basis', p: [
           'Information about your child’s development is sensitive. We process it only with your explicit consent, which you give by completing the check and submitting your email. We process order details to perform our contract with you.',
@@ -55,6 +58,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'Resend (sends the report emails).',
           'Lemon Squeezy (handles payments as our merchant of record).',
           'Vercel (hosts the website).',
+          'Meta Platforms (ad measurement, only if you accept cookies).',
           'These providers process data only on our instructions. Some are located outside your country, including the United States; they use standard contractual safeguards.',
         ] },
         { h: 'How long we keep it', p: [
@@ -172,7 +176,10 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'Para calcular su resultado, escribir su informe personal y enviárselo por correo.',
           'Para entregar el informe detallado que compró y atender reembolsos y consultas.',
           'Para enviar consejos ocasionales sobre el desarrollo infantil, solo si marcó esa casilla. Puede darse de baja en cualquier momento.',
-          'No vendemos sus datos ni los usamos para publicidad.',
+          'No vendemos sus datos. Sus respuestas, resultados, los datos de su hijo y su correo nunca se comparten con anunciantes.',
+        ] },
+        { h: 'Cookies y anuncios', p: [
+          'Si pulsa “Aceptar” en el aviso de cookies, usamos el Píxel de Meta (Facebook) para medir nuestros anuncios. Solo registra que se visitó una página, que se empezó una revisión, que se pidió un informe y que se pulsó el botón de pago. Si lo rechaza, no se carga. Puede cambiar de opinión borrando los datos de este sitio en su navegador.',
         ] },
         { h: 'Base legal', p: [
           'La información sobre el desarrollo de su hijo es sensible. Solo la tratamos con su consentimiento explícito, que da al completar la revisión y enviar su correo. Los datos del pedido se tratan para cumplir nuestro contrato con usted.',
@@ -183,6 +190,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'Resend (envía los correos con los informes).',
           'Lemon Squeezy (gestiona los pagos como comerciante registrado).',
           'Vercel (aloja el sitio web).',
+          'Meta Platforms (medición de anuncios, solo si acepta las cookies).',
           'Estos proveedores tratan los datos solo según nuestras instrucciones. Algunos están fuera de su país, incluido Estados Unidos, y aplican cláusulas contractuales estándar.',
         ] },
         { h: 'Cuánto tiempo los guardamos', p: [
@@ -298,7 +306,10 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'لحساب نتيجة الفحص وكتابة تقريرك الشخصي وإرساله إليك بالبريد الإلكتروني.',
           'لتسليم التقرير المفصّل الذي دفعت ثمنه، ومعالجة طلبات الاسترداد والدعم.',
           'لإرسال نصائح حول نمو الطفل من حين لآخر، فقط إذا اخترت ذلك. ويمكنك إلغاء الاشتراك في أي وقت.',
-          'لا نبيع بياناتك ولا نستخدمها للإعلانات.',
+          'لا نبيع بياناتك. لا تتم مشاركة إجاباتك أو نتائجك أو بيانات طفلك أو بريدك الإلكتروني مع المعلنين أبدًا.',
+        ] },
+        { h: 'ملفات تعريف الارتباط والإعلانات', p: [
+          'إذا ضغطت «موافق» في إشعار ملفات تعريف الارتباط، نستخدم بكسل Meta (فيسبوك) لقياس إعلاناتنا. وهو يسجّل فقط زيارة الصفحة، وبدء الفحص، وطلب التقرير، والضغط على زر الدفع. إذا رفضت، فلن يتم تحميله. ويمكنك تغيير رأيك بمسح بيانات هذا الموقع من متصفحك.',
         ] },
         { h: 'الأساس القانوني', p: [
           'المعلومات المتعلقة بنمو طفلك حساسة، ولا نعالجها إلا بموافقتك الصريحة التي تقدّمها عند إكمال الفحص وإرسال بريدك الإلكتروني. ونعالج بيانات الطلب لتنفيذ العقد المبرم معك.',
@@ -309,6 +320,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'Resend (يرسل رسائل التقارير).',
           'Lemon Squeezy (يتولى المدفوعات بصفته التاجر المسجّل).',
           'Vercel (يستضيف الموقع).',
+          'Meta Platforms (قياس الإعلانات، فقط إذا وافقت على ملفات تعريف الارتباط).',
           'يعالج هؤلاء المزوّدون البيانات وفق تعليماتنا فقط. يقع بعضهم خارج بلدك، بما في ذلك الولايات المتحدة، ويطبّقون ضمانات تعاقدية قياسية.',
         ] },
         { h: 'مدة الاحتفاظ', p: [

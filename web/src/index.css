@@ -80,3 +80,9 @@ a { color: var(--brand); }
 .faq { border-top: 1px solid var(--line); padding: 14px 0; }
 .faq summary { cursor: pointer; font-weight: 600; }
 .faq p { margin: 8px 0 0; color: var(--muted); }
+
+.cookie { position: fixed; inset-inline: 12px; bottom: 12px; max-width: 616px; margin: 0 auto; background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; box-shadow: 0 8px 24px rgba(36,32,58,.15); font-size: 14px; z-index: 10; }
+.cookie p { margin: 0 0 8px; }
+.cookie div { display: flex; gap: 8px; justify-content: flex-end; }
+.cookie .secondary { margin-top: 0; padding: 8px 14px; }
+.cookie .accept { background: var(--brand); color: var(--brand-ink); }
