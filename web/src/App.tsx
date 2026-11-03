@@ -5,7 +5,7 @@ import {
 import { LANG_NAMES, t } from './i18n.ts';
 import { emailReport, saveScreening, type Sex } from './api.ts';
 import { SEO, langPath } from './seo.ts';
-import { HomeSections } from './home.tsx';
+import { HERO_BADGES, HeroArt, HomeSections } from './home.tsx';
 import { FooterLinks, InfoPage, PAGE_LABELS, pageFromHash, type PageId } from './pages.tsx';
 
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
@@ -153,7 +153,7 @@ export default function App() {
     : step === 'age' ? 5 : step === 'sex' ? 12 : step === 'email' ? 95 : 0;
 
   return (
-    <div className="page">
+    <div className={!page && step === 'home' ? 'page wide' : 'page'}>
       <header className="top no-print">
         <button className="brand" onClick={() => { if (page) closePage(); setStep('home'); }}>
           <span className="logo" aria-hidden>●</span> {s.brand}
@@ -169,13 +169,18 @@ export default function App() {
         {!page && <>
         {step === 'home' && (
           <section>
-            <p className="eyebrow">{s.tagline}</p>
-            <h1>{s.heroTitle}</h1>
-            <p className="lead">{s.heroText}</p>
-            <ol className="how"><li>{s.how1}</li><li>{s.how2}</li><li>{s.how3}</li></ol>
-            <button className="primary" onClick={() => setStep('age')}>{s.start}</button>
-            <p className="muted center">{s.minutes}</p>
-            <p className="center"><a href="#sample">{PAGE_LABELS[lang].sample}</a></p>
+            <div className="hero">
+              <div>
+                <p className="eyebrow">{s.tagline}</p>
+                <h1>{s.heroTitle}</h1>
+                <p className="lead">{s.heroText}</p>
+                <ul className="badges">{HERO_BADGES[lang].map((b) => <li key={b}>{b}</li>)}</ul>
+                <button className="primary" onClick={() => setStep('age')}>{s.start}</button>
+                <p className="muted center">{s.minutes} · <a href="#sample">{PAGE_LABELS[lang].sample}</a></p>
+              </div>
+              <HeroArt />
+            </div>
+            <ol className="steps">{[s.how1, s.how2, s.how3].map((x) => <li key={x}>{x}</li>)}</ol>
           </section>
         )}
 

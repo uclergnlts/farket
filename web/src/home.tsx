@@ -97,6 +97,38 @@ const COPY: Record<Lang, HomeCopy> = {
   },
 };
 
+export const HERO_BADGES: Record<Lang, string[]> = {
+  en: ['Free', 'About 5 minutes', 'No account needed', 'We never ask your child’s name'],
+  es: ['Gratis', 'Unos 5 minutos', 'Sin crear una cuenta', 'Nunca pedimos el nombre de su hijo'],
+  ar: ['مجاني', 'حوالي 5 دقائق', 'دون إنشاء حساب', 'لا نطلب اسم طفلك أبدًا'],
+};
+
+/** Simple illustration: a parent and child talking. Decorative only. */
+export function HeroArt() {
+  return (
+    <svg viewBox="0 0 320 280" role="presentation" aria-hidden="true" className="hero-art">
+      <circle cx="160" cy="150" r="125" fill="var(--brand-soft)" />
+      <circle cx="262" cy="58" r="10" fill="#f4a259" opacity=".7" />
+      <circle cx="52" cy="92" r="6" fill="var(--brand)" opacity=".35" />
+      <circle cx="275" cy="210" r="7" fill="var(--brand)" opacity=".25" />
+      {/* parent */}
+      <rect x="70" y="150" width="96" height="110" rx="44" fill="var(--brand)" />
+      <circle cx="118" cy="112" r="34" fill="#f2c9a5" />
+      <path d="M84 108c0-26 18-40 36-40s34 12 32 38c-10-12-26-16-40-14-12 2-20 8-28 16z" fill="#3b2a6b" />
+      {/* child */}
+      <rect x="180" y="190" width="64" height="70" rx="30" fill="#f4a259" />
+      <circle cx="212" cy="164" r="24" fill="#f2c9a5" />
+      <path d="M190 158c2-16 14-24 24-24 12 0 22 8 22 22-8-8-20-10-30-8-6 2-12 6-16 10z" fill="#8a5a2b" />
+      {/* speech bubble */}
+      <rect x="196" y="70" width="78" height="46" rx="20" fill="#fff" stroke="var(--line)" strokeWidth="2" />
+      <path d="M214 114l-6 16 18-14z" fill="#fff" />
+      <circle cx="218" cy="93" r="5" fill="var(--brand)" />
+      <circle cx="235" cy="93" r="5" fill="var(--brand)" opacity=".7" />
+      <circle cx="252" cy="93" r="5" fill="var(--brand)" opacity=".4" />
+    </svg>
+  );
+}
+
 const ICONS: Record<keyof HomeCopy['areas'], string> = {
   social: '👀', communication: '💬', play: '🧸', behavior: '🔁', regression: '↩️',
 };

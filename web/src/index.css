@@ -81,3 +81,22 @@ a { color: var(--brand); }
 .faq:first-of-type { border-top: 0; }
 .faq summary { cursor: pointer; font-weight: 600; list-style-position: inside; }
 .faq p { margin: 8px 0 0; color: var(--muted); }
+.page.wide { max-width: 1040px; }
+.hero { display: grid; gap: 8px; align-items: center; }
+.hero-art { width: 100%; max-width: 180px; margin: 0 auto; order: -1; }
+.badges { list-style: none; padding: 0; margin: 4px 0 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+.badges li { background: var(--brand-soft); color: #3d3566; border-radius: 99px; padding: 6px 12px; font-size: 14px; font-weight: 500; }
+.badges li::before { content: "✓"; color: var(--brand); font-weight: 700; margin-inline-end: 6px; }
+.steps { list-style: none; counter-reset: step; padding: 0; margin: 28px 0 0; display: grid; gap: 12px; border-top: 1px solid var(--line); padding-top: 24px; }
+.steps li { counter-increment: step; display: flex; gap: 12px; align-items: center; }
+.steps li::before { content: counter(step); flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+@media (min-width: 860px) {
+  .page.wide .card { padding: 40px 48px; }
+  .hero { grid-template-columns: 1.2fr 1fr; gap: 40px; }
+  .hero-art { order: 0; max-width: 380px; }
+  .hero .primary, .home-more .primary { width: auto; padding: 16px 40px; }
+  .hero .muted.center { text-align: start; }
+  .steps { grid-template-columns: repeat(3, 1fr); }
+  .home-more { grid-template-columns: 1fr 1fr; }
+  .home-more > section:nth-child(n+3) { grid-column: 1 / -1; }
+}
