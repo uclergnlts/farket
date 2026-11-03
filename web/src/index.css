@@ -51,6 +51,13 @@ label select { font: inherit; color: var(--ink); padding: 12px; border-radius: 1
 .report { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 8px; }
 .report .bullet { margin: 4px 0; }
 footer { margin-top: 24px; font-size: 12px; }
+a { color: var(--brand); }
+.footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; margin-top: 8px; font-size: 13px; }
+.footer-links a { color: var(--muted); }
+.doc h1 { font-size: clamp(26px, 5vw, 32px); }
+.doc h3 { margin-top: 20px; }
+.doc p { margin: 8px 0; }
+.sample-badge { display: inline-block; background: var(--medium); color: #fff; font-weight: 700; font-size: 13px; letter-spacing: .04em; padding: 4px 10px; border-radius: 8px; margin: 0 0 8px; }
 @media print {
   .no-print, footer { display: none !important; }
   body, .page { background: #fff; } .card { box-shadow: none; padding: 0; }

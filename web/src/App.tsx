@@ -4,6 +4,7 @@ import {
 } from './scoring.ts';
 import { LANG_NAMES, t } from './i18n.ts';
 import { emailReport, saveScreening, type Sex } from './api.ts';
+import { FooterLinks, InfoPage, PAGE_LABELS, pageFromHash, type PageId } from './pages.tsx';
 
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
 
@@ -57,6 +58,7 @@ export default function App() {
   const [sent, setSent] = useState<boolean | null>(null);
   const [screeningId, setScreeningId] = useState<string | null>(offerFromUrl);
   const [busy, setBusy] = useState(false);
+  const [page, setPage] = useState<PageId | null>(pageFromHash);
   const s = t[lang];
   const months = age?.months ?? 0;
   const qs = useMemo(() => questionsForAge(months), [months]);
@@ -67,7 +69,18 @@ export default function App() {
     document.title = `${s.brand} · ${s.tagline}`;
   }, [lang, s]);
 
-  useEffect(() => { window.scrollTo(0, 0); }, [step, index]);
+  useEffect(() => { window.scrollTo(0, 0); }, [step, index, page]);
+
+  // Policy and sample pages live at #privacy, #terms, #refund and #sample.
+  useEffect(() => {
+    const onHash = () => setPage(pageFromHash());
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
+  const closePage = () => {
+    history.pushState(null, '', location.pathname + location.search);
+    setPage(null);
+  };
 
   // Coming back from checkout with the browser's back button re-enables the offer button.
   useEffect(() => {
@@ -119,6 +132,7 @@ export default function App() {
         {busy ? s.reportLoading : s.offerButton}
       </button>
       <p className="muted center">{s.offerNote}</p>
+      <p className="center"><a href="#sample">{PAGE_LABELS[lang].sample}</a></p>
     </div>
   );
 
@@ -129,16 +143,18 @@ export default function App() {
   return (
     <div className="page">
       <header className="top no-print">
-        <button className="brand" onClick={() => setStep('home')}>
+        <button className="brand" onClick={() => { if (page) closePage(); setStep('home'); }}>
           <span className="logo" aria-hidden>●</span> {s.brand}
         </button>
         <select aria-label="Language" value={lang} onChange={(e) => setLang(e.target.value as Lang)}>
           {(Object.keys(LANG_NAMES) as Lang[]).map((l) => <option key={l} value={l}>{LANG_NAMES[l]}</option>)}
         </select>
       </header>
-      {flow.includes(step) && <div className="bar no-print"><div style={{ width: `${progress}%` }} /></div>}
+      {!page && flow.includes(step) && <div className="bar no-print"><div style={{ width: `${progress}%` }} /></div>}
 
       <main className="card">
+        {page && <InfoPage id={page} lang={lang} onBack={closePage} />}
+        {!page && <>
         {step === 'home' && (
           <section>
             <p className="eyebrow">{s.tagline}</p>
@@ -147,6 +163,7 @@ export default function App() {
             <ol className="how"><li>{s.how1}</li><li>{s.how2}</li><li>{s.how3}</li></ol>
             <button className="primary" onClick={() => setStep('age')}>{s.start}</button>
             <p className="muted center">{s.minutes}</p>
+            <p className="center"><a href="#sample">{PAGE_LABELS[lang].sample}</a></p>
           </section>
         )}
 
@@ -239,8 +256,12 @@ export default function App() {
             <button className="link no-print" onClick={() => setStep('home')}>{s.again}</button>
           </section>
         )}
+        </>}
       </main>
-      <footer className="muted center no-print">{s.disclaimer}</footer>
+      <footer className="muted center no-print">
+        <p>{s.disclaimer}</p>
+        <FooterLinks lang={lang} />
+      </footer>
     </div>
   );
 }
