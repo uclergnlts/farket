@@ -45,7 +45,11 @@ function initialLang(): Lang {
   const fromUrl = new URLSearchParams(location.search).get('lang');
   if (fromUrl === 'en' || fromUrl === 'es' || fromUrl === 'ar') return fromUrl;
   if (fromUrl) return 'en';
-  // The English page is the default; only the bare home page follows the browser language.
+  // A language the parent picked before wins (set by the language menu, read by middleware.ts too).
+  const saved = document.cookie.match(/(?:^|; )lang=(en|es|ar)/)?.[1];
+  if (saved) return saved as Lang;
+  // Otherwise the bare home page follows the browser language (middleware.ts already
+  // redirects by country before the page loads).
   const nav = navigator.language.slice(0, 2);
   return nav === 'es' || nav === 'ar' ? nav : 'en';
 }
@@ -158,7 +162,11 @@ export default function App() {
         <button className="brand" onClick={() => { if (page) closePage(); setStep('home'); }}>
           <span className="logo" aria-hidden>●</span> {s.brand}
         </button>
-        <select aria-label="Language" value={lang} onChange={(e) => setLang(e.target.value as Lang)}>
+        <select aria-label="Language" value={lang} onChange={(e) => {
+          const l = e.target.value as Lang;
+          document.cookie = `lang=${l}; path=/; max-age=31536000; samesite=lax`;
+          setLang(l);
+        }}>
           {(Object.keys(LANG_NAMES) as Lang[]).map((l) => <option key={l} value={l}>{LANG_NAMES[l]}</option>)}
         </select>
       </header>
