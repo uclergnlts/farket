@@ -5,7 +5,7 @@ import {
 import { LANG_NAMES, t } from './i18n.ts';
 import { emailReport, saveScreening, type Sex } from './api.ts';
 import { SEO, langPath } from './seo.ts';
-import { HomeSections } from './home.tsx';
+import { HERO, HomeSections } from './home.tsx';
 import { FooterLinks, InfoPage, PAGE_LABELS, pageFromHash, type PageId } from './pages.tsx';
 
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
@@ -45,7 +45,11 @@ function initialLang(): Lang {
   const fromUrl = new URLSearchParams(location.search).get('lang');
   if (fromUrl === 'en' || fromUrl === 'es' || fromUrl === 'ar') return fromUrl;
   if (fromUrl) return 'en';
-  // The English page is the default; only the bare home page follows the browser language.
+  // A language the parent picked before wins (set by the language menu, read by middleware.ts too).
+  const saved = document.cookie.match(/(?:^|; )lang=(en|es|ar)/)?.[1];
+  if (saved) return saved as Lang;
+  // Otherwise the bare home page follows the browser language (middleware.ts already
+  // redirects by country before the page loads).
   const nav = navigator.language.slice(0, 2);
   return nav === 'es' || nav === 'ar' ? nav : 'en';
 }
@@ -158,24 +162,27 @@ export default function App() {
         <button className="brand" onClick={() => { if (page) closePage(); setStep('home'); }}>
           <span className="logo" aria-hidden>●</span> {s.brand}
         </button>
-        <select aria-label="Language" value={lang} onChange={(e) => setLang(e.target.value as Lang)}>
+        <select aria-label="Language" value={lang} onChange={(e) => {
+          const l = e.target.value as Lang;
+          document.cookie = `lang=${l}; path=/; max-age=31536000; samesite=lax`;
+          setLang(l);
+        }}>
           {(Object.keys(LANG_NAMES) as Lang[]).map((l) => <option key={l} value={l}>{LANG_NAMES[l]}</option>)}
         </select>
       </header>
       {!page && flow.includes(step) && <div className="bar no-print"><div style={{ width: `${progress}%` }} /></div>}
 
-      <main className="card">
+      <main className={!page && step === 'home' ? 'home-main' : 'card'}>
         {page && <InfoPage id={page} lang={lang} onBack={closePage} />}
         {!page && <>
         {step === 'home' && (
-          <section>
-            <p className="eyebrow">{s.tagline}</p>
-            <h1>{s.heroTitle}</h1>
-            <p className="lead">{s.heroText}</p>
-            <ol className="how"><li>{s.how1}</li><li>{s.how2}</li><li>{s.how3}</li></ol>
-            <button className="primary" onClick={() => setStep('age')}>{s.start}</button>
-            <p className="muted center">{s.minutes}</p>
-            <p className="center"><a href="#sample">{PAGE_LABELS[lang].sample}</a></p>
+          <section className="hero">
+            <ul className="chips">{HERO[lang].chips.map((c) => <li key={c}>{c}</li>)}</ul>
+            <h1>{HERO[lang].title}</h1>
+            <p className="lead">{HERO[lang].text}</p>
+            <button className="primary big" onClick={() => setStep('age')}>{s.start}</button>
+            <p className="stat">{HERO[lang].stat}</p>
+            <ol className="steps">{HERO[lang].steps.map((x) => <li key={x}>{x}</li>)}</ol>
           </section>
         )}
 
