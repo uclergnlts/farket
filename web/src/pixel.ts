@@ -3,8 +3,8 @@
 // moments: page view, check started, report requested (Lead) and checkout clicked.
 // Answers, results, age, sex and email are never sent to Meta.
 
-/** Fill in the Pixel ID from Meta Events Manager. While empty, nothing loads and no banner shows. */
-export const PIXEL_ID = '';
+/** "Farket Pixel" in Meta Events Manager (Ucler business portfolio). Empty = off: nothing loads, no banner. */
+export const PIXEL_ID = '956917537156142';
 
 const CONSENT_KEY = 'cookie_consent'; // 'yes' | 'no'
 
