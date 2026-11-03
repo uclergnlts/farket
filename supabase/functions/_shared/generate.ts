@@ -1,8 +1,9 @@
-// Shared AI report generation: used by the "report" and "email-report" functions.
-import Anthropic from "npm:@anthropic-ai/sdk@1.3.0";
+// Shared AI report generation (OpenAI): used by "report", "email-report" and the webhook.
+// Secrets: OPENAI_API_KEY (falls back to ANTHROPIC_API_KEY, where the key was first saved),
+// optional OPENAI_MODEL.
 import type { SupabaseClient } from "npm:@supabase/supabase-js@2";
 
-export const MODEL = "claude-opus-5-5";
+export const MODEL = Deno.env.get("OPENAI_MODEL") ?? "gpt-4.1";
 export const LANGUAGES: Record<string, string> = {
   en: "English", es: "Spanish", ar: "Arabic", tr: "Turkish", ru: "Russian",
 };
@@ -60,28 +61,31 @@ export async function generateReport(
     answers: s.answers,
   };
 
-  const client = new Anthropic();
+  const key = Deno.env.get("OPENAI_API_KEY") ?? Deno.env.get("ANTHROPIC_API_KEY");
+  if (!key) { console.error("no OpenAI key"); return { error: "generation_failed" }; }
   let content = "";
   try {
-    const response = await client.beta.messages.create({
-      model: MODEL,
-      max_tokens: kind === "short" ? 4000 : 16000,
-      output_config: { effort: kind === "short" ? "low" : "medium" },
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
-      system: SYSTEM,
-      messages: [{ role: "user", content: JSON.stringify(input) }],
+    const r = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: MODEL,
+        max_completion_tokens: kind === "short" ? 1500 : 6000,
+        messages: [
+          { role: "system", content: SYSTEM },
+          { role: "user", content: JSON.stringify(input) },
+        ],
+      }),
     });
-    if (response.stop_reason === "refusal") {
-      console.error("refusal", JSON.stringify(response.stop_details));
-      return { error: "generation_failed" };
+    if (!r.ok) {
+      console.error("openai error", r.status, (await r.text()).slice(0, 500));
+      return { error: r.status === 429 ? "busy" : "generation_failed" };
     }
-    for (const block of response.content) if (block.type === "text") content += block.text;
+    const data = await r.json();
+    content = data?.choices?.[0]?.message?.content ?? "";
   } catch (e) {
-    console.error("anthropic error", e instanceof Anthropic.APIError ? `${e.status} ${e.message}` : String(e));
-    if (e instanceof Anthropic.RateLimitError) return { error: "busy" };
-    if (e instanceof Anthropic.APIError) return { error: "generation_failed" };
-    throw e;
+    console.error("openai request failed", String(e));
+    return { error: "generation_failed" };
   }
   if (!content.trim()) return { error: "generation_failed" };
 
