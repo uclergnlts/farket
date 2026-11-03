@@ -269,6 +269,7 @@ export default function App() {
             </form>
             <p className="muted">{s.emailPrivacy}</p>
             <p className="note">{s.disclaimer}</p>
+            <button className="link" onClick={() => { setIndex(qs.length - 1); setStep('quiz'); }}>{s.back}</button>
           </section>
         )}
 
@@ -302,7 +303,7 @@ export default function App() {
       </main>
       {!page && step === 'home' && <HomeSections lang={lang} start={startCheck} startLabel={s.start} />}
       <footer className="muted center no-print">
-        <p>{s.disclaimer}</p>
+        {(page || !['email', 'done', 'offer'].includes(step)) && <p>{s.disclaimer}</p>}
         <FooterLinks lang={lang} />
       </footer>
       {askCookies && (

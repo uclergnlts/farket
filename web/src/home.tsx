@@ -55,22 +55,22 @@ export const HERO: Record<Lang, HeroCopy> = {
     title: 'The earlier you know, the more you can help.',
     text: 'Signs of autism can show up before age 2, and support that starts early makes the biggest difference. Answer a few simple questions about your child and find out in 5 minutes whether it’s worth talking to a specialist.',
     stat: 'Pediatricians recommend autism screening at 18 and 24 months.',
-    chips: ['Free', '5 minutes', '6–48 months', 'No sign-up'],
-    steps: ['Answer simple questions about your child', 'See your result right away', 'Know your next step'],
+    chips: ['Free', '5 minutes', '6–48 months', 'No account needed'],
+    steps: ['Answer simple questions about your child', 'Get your result and a free report', 'Know your next step'],
   },
   es: {
     title: 'Cuanto antes lo sepa, más podrá ayudar.',
     text: 'Las señales del autismo pueden aparecer antes de los 2 años, y el apoyo que empieza pronto es el que más ayuda. Responda unas preguntas sencillas sobre su hijo y sepa en 5 minutos si conviene consultar a un especialista.',
     stat: 'Los pediatras recomiendan la detección del autismo a los 18 y 24 meses.',
-    chips: ['Gratis', '5 minutos', '6–48 meses', 'Sin registro'],
-    steps: ['Responda preguntas sencillas sobre su hijo', 'Vea su resultado al instante', 'Sepa cuál es el siguiente paso'],
+    chips: ['Gratis', '5 minutos', '6–48 meses', 'Sin crear cuenta'],
+    steps: ['Responda preguntas sencillas sobre su hijo', 'Reciba su resultado y un informe gratuito', 'Sepa cuál es el siguiente paso'],
   },
   ar: {
     title: 'كلما عرفت مبكرًا، استطعت أن تساعد أكثر.',
     text: 'قد تظهر علامات التوحد قبل عمر السنتين، والدعم الذي يبدأ مبكرًا هو الأكثر فائدة. أجب عن أسئلة بسيطة حول طفلك واعرف خلال 5 دقائق إن كان من المفيد استشارة مختص.',
     stat: 'يوصي أطباء الأطفال بفحص التوحد في عمر 18 و24 شهرًا.',
-    chips: ['مجاني', '5 دقائق', '6–48 شهرًا', 'دون تسجيل'],
-    steps: ['أجب عن أسئلة بسيطة حول طفلك', 'شاهد نتيجتك فورًا', 'اعرف خطوتك التالية'],
+    chips: ['مجاني', '5 دقائق', '6–48 شهرًا', 'دون إنشاء حساب'],
+    steps: ['أجب عن أسئلة بسيطة حول طفلك', 'احصل على نتيجتك وتقرير مجاني', 'اعرف خطوتك التالية'],
   },
 };
 
