@@ -65,38 +65,18 @@ a { color: var(--brand); }
 
 #root > .prerender { max-width: 640px; margin: 72px auto 0; }
 .prerender ul { padding-inline-start: 20px; }
-.home-more { display: grid; gap: 16px; margin-top: 16px; }
-.home-more h2 { font-size: 22px; }
-.areas { list-style: none; padding: 0; margin: 16px 0 0; display: grid; gap: 14px; }
-.areas li { display: flex; gap: 14px; align-items: flex-start; }
-.area-icon { flex: none; width: 40px; height: 40px; border-radius: 12px; background: var(--brand-soft); display: inline-flex; align-items: center; justify-content: center; font-size: 20px; }
-.plans { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-.plan { border: 1.5px solid var(--line); border-radius: 14px; padding: 16px 18px; }
-.plan.featured { border-color: var(--brand); background: var(--brand-soft); }
-.plan-name { font-weight: 700; margin: 0; }
-.plan-price { color: var(--brand); font-weight: 700; font-size: 20px; margin: 4px 0 8px; }
-.plan ul { padding-inline-start: 20px; margin: 0 0 8px; }
-.plan li { margin: 6px 0; }
-.faq { border-top: 1px solid var(--line); padding: 12px 0; }
-.faq:first-of-type { border-top: 0; }
-.faq summary { cursor: pointer; font-weight: 600; list-style-position: inside; }
+.hero { text-align: center; padding: 24px 0 8px; }
+.hero h1 { font-size: clamp(32px, 8vw, 48px); line-height: 1.1; letter-spacing: -0.02em; margin: 20px 0 16px; }
+.hero .lead { color: var(--muted); font-size: 18px; max-width: 34em; margin: 0 auto 28px; }
+.chips { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.chips li { background: var(--brand-soft); color: var(--brand); border-radius: 99px; padding: 6px 14px; font-size: 14px; font-weight: 600; }
+.primary.big { font-size: 19px; padding: 20px; border-radius: 18px; box-shadow: 0 8px 24px rgba(91,60,196,.28); }
+.stat { font-size: 14px; color: var(--muted); margin: 16px 0 0; }
+.steps { list-style: none; counter-reset: step; padding: 0; margin: 40px auto 0; max-width: 380px; display: grid; gap: 14px; text-align: start; }
+.steps li { counter-increment: step; display: flex; gap: 14px; align-items: center; font-weight: 500; }
+.steps li::before { content: counter(step); flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--brand-soft); color: var(--brand); font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+.home-more { margin-top: 48px; display: grid; gap: 24px; }
+.home-more h2 { font-size: 20px; }
+.faq { border-top: 1px solid var(--line); padding: 14px 0; }
+.faq summary { cursor: pointer; font-weight: 600; }
 .faq p { margin: 8px 0 0; color: var(--muted); }
-.page.wide { max-width: 1040px; }
-.hero { display: grid; gap: 8px; align-items: center; }
-.hero-art { width: 100%; max-width: 180px; margin: 0 auto; order: -1; }
-.badges { list-style: none; padding: 0; margin: 4px 0 20px; display: flex; flex-wrap: wrap; gap: 8px; }
-.badges li { background: var(--brand-soft); color: #3d3566; border-radius: 99px; padding: 6px 12px; font-size: 14px; font-weight: 500; }
-.badges li::before { content: "✓"; color: var(--brand); font-weight: 700; margin-inline-end: 6px; }
-.steps { list-style: none; counter-reset: step; padding: 0; margin: 28px 0 0; display: grid; gap: 12px; border-top: 1px solid var(--line); padding-top: 24px; }
-.steps li { counter-increment: step; display: flex; gap: 12px; align-items: center; }
-.steps li::before { content: counter(step); flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--brand); color: #fff; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
-@media (min-width: 860px) {
-  .page.wide .card { padding: 40px 48px; }
-  .hero { grid-template-columns: 1.2fr 1fr; gap: 40px; }
-  .hero-art { order: 0; max-width: 380px; }
-  .hero .primary, .home-more .primary { width: auto; padding: 16px 40px; }
-  .hero .muted.center { text-align: start; }
-  .steps { grid-template-columns: repeat(3, 1fr); }
-  .home-more { grid-template-columns: 1fr 1fr; }
-  .home-more > section:nth-child(n+3) { grid-column: 1 / -1; }
-}
