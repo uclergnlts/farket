@@ -4,6 +4,7 @@ import {
 } from './scoring.ts';
 import { LANG_NAMES, t } from './i18n.ts';
 import { emailReport, saveScreening, type Sex } from './api.ts';
+import { SEO, langPath } from './seo.ts';
 import { FooterLinks, InfoPage, PAGE_LABELS, pageFromHash, type PageId } from './pages.tsx';
 
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
@@ -38,8 +39,12 @@ const AGE_RANGES: { range: [number, number]; months: number }[] = [
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 function initialLang(): Lang {
+  const fromPath = location.pathname.split('/')[1];
+  if (fromPath === 'es' || fromPath === 'ar') return fromPath;
   const fromUrl = new URLSearchParams(location.search).get('lang');
   if (fromUrl === 'en' || fromUrl === 'es' || fromUrl === 'ar') return fromUrl;
+  if (fromUrl) return 'en';
+  // The English page is the default; only the bare home page follows the browser language.
   const nav = navigator.language.slice(0, 2);
   return nav === 'es' || nav === 'ar' ? nav : 'en';
 }
@@ -66,7 +71,13 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.title = `${s.brand} · ${s.tagline}`;
+    document.title = SEO[lang].title;
+    // Keep the address on the language's own page (/, /es/, /ar/) so it can be shared and indexed.
+    const q = new URLSearchParams(location.search);
+    q.delete('lang');
+    const search = q.toString() ? `?${q}` : '';
+    const want = langPath(lang) + search + location.hash;
+    if (location.pathname + location.search + location.hash !== want) history.replaceState(null, '', want);
   }, [lang, s]);
 
   useEffect(() => { window.scrollTo(0, 0); }, [step, index, page]);
