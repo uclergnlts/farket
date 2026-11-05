@@ -6,7 +6,9 @@ export const PAGE_IDS: PageId[] = ['sample', 'privacy', 'terms', 'refund'];
 
 /** Where parents write for questions, data deletion and refunds. */
 export const CONTACT_EMAIL = 'uclergnlts_0101@hotmail.com';
-const UPDATED = '2026-11-03';
+/** Legal name of the person operating Farket (must match the payment provider onboarding). */
+export const OPERATOR = 'Ucler Gonultas';
+const UPDATED = '2026-11-05';
 const PRICE = '$9.99';
 
 export function pageFromHash(): PageId | null {
@@ -18,6 +20,7 @@ interface Section { h?: string; p: string[] }
 interface Doc { title: string; intro?: string; sections: Section[] }
 
 const C = CONTACT_EMAIL;
+const O = OPERATOR;
 
 export const PAGE_LABELS: Record<Lang, Record<PageId, string> & { updated: string; sampleBadge: string; back: string }> = {
   en: { privacy: 'Privacy Policy', terms: 'Terms of Use', refund: 'Refund Policy', sample: 'Sample report',
@@ -34,6 +37,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
       title: 'Privacy Policy',
       intro: 'Farket (farket.uclergnlts.com) is an online early development screening service for children aged 6 to 48 months. This policy explains what we collect, why, and the choices you have.',
       sections: [
+        { h: 'Who runs Farket', p: [`Farket is operated by ${O}, an individual seller based in Turkey. Contact: ${C}.`] },
         { h: 'What we collect', p: [
           'Your child’s age range and sex (or “prefer not to say”), and your answers to the screening questions.',
           'Your email address, so we can send you your report, and whether you agreed to receive occasional tips.',
@@ -79,6 +83,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
       title: 'Terms of Use',
       intro: 'By using Farket you agree to these terms. Please read them, especially the part about what the service is not.',
       sections: [
+        { h: 'Who runs Farket', p: [`Farket is operated by ${O}, an individual seller based in Turkey. Contact: ${C}.`] },
         { h: 'Screening, not diagnosis', p: [
           'Farket is a screening tool. It is not a medical device and does not diagnose autism or any other condition. Results and reports are based only on the answers you give and are written with the help of artificial intelligence. They do not replace an evaluation by a doctor or a qualified specialist.',
           'If you are worried about your child’s development, talk to your pediatrician whatever the result. In an emergency, contact your local emergency services.',
@@ -166,6 +171,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
       title: 'Política de privacidad',
       intro: 'Farket (farket.uclergnlts.com) es un servicio en línea de detección del desarrollo temprano para niños de 6 a 48 meses. Esta política explica qué datos recogemos, para qué y qué opciones tiene.',
       sections: [
+        { h: 'Quién gestiona Farket', p: [`Farket está gestionado por ${O}, vendedor individual con sede en Turquía. Contacto: ${C}.`] },
         { h: 'Qué recogemos', p: [
           'El rango de edad y el sexo de su hijo (o “prefiero no decirlo”) y sus respuestas a las preguntas.',
           'Su correo electrónico, para enviarle el informe, y si aceptó recibir consejos ocasionales.',
@@ -211,6 +217,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
       title: 'Términos de uso',
       intro: 'Al usar Farket acepta estos términos. Léalos, sobre todo la parte que explica lo que el servicio no es.',
       sections: [
+        { h: 'Quién gestiona Farket', p: [`Farket está gestionado por ${O}, vendedor individual con sede en Turquía. Contacto: ${C}.`] },
         { h: 'Detección, no diagnóstico', p: [
           'Farket es una herramienta de detección. No es un dispositivo médico y no diagnostica el autismo ni ninguna otra condición. Los resultados e informes se basan solo en sus respuestas y se redactan con ayuda de inteligencia artificial. No sustituyen la evaluación de un médico o especialista.',
           'Si le preocupa el desarrollo de su hijo, hable con su pediatra sea cual sea el resultado. En una emergencia, llame a los servicios de emergencia locales.',
@@ -296,6 +303,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
       title: 'سياسة الخصوصية',
       intro: 'Farket ‏(farket.uclergnlts.com) خدمة إلكترونية للفحص الأولي للنمو المبكر للأطفال من عمر 6 إلى 48 شهرًا. توضح هذه السياسة البيانات التي نجمعها وسبب جمعها والخيارات المتاحة لك.',
       sections: [
+        { h: 'من يدير Farket', p: [`يدير Farket ‏${O}، وهو بائع فرد مقيم في تركيا. للتواصل: ${C}.`] },
         { h: 'ما الذي نجمعه', p: [
           'الفئة العمرية لطفلك وجنسه (أو «أفضّل عدم الإجابة»)، وإجاباتك عن أسئلة الفحص.',
           'بريدك الإلكتروني لإرسال التقرير إليك، وما إذا كنت قد وافقت على تلقي نصائح من حين لآخر.',
@@ -341,6 +349,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
       title: 'شروط الاستخدام',
       intro: 'باستخدامك Farket فإنك توافق على هذه الشروط. يرجى قراءتها، خاصة الجزء الذي يوضح ما ليست عليه الخدمة.',
       sections: [
+        { h: 'من يدير Farket', p: [`يدير Farket ‏${O}، وهو بائع فرد مقيم في تركيا. للتواصل: ${C}.`] },
         { h: 'فحص أولي وليس تشخيصًا', p: [
           'Farket أداة فحص أولي، وليست جهازًا طبيًا، ولا تشخّص التوحد أو أي حالة أخرى. تعتمد النتائج والتقارير فقط على إجاباتك وتُكتب بمساعدة الذكاء الاصطناعي، ولا تغني عن تقييم طبيب أو مختص مؤهل.',
           'إذا كنت قلقًا بشأن نمو طفلك، فتحدث إلى طبيب الأطفال مهما كانت النتيجة. وفي حالات الطوارئ، اتصل بخدمات الطوارئ المحلية.',
@@ -445,12 +454,17 @@ export function InfoPage({ id, lang, onBack }: { id: PageId; lang: Lang; onBack:
   );
 }
 
+const OPERATED_BY: Record<Lang, string> = {
+  en: `Operated by ${OPERATOR} · Turkey`, es: `Gestionado por ${OPERATOR} · Turquía`, ar: `يديره ${OPERATOR} · تركيا`,
+};
+
 export function FooterLinks({ lang }: { lang: Lang }) {
   const L = PAGE_LABELS[lang];
   return (
     <nav className="footer-links">
       {PAGE_IDS.map((id) => <a key={id} href={`#${id}`}>{L[id]}</a>)}
       <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+      <span className="operator">{OPERATED_BY[lang]}</span>
     </nav>
   );
 }

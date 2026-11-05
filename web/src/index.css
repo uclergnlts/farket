@@ -90,3 +90,4 @@ a { color: var(--brand); }
 .cookie div { display: flex; gap: 8px; justify-content: flex-end; }
 .cookie .secondary { margin-top: 0; padding: 8px 14px; }
 .cookie .accept { background: var(--brand); color: var(--brand-ink); }
+.footer-links .operator { color: var(--muted); flex-basis: 100%; text-align: center; }
