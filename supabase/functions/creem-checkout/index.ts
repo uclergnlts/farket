@@ -3,8 +3,10 @@
 // Answers 503 { error: "not_configured" } until the Creem secrets are set; the website then
 // falls back to the Lemon Squeezy checkout link.
 // Secrets: CREEM_API_KEY, CREEM_PRODUCT_ID, SITE_URL; CREEM_TEST_MODE=true uses the test API.
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { json, preflight } from "../_shared/generate.ts";
-import { admin } from "../_shared/purchase.ts";
+
+const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
 const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const UUID = /^[0-9a-f-]{36}$/i;
