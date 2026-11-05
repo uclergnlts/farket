@@ -72,7 +72,7 @@ export function seoHead(l: SeoLang): string {
     operatingSystem: 'Any (web browser)',
     offers: [
       { '@type': 'Offer', name: 'Screening and personal report', price: '0', priceCurrency: 'USD' },
-      { '@type': 'Offer', name: 'Detailed development report', price: '9.99', priceCurrency: 'USD' },
+      { '@type': 'Offer', name: 'Detailed development report', price: '4.99', priceCurrency: 'USD' },
     ],
   };
   return `<title>${esc(s.title)}</title>

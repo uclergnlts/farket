@@ -25,7 +25,7 @@ const HERO_ALT: Record<Lang, string> = {
 
 type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer' | 'paid';
 
-/** Lemon Squeezy hosted checkout for the $9.99 detailed report (fallback). */
+/** Lemon Squeezy hosted checkout for the $4.99 detailed report (fallback). */
 const LS_CHECKOUT_URL = 'https://ucler.lemonsqueezy.com/checkout/buy/664f6fb7-1692-44c0-9019-57e71ff46a69';
 
 /**

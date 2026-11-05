@@ -9,7 +9,7 @@ export const CONTACT_EMAIL = 'uclergnlts_0101@hotmail.com';
 /** Legal name of the person operating Farket (must match the payment provider onboarding). */
 export const OPERATOR = 'Ucler Gonultas';
 const UPDATED = '2026-11-05';
-const PRICE = '$9.99';
+const PRICE = '$4.99';
 
 export function pageFromHash(): PageId | null {
   const h = location.hash.replace(/^#\/?/, '');
