@@ -56,7 +56,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'Supabase (database and servers, hosted in the EU, Frankfurt).',
           'OpenAI (writes the report text from your answers; answers are sent without your email address. OpenAI does not use API data to train its models).',
           'Resend (sends the report emails).',
-          'Lemon Squeezy (handles payments as our merchant of record).',
+          'Creem and Lemon Squeezy (handle payments as our merchant of record).',
           'Vercel (hosts the website).',
           'Meta Platforms (ad measurement, only if you accept cookies).',
           'These providers process data only on our instructions. Some are located outside your country, including the United States; they use standard contractual safeguards.',
@@ -89,7 +89,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         { h: 'Free and paid parts', p: [
           'The screening, your result and your personal report are free. The result and the advice to see a specialist are never behind a payment.',
           `The detailed development report is an optional one-time purchase (${PRICE}, prices shown at checkout include applicable taxes). It is a digital product delivered by email, normally within a few minutes. There is no subscription and no recurring charge. Because each report is personalized, sales are final; see our Refund Policy.`,
-          'Payments are processed by Lemon Squeezy, our reseller and merchant of record, which also handles taxes and invoices. Their buyer terms apply to the payment.',
+          'Payments are processed by Creem or Lemon Squeezy, our reseller and merchant of record, which also handles taxes and invoices. Their buyer terms apply to the payment.',
         ] },
         { h: 'Acceptable use', p: [
           'Do not misuse the service: no automated access, no attempts to break or overload it, and no entering other people’s data without their permission.',
@@ -123,8 +123,8 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'If your report has not arrived within 24 hours (please check your spam folder first), write to us. We will send it again, and if we cannot deliver it we will refund you in full.',
         ] },
         { h: 'How to ask', p: [
-          `Email ${C} with the email address you used and your order number. You can also reply to your Lemon Squeezy receipt email.`,
-          'Refunds go back to your original payment method through Lemon Squeezy. Depending on your bank, they usually appear within 5 to 10 business days.',
+          `Email ${C} with the email address you used and your order number. You can also reply to your payment receipt email.`,
+          'Refunds go back to your original payment method through our payment provider. Depending on your bank, they usually appear within 5 to 10 business days.',
         ] },
         { h: 'No subscriptions', p: [
           'Farket has no subscriptions, so there is nothing to cancel and you will never be charged again.',
@@ -188,7 +188,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'Supabase (base de datos y servidores, alojados en la UE, Fráncfort).',
           'OpenAI (redacta el texto del informe a partir de sus respuestas; se envían sin su correo. OpenAI no usa los datos de la API para entrenar sus modelos).',
           'Resend (envía los correos con los informes).',
-          'Lemon Squeezy (gestiona los pagos como comerciante registrado).',
+          'Creem y Lemon Squeezy (gestionan los pagos como comerciante registrado).',
           'Vercel (aloja el sitio web).',
           'Meta Platforms (medición de anuncios, solo si acepta las cookies).',
           'Estos proveedores tratan los datos solo según nuestras instrucciones. Algunos están fuera de su país, incluido Estados Unidos, y aplican cláusulas contractuales estándar.',
@@ -221,7 +221,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         { h: 'Partes gratuitas y de pago', p: [
           'La revisión, su resultado y su informe personal son gratuitos. El resultado y la recomendación de ver a un especialista nunca están detrás de un pago.',
           `El informe detallado del desarrollo es una compra única y opcional (${PRICE}; los precios en el pago incluyen los impuestos aplicables). Es un producto digital que se entrega por correo, normalmente en pocos minutos. No hay suscripción ni cargos recurrentes. Como cada informe es personalizado, las ventas son definitivas; consulte nuestra Política de reembolso.`,
-          'Los pagos los procesa Lemon Squeezy, nuestro revendedor y comerciante registrado, que también gestiona impuestos y facturas. Sus condiciones para compradores se aplican al pago.',
+          'Los pagos los procesa Creem o Lemon Squeezy, nuestro revendedor y comerciante registrado, que también gestiona impuestos y facturas. Sus condiciones para compradores se aplican al pago.',
         ] },
         { h: 'Uso aceptable', p: [
           'No haga un mal uso del servicio: nada de acceso automatizado, intentos de dañarlo o sobrecargarlo, ni introducir datos de otras personas sin su permiso.',
@@ -255,8 +255,8 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'Si su informe no ha llegado en 24 horas (revise primero la carpeta de spam), escríbanos. Se lo volveremos a enviar y, si no podemos entregarlo, le devolveremos el importe completo.',
         ] },
         { h: 'Cómo pedirlo', p: [
-          `Escriba a ${C} con el correo que usó y su número de pedido. También puede responder al correo de recibo de Lemon Squeezy.`,
-          'El reembolso vuelve a su método de pago original a través de Lemon Squeezy. Según su banco, suele aparecer en 5 a 10 días hábiles.',
+          `Escriba a ${C} con el correo que usó y su número de pedido. También puede responder al correo de recibo del pago.`,
+          'El reembolso vuelve a su método de pago original a través de nuestro proveedor de pagos. Según su banco, suele aparecer en 5 a 10 días hábiles.',
         ] },
         { h: 'Sin suscripciones', p: [
           'Farket no tiene suscripciones: no hay nada que cancelar y nunca se le volverá a cobrar.',
@@ -318,7 +318,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'Supabase (قاعدة البيانات والخوادم، مستضافة في الاتحاد الأوروبي، فرانكفورت).',
           'OpenAI (يكتب نص التقرير بناءً على إجاباتك؛ تُرسل الإجابات دون بريدك الإلكتروني، ولا تستخدم OpenAI بيانات واجهة البرمجة لتدريب نماذجها).',
           'Resend (يرسل رسائل التقارير).',
-          'Lemon Squeezy (يتولى المدفوعات بصفته التاجر المسجّل).',
+          'Creem وLemon Squeezy (يتوليان المدفوعات بصفتهما التاجر المسجّل).',
           'Vercel (يستضيف الموقع).',
           'Meta Platforms (قياس الإعلانات، فقط إذا وافقت على ملفات تعريف الارتباط).',
           'يعالج هؤلاء المزوّدون البيانات وفق تعليماتنا فقط. يقع بعضهم خارج بلدك، بما في ذلك الولايات المتحدة، ويطبّقون ضمانات تعاقدية قياسية.',
@@ -351,7 +351,7 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         { h: 'الأجزاء المجانية والمدفوعة', p: [
           'الفحص ونتيجتك وتقريرك الشخصي مجانية. ولا تُوضع النتيجة ونصيحة مراجعة المختص خلف أي دفع أبدًا.',
           `تقرير النمو المفصّل عملية شراء اختيارية لمرة واحدة (${PRICE}، وتشمل الأسعار المعروضة عند الدفع الضرائب المطبّقة). وهو منتج رقمي يُرسل بالبريد الإلكتروني، عادةً خلال دقائق. لا يوجد اشتراك ولا رسوم متكررة. ولأن كل تقرير مخصّص، فإن جميع المبيعات نهائية؛ راجع سياسة الاسترداد.`,
-          'تتولى Lemon Squeezy معالجة المدفوعات بصفتها البائع والتاجر المسجّل، وتتولى أيضًا الضرائب والفواتير. وتسري شروطها الخاصة بالمشترين على عملية الدفع.',
+          'تتولى Creem أو Lemon Squeezy معالجة المدفوعات بصفتها البائع والتاجر المسجّل، وتتولى أيضًا الضرائب والفواتير. وتسري شروطها الخاصة بالمشترين على عملية الدفع.',
         ] },
         { h: 'الاستخدام المقبول', p: [
           'لا تُسئ استخدام الخدمة: يُمنع الوصول الآلي، ومحاولات تعطيلها أو إثقالها، وإدخال بيانات أشخاص آخرين دون إذنهم.',
@@ -385,8 +385,8 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
           'إذا لم يصل تقريرك خلال 24 ساعة (يرجى التحقق من مجلد الرسائل غير المرغوب فيها أولًا)، فراسلنا. سنعيد إرساله، وإذا تعذّر تسليمه فسنعيد إليك المبلغ كاملًا.',
         ] },
         { h: 'كيف تطلب الاسترداد', p: [
-          `راسلنا على ${C} بالبريد الإلكتروني الذي استخدمته ورقم الطلب. ويمكنك أيضًا الرد على رسالة الإيصال من Lemon Squeezy.`,
-          'يُعاد المبلغ إلى وسيلة الدفع الأصلية عبر Lemon Squeezy، ويظهر عادةً خلال 5 إلى 10 أيام عمل حسب البنك.',
+          `راسلنا على ${C} بالبريد الإلكتروني الذي استخدمته ورقم الطلب. ويمكنك أيضًا الرد على رسالة إيصال الدفع.`,
+          'يُعاد المبلغ إلى وسيلة الدفع الأصلية عبر مزوّد الدفع لدينا، ويظهر عادةً خلال 5 إلى 10 أيام عمل حسب البنك.',
         ] },
         { h: 'لا اشتراكات', p: [
           'لا يوجد في Farket أي اشتراك، فلا شيء لإلغائه ولن تُحاسب مرة أخرى أبدًا.',
