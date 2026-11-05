@@ -56,6 +56,6 @@ export type PixelEvent = 'StartCheck' | 'Lead' | 'InitiateCheckout';
 export function track(event: PixelEvent) {
   if (!loaded || !window.fbq) return;
   if (event === 'StartCheck') window.fbq('trackCustom', 'StartCheck');
-  else if (event === 'InitiateCheckout') window.fbq('track', 'InitiateCheckout', { value: 9.99, currency: 'USD' });
+  else if (event === 'InitiateCheckout') window.fbq('track', 'InitiateCheckout', { value: 4.99, currency: 'USD' });
   else window.fbq('track', event);
 }

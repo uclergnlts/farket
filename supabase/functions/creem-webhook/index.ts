@@ -1,4 +1,4 @@
-// Creem webhook: records the $9.99 detailed report purchase and emails the report.
+// Creem webhook: records the $4.99 detailed report purchase and emails the report.
 // Events: checkout.completed, refund.created. The checkout is created by creem-checkout with
 // request_id = screening id (also in metadata.screening_id).
 // Deployed with verify_jwt=false; requests are checked with the creem-signature header

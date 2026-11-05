@@ -1,4 +1,4 @@
-// Lemon Squeezy webhook: records the $9.99 detailed report purchase and emails the report.
+// Lemon Squeezy webhook: records the $4.99 detailed report purchase and emails the report.
 // Events: order_created, order_refunded. The checkout link carries
 // checkout[custom][screening_id], which arrives here as meta.custom_data.screening_id.
 // Deployed with verify_jwt=false; requests are checked with the X-Signature HMAC instead.

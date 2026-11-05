@@ -1,4 +1,4 @@
-// Starts a Creem checkout for the $9.99 detailed report of one screening.
+// Starts a Creem checkout for the $4.99 detailed report of one screening.
 // POST { screening_id: string, email?: string, lang?: string } -> { url }
 // Answers 503 { error: "not_configured" } until the Creem secrets are set; the website then
 // falls back to the Lemon Squeezy checkout link.
