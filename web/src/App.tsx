@@ -5,7 +5,7 @@ import {
 import { LANG_NAMES, t } from './i18n.ts';
 
 const LANG_SHORT: Record<Lang, string> = { en: 'EN', es: 'ES', ar: 'عربي' };
-import { emailReport, saveScreening, type Sex } from './api.ts';
+import { creemCheckoutUrl, emailReport, saveScreening, type Sex } from './api.ts';
 import { SEO, langPath } from './seo.ts';
 import { HERO, HomeSections } from './home.tsx';
 import { FooterLinks, InfoPage, PAGE_LABELS, pageFromHash, type PageId } from './pages.tsx';
@@ -23,14 +23,19 @@ const HERO_ALT: Record<Lang, string> = {
   ar: 'سؤال من Farket على شاشة هاتف',
 };
 
-type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer';
+type Step = 'home' | 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer' | 'paid';
 
-/** Lemon Squeezy hosted checkout for the $9.99 detailed report. */
-const CHECKOUT_URL = 'https://ucler.lemonsqueezy.com/checkout/buy/664f6fb7-1692-44c0-9019-57e71ff46a69';
+/** Lemon Squeezy hosted checkout for the $9.99 detailed report (fallback). */
+const LS_CHECKOUT_URL = 'https://ucler.lemonsqueezy.com/checkout/buy/664f6fb7-1692-44c0-9019-57e71ff46a69';
 
-/** Sends the parent to checkout; the webhook emails the detailed report after payment. */
-function goToCheckout(screeningId: string, lang: Lang, email?: string) {
-  const u = new URL(CHECKOUT_URL);
+/**
+ * Sends the parent to checkout; the payment webhook emails the detailed report after payment.
+ * Creem is used once its secrets are set on the server; until then, Lemon Squeezy.
+ */
+async function goToCheckout(screeningId: string, lang: Lang, email?: string) {
+  const creem = await creemCheckoutUrl(screeningId, lang, email);
+  if (creem) { location.href = creem; return; }
+  const u = new URL(LS_CHECKOUT_URL);
   u.searchParams.set('checkout[custom][screening_id]', screeningId);
   if (email) u.searchParams.set('checkout[email]', email);
   u.searchParams.set('locale', lang);
@@ -42,6 +47,11 @@ function offerFromUrl(): string | null {
   const p = new URLSearchParams(location.search);
   const id = p.get('s');
   return p.get('offer') === 'detailed' && id && /^[0-9a-f-]{36}$/i.test(id) ? id : null;
+}
+
+/** Back from a paid checkout: ?paid=1. */
+function paidFromUrl(): boolean {
+  return new URLSearchParams(location.search).get('paid') === '1';
 }
 
 /** Age ranges offered to parents; questions are picked for the range's typical age. */
@@ -71,7 +81,7 @@ function initialLang(): Lang {
 
 export default function App() {
   const [lang, setLang] = useState<Lang>(initialLang);
-  const [step, setStep] = useState<Step>(() => (offerFromUrl() ? 'offer' : 'home'));
+  const [step, setStep] = useState<Step>(() => (paidFromUrl() ? 'paid' : offerFromUrl() ? 'offer' : 'home'));
   const [age, setAge] = useState<(typeof AGE_RANGES)[number] | null>(null);
   const [sex, setSex] = useState<Sex | null>(null);
   const [index, setIndex] = useState(0);
@@ -295,6 +305,13 @@ export default function App() {
             {offerCard}
             <p className="note">{s.disclaimer}</p>
             <button className="link no-print" onClick={restart}>{s.again}</button>
+          </section>
+        )}
+        {step === 'paid' && (
+          <section>
+            <h2>{s.paidTitle}</h2>
+            <p>{s.paidText}</p>
+            <button className="link no-print" onClick={() => setStep('home')}>{s.again}</button>
           </section>
         )}
         {step === 'offer' && (

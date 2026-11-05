@@ -71,3 +71,15 @@ export async function fetchReport(
   if (status === 503) return { error: 'busy' };
   return { error: 'failed' };
 }
+
+/** A Creem checkout page for the detailed report, or null when Creem is not set up (yet). */
+export async function creemCheckoutUrl(screeningId: string, language: Lang, email?: string): Promise<string | null> {
+  try {
+    const { data, error } = await supabase.functions.invoke('creem-checkout', {
+      body: { screening_id: screeningId, lang: language, email },
+    });
+    return !error && typeof data?.url === 'string' ? data.url : null;
+  } catch {
+    return null;
+  }
+}
