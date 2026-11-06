@@ -47,11 +47,11 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         { h: 'Why we use it', p: [
           'To calculate your screening result, write your personal report and email it to you.',
           'To deliver the detailed report you paid for, and to handle refunds and support requests.',
-          'To send occasional tips about child development, only if you ticked that box. You can unsubscribe at any time.',
+          'To send occasional tips about child development, which may mention the detailed report, only if you ticked that box. Every tip email has an unsubscribe link. We also count, without answers or contact details, which step of the check visitors reach, so we can make it easier to finish.',
           'We do not sell your data. Your answers, results, your child’s details and your email are never shared with advertisers.',
         ] },
         { h: 'Cookies and ads', p: [
-          'If you click “Accept” on the cookie notice, we use the Meta (Facebook) Pixel to measure our ads. It only records that a page was visited, that a check was started, that a report was requested and that the checkout button was clicked. If you decline, it is not loaded. You can change your mind by clearing this site’s data in your browser.',
+          'If you click “Accept” on the cookie notice, we use the Meta (Facebook) Pixel to measure our ads. It only records that a page was visited, that a check was started, that a report was requested and that the checkout button was clicked. When you request your report, we also send Meta a scrambled (hashed) form of your email address from our server, so the ad result is counted once and correctly. Your answers and results are never sent. If you decline, none of this happens. You can change your mind by clearing this site’s data in your browser.',
         ] },
         { h: 'Legal basis', p: [
           'Information about your child’s development is sensitive. We process it only with your explicit consent, which you give by completing the check and submitting your email. We process order details to perform our contract with you.',
@@ -181,11 +181,11 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         { h: 'Para qué lo usamos', p: [
           'Para calcular su resultado, escribir su informe personal y enviárselo por correo.',
           'Para entregar el informe detallado que compró y atender reembolsos y consultas.',
-          'Para enviar consejos ocasionales sobre el desarrollo infantil, solo si marcó esa casilla. Puede darse de baja en cualquier momento.',
+          'Para enviar consejos ocasionales sobre el desarrollo infantil, que pueden mencionar el informe detallado, solo si marcó esa casilla. Cada correo de consejos incluye un enlace para darse de baja. También contamos, sin respuestas ni datos de contacto, hasta qué paso de la revisión llegan los visitantes, para que sea más fácil terminarla.',
           'No vendemos sus datos. Sus respuestas, resultados, los datos de su hijo y su correo nunca se comparten con anunciantes.',
         ] },
         { h: 'Cookies y anuncios', p: [
-          'Si pulsa “Aceptar” en el aviso de cookies, usamos el Píxel de Meta (Facebook) para medir nuestros anuncios. Solo registra que se visitó una página, que se empezó una revisión, que se pidió un informe y que se pulsó el botón de pago. Si lo rechaza, no se carga. Puede cambiar de opinión borrando los datos de este sitio en su navegador.',
+          'Si pulsa “Aceptar” en el aviso de cookies, usamos el Píxel de Meta (Facebook) para medir nuestros anuncios. Solo registra que se visitó una página, que se empezó una revisión, que se pidió un informe y que se pulsó el botón de pago. Cuando pide su informe, también enviamos a Meta desde nuestro servidor una forma cifrada (hash) de su correo, para que el resultado del anuncio se cuente una sola vez y bien. Nunca se envían sus respuestas ni resultados. Si lo rechaza, nada de esto ocurre. Puede cambiar de opinión borrando los datos de este sitio en su navegador.',
         ] },
         { h: 'Base legal', p: [
           'La información sobre el desarrollo de su hijo es sensible. Solo la tratamos con su consentimiento explícito, que da al completar la revisión y enviar su correo. Los datos del pedido se tratan para cumplir nuestro contrato con usted.',
@@ -313,11 +313,11 @@ const DOCS: Record<Lang, Record<PageId, Doc>> = {
         { h: 'لماذا نستخدمها', p: [
           'لحساب نتيجة الفحص وكتابة تقريرك الشخصي وإرساله إليك بالبريد الإلكتروني.',
           'لتسليم التقرير المفصّل الذي دفعت ثمنه، ومعالجة طلبات الاسترداد والدعم.',
-          'لإرسال نصائح حول نمو الطفل من حين لآخر، فقط إذا اخترت ذلك. ويمكنك إلغاء الاشتراك في أي وقت.',
+          'لإرسال نصائح حول نمو الطفل من حين لآخر، وقد تذكر التقرير المفصّل، فقط إذا اخترت ذلك. وتحتوي كل رسالة نصائح على رابط لإلغاء الاشتراك. كما نحسب، دون إجابات أو بيانات اتصال، الخطوة التي يصل إليها الزوار في الفحص، لنجعل إكماله أسهل.',
           'لا نبيع بياناتك. لا تتم مشاركة إجاباتك أو نتائجك أو بيانات طفلك أو بريدك الإلكتروني مع المعلنين أبدًا.',
         ] },
         { h: 'ملفات تعريف الارتباط والإعلانات', p: [
-          'إذا ضغطت «موافق» في إشعار ملفات تعريف الارتباط، نستخدم بكسل Meta (فيسبوك) لقياس إعلاناتنا. وهو يسجّل فقط زيارة الصفحة، وبدء الفحص، وطلب التقرير، والضغط على زر الدفع. إذا رفضت، فلن يتم تحميله. ويمكنك تغيير رأيك بمسح بيانات هذا الموقع من متصفحك.',
+          'إذا ضغطت «موافق» في إشعار ملفات تعريف الارتباط، نستخدم بكسل Meta (فيسبوك) لقياس إعلاناتنا. وهو يسجّل فقط زيارة الصفحة، وبدء الفحص، وطلب التقرير، والضغط على زر الدفع. وعند طلب تقريرك، نرسل أيضًا من خادمنا إلى Meta صيغة مشفّرة (hash) من بريدك الإلكتروني، لتُحتسب نتيجة الإعلان مرة واحدة وبدقة. لا نرسل إجاباتك أو نتائجك أبدًا. إذا رفضت، فلن يحدث أي من ذلك. ويمكنك تغيير رأيك بمسح بيانات هذا الموقع من متصفحك.',
         ] },
         { h: 'الأساس القانوني', p: [
           'المعلومات المتعلقة بنمو طفلك حساسة، ولا نعالجها إلا بموافقتك الصريحة التي تقدّمها عند إكمال الفحص وإرسال بريدك الإلكتروني. ونعالج بيانات الطلب لتنفيذ العقد المبرم معك.',

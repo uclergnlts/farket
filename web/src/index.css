@@ -94,3 +94,7 @@ a { color: var(--brand); }
 .cookie .secondary { margin-top: 0; padding: 8px 14px; }
 .cookie .accept { background: var(--brand); color: var(--brand-ink); }
 .footer-links .operator { color: var(--muted); flex-basis: 100%; text-align: center; }
+
+.preview { display: block; margin: 12px 0 4px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.preview img { display: block; width: 100%; height: auto; }
+.small { font-size: 13px; }

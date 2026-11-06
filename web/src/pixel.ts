@@ -23,6 +23,9 @@ export function needsConsent(): boolean {
   return PIXEL_ID !== '' && consent() === null;
 }
 
+/** Whether ad measurement is on for this visitor. */
+export function pixelOn(): boolean { return loaded; }
+
 export function setConsent(v: 'yes' | 'no') {
   try { localStorage.setItem(CONSENT_KEY, v); } catch { /* private mode: ask again next visit */ }
   if (v === 'yes') loadPixel();
@@ -53,8 +56,10 @@ export function loadPixel() {
 export type PixelEvent = 'StartCheck' | 'Lead' | 'InitiateCheckout';
 
 /** Records one funnel moment. Sends no details about the child or the answers. */
-export function track(event: PixelEvent) {
+export function track(event: PixelEvent, eventId?: string) {
   if (!loaded || !window.fbq) return;
+  // The same id goes to the server event (Conversions API) so Meta counts the Lead once.
+  if (event === 'Lead' && eventId) { window.fbq('track', 'Lead', {}, { eventID: eventId }); return; }
   if (event === 'StartCheck') window.fbq('trackCustom', 'StartCheck');
   else if (event === 'InitiateCheckout') window.fbq('track', 'InitiateCheckout', { value: 4.99, currency: 'USD' });
   else window.fbq('track', event);
