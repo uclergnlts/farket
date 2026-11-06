@@ -275,6 +275,7 @@ export default function App() {
               <input className="input" type="email" inputMode="email" autoComplete="email" required
                 placeholder={s.emailPlaceholder} value={email} onChange={(e) => setEmail(e.target.value)} />
               {email && !EMAIL.test(email.trim()) && <p className="error">{s.emailInvalid}</p>}
+              <p className="note">{s.emailSpamHint}</p>
               <label className="check">
                 <input type="checkbox" checked={marketing} onChange={(e) => setMarketing(e.target.checked)} /> {s.marketing}
               </label>
