@@ -5,17 +5,24 @@ import {
 import { LANG_NAMES, t } from './i18n.ts';
 
 const LANG_SHORT: Record<Lang, string> = { en: 'EN', es: 'ES', ar: 'عربي' };
-import { creemCheckoutUrl, emailReport, saveScreening, type Sex } from './api.ts';
+import { creemCheckoutUrl, emailReport, logStep, saveScreening, sendMetaLead, type Sex } from './api.ts';
 import { SEO, langPath } from './seo.ts';
 import { HERO, HomeSections } from './home.tsx';
 import { FooterLinks, InfoPage, PAGE_LABELS, pageFromHash, type PageId } from './pages.tsx';
-import { loadPixel, needsConsent, setConsent, track } from './pixel.ts';
+import { loadPixel, needsConsent, pixelOn, setConsent, track } from './pixel.ts';
 
 const COOKIE_TEXT: Record<Lang, { text: string; yes: string; no: string }> = {
   en: { text: 'We use a Meta (Facebook) cookie to measure our ads. Your answers and results are never shared.', yes: 'Accept', no: 'Decline' },
   es: { text: 'Usamos una cookie de Meta (Facebook) para medir nuestros anuncios. Sus respuestas y resultados nunca se comparten.', yes: 'Aceptar', no: 'Rechazar' },
   ar: { text: 'نستخدم ملف تعريف ارتباط من Meta (فيسبوك) لقياس إعلاناتنا. لا تتم مشاركة إجاباتك أو نتائجك أبدًا.', yes: 'موافق', no: 'رفض' },
 };
+
+const UNSUBSCRIBED: Record<Lang, string> = {
+  en: 'You’re unsubscribed. We won’t send you any more tips.',
+  es: 'Se ha dado de baja. No le enviaremos más consejos.',
+  ar: 'تم إلغاء اشتراكك. لن نرسل لك المزيد من النصائح.',
+};
+const unsubscribed = new URLSearchParams(location.search).get('unsubscribed') === '1';
 
 const HERO_ALT: Record<Lang, string> = {
   en: 'A Farket question on a phone screen',
@@ -113,6 +120,13 @@ export default function App() {
 
   useEffect(() => { window.scrollTo(0, 0); }, [step, index, page]);
 
+  // Where visitors stop: one row per step reached (see logStep in api.ts).
+  useEffect(() => {
+    if (step === 'home' || step === 'paid') return;
+    logStep(step, lang, step === 'quiz' ? index + 1 : undefined);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, index]);
+
   // Ad measurement: only for visitors who accepted cookies (see pixel.ts).
   useEffect(() => { loadPixel(); }, []);
   const decideCookies = (v: 'yes' | 'no') => { setConsent(v); setAskCookies(false); };
@@ -157,7 +171,8 @@ export default function App() {
         ageRange: age.range, months, sex, email: email.trim(), marketing, language: lang, answers, result,
       });
       setScreeningId(id);
-      track('Lead');
+      track('Lead', id);
+      if (pixelOn()) sendMetaLead(id);
       setSent(await emailReport(id));
     } catch {
       setSent(false);
@@ -177,6 +192,9 @@ export default function App() {
     <div className="offers no-print">
       <h3>{s.offerTitle[result?.risk ?? 'any']}</h3>
       <p>{s.offerText[result?.risk ?? 'any']}</p>
+      <a className="preview" href="#sample" aria-label={PAGE_LABELS[lang].sample}>
+        <img src={`/report-preview-${lang}.webp`} alt="" width="600" height="420" loading="lazy" />
+      </a>
       <ul className="includes">{s.offerIncludes.map((x) => <li key={x}>{x}</li>)}</ul>
       <button className="primary" disabled={busy || !screeningId} onClick={getDetailed}>
         {busy ? s.reportLoading : s.offerButton}
@@ -210,6 +228,7 @@ export default function App() {
       {!page && flow.includes(step) && <div className="bar no-print"><div style={{ width: `${progress}%` }} /></div>}
 
       <main className={!page && step === 'home' ? 'home-main' : 'card'}>
+        {unsubscribed && !page && step === 'home' && <p className="note">{UNSUBSCRIBED[lang]}</p>}
         {page && <InfoPage id={page} lang={lang} onBack={closePage} />}
         {!page && <>
         {step === 'home' && (
@@ -303,6 +322,7 @@ export default function App() {
             <div className={`badge ${result.risk}`}>{s.risk[result.risk]}</div>
             <p className="lead">{s.nextStep[result.risk]}</p>
             {result.limitedAge && <p className="note">{s.limitedAge}</p>}
+            <p className="muted small">{s.basisNote}</p>
 
             {offerCard}
             <p className="note">{s.disclaimer}</p>

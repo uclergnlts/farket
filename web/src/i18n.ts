@@ -20,7 +20,7 @@ export interface Strings {
   emailTitle: string; emailText: string; emailPlaceholder: string; emailInvalid: string;
   emailPrivacy: string; emailSpamHint: string; marketing: string; sendReport: string; sending: string;
   sentTitle: string; sentText: (email: string) => string; notSent: string; quickResult: string;
-  offerTitle: Record<Risk | 'any', string>; offerText: Record<Risk | 'any', string>; offerIncludes: string[]; offerButton: string; offerNote: string;
+  offerTitle: Record<Risk | 'any', string>; offerText: Record<Risk | 'any', string>; offerIncludes: string[]; basisNote: string; offerButton: string; offerNote: string;
   paidTitle: string; paidText: string;
 }
 
@@ -87,6 +87,7 @@ export const t: Record<Lang, Strings> = {
       medium: 'A doctor’s visit is more useful when you arrive prepared. The detailed report turns your answers into a clear summary you can show the doctor.',
       high: 'A specialist visit is more useful when you arrive prepared. The detailed report turns your answers into a clear summary you can show the doctor.',
     },
+    basisNote: 'The questions were written using public developmental milestone guides from the CDC (“Learn the Signs. Act Early.”) and the American Academy of Pediatrics. This is a screening aid, not a validated clinical test.',
     offerIncludes: ['Each development area explained with your own answers', 'Activities you can try at home this week', 'A one-page summary to bring to your doctor'],
     offerButton: 'Get the detailed report · $4.99',
     offerNote: 'One-time payment. The report arrives by email within a few minutes. Written by AI from your answers; not a diagnosis.',
@@ -156,6 +157,7 @@ export const t: Record<Lang, Strings> = {
       medium: 'Una visita al médico aprovecha más si va preparado. El informe detallado convierte sus respuestas en un resumen claro para mostrar al médico.',
       high: 'Una visita al especialista aprovecha más si va preparado. El informe detallado convierte sus respuestas en un resumen claro para mostrar al médico.',
     },
+    basisNote: 'Las preguntas se redactaron a partir de guías públicas de hitos del desarrollo de los CDC (“Aprenda los signos. Reaccione pronto.”) y la Academia Americana de Pediatría. Es una ayuda de detección, no una prueba clínica validada.',
     offerIncludes: ['Cada área del desarrollo explicada con sus propias respuestas', 'Actividades para hacer en casa esta semana', 'Una hoja resumen para llevar a su médico'],
     offerButton: 'Obtener el informe detallado · 4,99 $',
     offerNote: 'Pago único. El informe llega a su correo en pocos minutos. Escrito por IA a partir de sus respuestas; no es un diagnóstico.',
@@ -225,6 +227,7 @@ export const t: Record<Lang, Strings> = {
       medium: 'تكون زيارة الطبيب أكثر فائدة عندما تذهب مستعدًا. يحوّل التقرير المفصّل إجاباتك إلى ملخص واضح يمكنك عرضه على الطبيب.',
       high: 'تكون زيارة الأخصائي أكثر فائدة عندما تذهب مستعدًا. يحوّل التقرير المفصّل إجاباتك إلى ملخص واضح يمكنك عرضه على الطبيب.',
     },
+    basisNote: 'كُتبت الأسئلة بالاستناد إلى أدلة مراحل النمو العامة الصادرة عن مراكز CDC (برنامج «تعرّف على العلامات. تصرّف مبكرًا») والأكاديمية الأمريكية لطب الأطفال. هذه أداة فحص مساعدة، وليست اختبارًا سريريًا معتمدًا.',
     offerIncludes: ['شرح لكل مجال من مجالات النمو بناءً على إجاباتك', 'أنشطة يمكنك تجربتها في المنزل هذا الأسبوع', 'صفحة ملخص واحدة لأخذها إلى طبيبك'],
     offerButton: 'احصل على التقرير المفصّل · 4.99 $',
     offerNote: 'دفعة واحدة. يصل التقرير إلى بريدك الإلكتروني خلال دقائق. يكتبه الذكاء الاصطناعي بناءً على إجاباتك؛ وهو ليس تشخيصًا.',

@@ -83,3 +83,28 @@ export async function creemCheckoutUrl(screeningId: string, language: Lang, emai
     return null;
   }
 }
+
+/** A random id for this browser tab, so funnel steps can be grouped into one visit. */
+function visitId(): string {
+  try {
+    let v = sessionStorage.getItem('visit');
+    if (!v) { v = crypto.randomUUID(); sessionStorage.setItem('visit', v); }
+    return v;
+  } catch {
+    return (window as { __visit?: string }).__visit ??= Math.random().toString(36).slice(2) + Date.now().toString(36);
+  }
+}
+
+/** Records that the visitor reached a step (and which question). Never answers or contact details. */
+export function logStep(step: 'age' | 'sex' | 'quiz' | 'email' | 'done' | 'offer', lang: Lang, question?: number) {
+  supabase.from('funnel_events').insert({ visit: visitId(), lang, step, question: question ?? null })
+    .then(() => {}, () => {});
+}
+
+/** Sends the Lead to Meta from the server too (only for visitors who accepted cookies). */
+export function sendMetaLead(screeningId: string) {
+  const cookie = (n: string) => document.cookie.split('; ').find((c) => c.startsWith(n + '='))?.slice(n.length + 1);
+  supabase.functions.invoke('meta-event', {
+    body: { screening_id: screeningId, fbp: cookie('_fbp'), fbc: cookie('_fbc'), url: location.href },
+  }).then(() => {}, () => {});
+}
