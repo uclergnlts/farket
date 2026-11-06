@@ -20,7 +20,7 @@ export interface Strings {
   emailTitle: string; emailText: string; emailPlaceholder: string; emailInvalid: string;
   emailPrivacy: string; emailSpamHint: string; marketing: string; sendReport: string; sending: string;
   sentTitle: string; sentText: (email: string) => string; notSent: string; quickResult: string;
-  offerTitle: string; offerText: string; offerButton: string; offerNote: string;
+  offerTitle: Record<Risk | 'any', string>; offerText: Record<Risk | 'any', string>; offerIncludes: string[]; offerButton: string; offerNote: string;
   paidTitle: string; paidText: string;
 }
 
@@ -80,8 +80,14 @@ export const t: Record<Lang, Strings> = {
     sentText: (e) => `We sent your personal report to ${e}. If you don’t see it in a few minutes, check your spam folder.`,
     notSent: 'We couldn’t send the email right now. Your result is below, and we’ll try again.',
     quickResult: 'Your result at a glance',
-    offerTitle: 'Want the detailed development report?',
-    offerText: 'Every area explained with your own answers, activities to try at home, and a summary page to bring to your doctor.',
+    offerTitle: { any: 'Want the detailed development report?', low: 'Support your child’s development at home', medium: 'Go to the doctor prepared', high: 'Go to the doctor prepared' },
+    offerText: {
+      any: 'Every area explained with your own answers, activities to try at home, and a summary page to bring to your doctor.',
+      low: 'Your result looks reassuring. The detailed report shows which areas to keep an eye on and gives you simple activities for each one.',
+      medium: 'A doctor’s visit is more useful when you arrive prepared. The detailed report turns your answers into a clear summary you can show the doctor.',
+      high: 'A specialist visit is more useful when you arrive prepared. The detailed report turns your answers into a clear summary you can show the doctor.',
+    },
+    offerIncludes: ['Each development area explained with your own answers', 'Activities you can try at home this week', 'A one-page summary to bring to your doctor'],
     offerButton: 'Get the detailed report · $4.99',
     offerNote: 'One-time payment. The report arrives by email within a few minutes. Written by AI from your answers; not a diagnosis.',
     paidTitle: 'Thank you, your payment went through',
@@ -143,8 +149,14 @@ export const t: Record<Lang, Strings> = {
     sentText: (e) => `Hemos enviado su informe personal a ${e}. Si no lo ve en unos minutos, revise la carpeta de spam.`,
     notSent: 'No pudimos enviar el correo ahora. Su resultado está abajo y lo volveremos a intentar.',
     quickResult: 'Su resultado de un vistazo',
-    offerTitle: '¿Quiere el informe detallado del desarrollo?',
-    offerText: 'Cada área explicada con sus propias respuestas, actividades para hacer en casa y una hoja resumen para llevar a su médico.',
+    offerTitle: { any: '¿Quiere el informe detallado del desarrollo?', low: 'Apoye el desarrollo de su hijo en casa', medium: 'Vaya preparado al médico', high: 'Vaya preparado al médico' },
+    offerText: {
+      any: 'Cada área explicada con sus propias respuestas, actividades para hacer en casa y una hoja resumen para llevar a su médico.',
+      low: 'Su resultado es tranquilizador. El informe detallado muestra qué áreas conviene vigilar y le da actividades sencillas para cada una.',
+      medium: 'Una visita al médico aprovecha más si va preparado. El informe detallado convierte sus respuestas en un resumen claro para mostrar al médico.',
+      high: 'Una visita al especialista aprovecha más si va preparado. El informe detallado convierte sus respuestas en un resumen claro para mostrar al médico.',
+    },
+    offerIncludes: ['Cada área del desarrollo explicada con sus propias respuestas', 'Actividades para hacer en casa esta semana', 'Una hoja resumen para llevar a su médico'],
     offerButton: 'Obtener el informe detallado · 4,99 $',
     offerNote: 'Pago único. El informe llega a su correo en pocos minutos. Escrito por IA a partir de sus respuestas; no es un diagnóstico.',
     paidTitle: 'Gracias, su pago se completó',
@@ -206,8 +218,14 @@ export const t: Record<Lang, Strings> = {
     sentText: (e) => `أرسلنا تقريرك الشخصي إلى ${e}. إذا لم تجده خلال بضع دقائق، فتحقق من مجلد الرسائل غير المرغوب فيها.`,
     notSent: 'تعذّر إرسال البريد الآن. نتيجتك أدناه، وسنحاول مرة أخرى.',
     quickResult: 'نتيجتك باختصار',
-    offerTitle: 'هل تريد تقرير النمو المفصّل؟',
-    offerText: 'شرح لكل مجال بناءً على إجاباتك، وأنشطة يمكن تجربتها في المنزل، وصفحة ملخص لأخذها إلى طبيبك.',
+    offerTitle: { any: 'هل تريد تقرير النمو المفصّل؟', low: 'ادعم نمو طفلك في المنزل', medium: 'اذهب إلى الطبيب وأنت مستعد', high: 'اذهب إلى الطبيب وأنت مستعد' },
+    offerText: {
+      any: 'شرح لكل مجال بناءً على إجاباتك، وأنشطة يمكن تجربتها في المنزل، وصفحة ملخص لأخذها إلى طبيبك.',
+      low: 'نتيجتك مطمئنة. يوضح التقرير المفصّل المجالات التي تستحق المتابعة، ويقدّم لك أنشطة بسيطة لكل منها.',
+      medium: 'تكون زيارة الطبيب أكثر فائدة عندما تذهب مستعدًا. يحوّل التقرير المفصّل إجاباتك إلى ملخص واضح يمكنك عرضه على الطبيب.',
+      high: 'تكون زيارة الأخصائي أكثر فائدة عندما تذهب مستعدًا. يحوّل التقرير المفصّل إجاباتك إلى ملخص واضح يمكنك عرضه على الطبيب.',
+    },
+    offerIncludes: ['شرح لكل مجال من مجالات النمو بناءً على إجاباتك', 'أنشطة يمكنك تجربتها في المنزل هذا الأسبوع', 'صفحة ملخص واحدة لأخذها إلى طبيبك'],
     offerButton: 'احصل على التقرير المفصّل · 4.99 $',
     offerNote: 'دفعة واحدة. يصل التقرير إلى بريدك الإلكتروني خلال دقائق. يكتبه الذكاء الاصطناعي بناءً على إجاباتك؛ وهو ليس تشخيصًا.',
     paidTitle: 'شكرًا لك، تمت عملية الدفع',

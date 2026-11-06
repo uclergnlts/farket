@@ -175,8 +175,9 @@ export default function App() {
 
   const offerCard = (
     <div className="offers no-print">
-      <h3>{s.offerTitle}</h3>
-      <p>{s.offerText}</p>
+      <h3>{s.offerTitle[result?.risk ?? 'any']}</h3>
+      <p>{s.offerText[result?.risk ?? 'any']}</p>
+      <ul className="includes">{s.offerIncludes.map((x) => <li key={x}>{x}</li>)}</ul>
       <button className="primary" disabled={busy || !screeningId} onClick={getDetailed}>
         {busy ? s.reportLoading : s.offerButton}
       </button>

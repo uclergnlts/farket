@@ -48,6 +48,9 @@ label select { font: inherit; color: var(--ink); padding: 12px; border-radius: 1
 .badge { color: #fff; font-weight: 700; font-size: 22px; text-align: center; padding: 18px; border-radius: 14px; margin: 8px 0 16px; }
 .badge.low { background: var(--low); } .badge.medium { background: var(--medium); } .badge.high { background: var(--high); }
 .offers { border-top: 1px solid var(--line); margin-top: 24px; padding-top: 4px; }
+.includes { list-style: none; padding: 0; margin: 8px 0 16px; display: grid; gap: 6px; }
+.includes li { padding-inline-start: 26px; position: relative; }
+.includes li::before { content: '✓'; position: absolute; inset-inline-start: 0; color: var(--brand); font-weight: 700; }
 .offer { display: grid; gap: 4px; width: 100%; text-align: start; background: var(--card); border: 1.5px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-top: 12px; color: var(--ink); }
 .offer span { color: var(--muted); font-size: 14px; }
 .offer.featured { border-color: var(--brand); background: var(--brand-soft); }
