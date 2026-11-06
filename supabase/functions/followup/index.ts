@@ -3,8 +3,8 @@
 // Called every hour by pg_cron. Safe to call any time: it only picks rows that are due.
 // Deploy with verify_jwt = false. Secrets: RESEND_API_KEY, EMAIL_FROM, SITE_URL.
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { json } from "../_shared/generate.ts";
-import { sendFollowupEmail } from "../_shared/email.ts";
+import { json } from "../_shared/http.ts";
+import { sendFollowupEmail } from "../_shared/followup-email.ts";
 
 const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
 
