@@ -6,7 +6,7 @@
 // Secrets: META_CAPI_TOKEN (Events Manager > Pixel > Settings > Conversions API > access token).
 // Without the token it does nothing.
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { json, preflight } from "../_shared/generate.ts";
+import { json, preflight } from "../_shared/http.ts";
 
 const PIXEL_ID = "956917537156142";
 
