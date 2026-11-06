@@ -18,7 +18,7 @@ export interface Strings {
   ageRangeTitle: string; ageRangeHelp: string; monthsLabel: (a: number, b: number) => string;
   sexTitle: string; boy: string; girl: string; unspecified: string;
   emailTitle: string; emailText: string; emailPlaceholder: string; emailInvalid: string;
-  emailPrivacy: string; marketing: string; sendReport: string; sending: string;
+  emailPrivacy: string; emailSpamHint: string; marketing: string; sendReport: string; sending: string;
   sentTitle: string; sentText: (email: string) => string; notSent: string; quickResult: string;
   offerTitle: string; offerText: string; offerButton: string; offerNote: string;
   paidTitle: string; paidText: string;
@@ -72,6 +72,7 @@ export const t: Record<Lang, Strings> = {
     emailTitle: 'Where should we send your report?',
     emailText: 'Your personal report is ready. Enter your email address and we’ll send it to you right away.',
     emailPlaceholder: 'you@example.com', emailInvalid: 'Please enter a valid email address.',
+    emailSpamHint: 'Your report arrives in a few minutes. If it’s not in your inbox, please check your spam or junk folder.',
     emailPrivacy: 'We use your email only to send your report. We don’t ask for your child’s name, and you can ask us to delete your data at any time.',
     marketing: 'Send me occasional tips about child development (optional)',
     sendReport: 'Send my report', sending: 'Sending…',
@@ -134,6 +135,7 @@ export const t: Record<Lang, Strings> = {
     emailTitle: '¿Adónde le enviamos su informe?',
     emailText: 'Su informe personal está listo. Escriba su correo electrónico y se lo enviaremos enseguida.',
     emailPlaceholder: 'usted@ejemplo.com', emailInvalid: 'Escriba un correo electrónico válido.',
+    emailSpamHint: 'Su informe llegará en unos minutos. Si no está en su bandeja de entrada, revise la carpeta de spam o correo no deseado.',
     emailPrivacy: 'Usamos su correo solo para enviarle el informe. No pedimos el nombre de su hijo y puede pedirnos que borremos sus datos en cualquier momento.',
     marketing: 'Envíenme consejos ocasionales sobre el desarrollo infantil (opcional)',
     sendReport: 'Enviar mi informe', sending: 'Enviando…',
@@ -196,6 +198,7 @@ export const t: Record<Lang, Strings> = {
     emailTitle: 'إلى أين نرسل تقريرك؟',
     emailText: 'تقريرك الشخصي جاهز. أدخل بريدك الإلكتروني وسنرسله إليك فورًا.',
     emailPlaceholder: 'you@example.com', emailInvalid: 'يرجى إدخال بريد إلكتروني صحيح.',
+    emailSpamHint: 'يصلك التقرير خلال بضع دقائق. إذا لم تجده في البريد الوارد، فتحقق من مجلد الرسائل غير المرغوب فيها (Spam).',
     emailPrivacy: 'نستخدم بريدك الإلكتروني فقط لإرسال تقريرك. لا نطلب اسم طفلك، ويمكنك أن تطلب حذف بياناتك في أي وقت.',
     marketing: 'أرسلوا لي نصائح من حين لآخر حول نمو الطفل (اختياري)',
     sendReport: 'أرسل تقريري', sending: 'جارٍ الإرسال…',
