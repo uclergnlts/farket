@@ -10,6 +10,8 @@ import { computeGauge, correctedAgeMonths, isRtl, pickLang, ymd, type Child, typ
 import { allowNotifications, scheduleReminder } from './src/diary/reminder';
 import { AddNote } from './src/diary/screens/AddNote';
 import { Gauge } from './src/diary/screens/Gauge';
+import { Paywall } from './src/diary/screens/Paywall';
+import { isPremium, onPremiumChange } from './src/diary/premium';
 import { Home } from './src/diary/screens/Home';
 import { Consent, ProfileForm, Welcome } from './src/diary/screens/Onboarding';
 import { Settings } from './src/diary/screens/Settings';
@@ -18,13 +20,15 @@ import {
 } from './src/diary/storage';
 import { c } from './src/diary/theme';
 
-type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild' | 'gauge';
+type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild' | 'gauge' | 'paywall';
 
 const deviceLang = () => pickLang(getLocales().map((l) => l.languageCode));
 
 export default function App() {
   const [state, setState] = useState<DiaryState | null>(null);
   const [screen, setScreen] = useState<Screen>('welcome');
+  const [premium, setPremium] = useState(false);
+  const [paywallFrom, setPaywallFrom] = useState<Screen>('home');
   const ref = useRef<DiaryState | null>(null);
   const syncing = useRef(false);
 
@@ -67,6 +71,10 @@ export default function App() {
       setState(s);
       setScreen(!s.settings.consentAt ? 'welcome' : s.child ? 'home' : 'profile');
       runSync();
+      if (s.settings.consentAt) {
+        isPremium().then(setPremium);
+        onPremiumChange(setPremium);
+      }
     });
   }, [runSync]);
 
@@ -130,6 +138,8 @@ export default function App() {
     });
   };
 
+  const openPaywall = (from: Screen) => { setPaywallFrom(from); setScreen('paywall'); };
+
   const deleteAll = async () => {
     const ok = await deleteEverything(state);
     if (!ok) { Alert.alert(s.deleteAll, s.notSynced); return; }
@@ -146,6 +156,8 @@ export default function App() {
   } else if (screen === 'consent') {
     body = <Consent s={s} onAgree={() => {
       commit({ ...state, settings: { ...state.settings, consentAt: new Date().toISOString() }, pending: { ...state.pending, settings: true } });
+      isPremium().then(setPremium);
+      onPremiumChange(setPremium);
       setScreen(state.child ? 'home' : 'profile');
     }} />;
   } else if (screen === 'profile' || screen === 'editChild' || !state.child) {
@@ -156,11 +168,14 @@ export default function App() {
       ageMonths={correctedAgeMonths(state.child, today)} today={today}
       onSave={addEntry} onCancel={() => setScreen('home')} />;
   } else if (screen === 'gauge') {
-    // Premium and the paywall arrive with subscriptions; until then the breakdown stays locked.
-    body = <Gauge s={s} gauge={computeGauge(state.entries, today)} premium={false}
-      onPremium={() => {}} onBack={() => setScreen('home')} />;
+    body = <Gauge s={s} gauge={computeGauge(state.entries, today)} premium={premium}
+      onPremium={() => openPaywall('gauge')} onBack={() => setScreen('home')} />;
+  } else if (screen === 'paywall') {
+    body = <Paywall s={s} premium={premium} onDone={() => { setPremium(true); setScreen(paywallFrom); }}
+      onBack={() => setScreen(paywallFrom)} />;
   } else if (screen === 'settings') {
-    body = <Settings s={s} settings={state.settings} synced={synced} onLang={setLang}
+    body = <Settings s={s} settings={state.settings} synced={synced} premium={premium}
+      onPremium={() => openPaywall('settings')} onLang={setLang}
       onReminder={(on, hour) => setReminder(on, hour)} onEditChild={() => setScreen('editChild')}
       onDeleteAll={deleteAll} onBack={() => setScreen('home')} />;
   } else {

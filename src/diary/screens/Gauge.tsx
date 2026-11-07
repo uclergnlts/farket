@@ -59,6 +59,27 @@ export function Gauge({ s, gauge, premium, onPremium, onBack }: {
 
       <Card>
         <Text style={t.label}>{s.gaugeAreas}</Text>
+        {premium && (() => {
+          const top = Math.max(1, ...gauge.weeks.map((w) => w.concerns + w.positives));
+          return (
+            <View style={st.weeks}>
+              <Text style={t.small}>{s.gaugeWeeks}</Text>
+              <View style={st.bars}>
+                {gauge.weeks.map((w, i) => (
+                  <View key={i} style={st.bar}>
+                    <View style={{ flex: 1 - (w.concerns + w.positives) / top }} />
+                    <View style={{ flex: w.positives / top, backgroundColor: c.good }} />
+                    <View style={{ flex: w.concerns / top, backgroundColor: c.warn }} />
+                  </View>
+                ))}
+              </View>
+              <Text style={t.small}>
+                <Text style={{ color: c.warn }}>■ </Text>{s.kind.concern}{'   '}
+                <Text style={{ color: c.good }}>■ </Text>{s.kind.positive}
+              </Text>
+            </View>
+          );
+        })()}
         {premium ? gauge.stats.map((x) => (
           <View key={x.category} style={st.area}>
             <Text style={t.p}>{s.category[x.category]}</Text>
@@ -93,5 +114,8 @@ const st = StyleSheet.create({
   why: { flexDirection: 'row', alignItems: 'center', gap: 12 },
   dot: { width: 10, height: 10, borderRadius: 5 },
   area: { gap: 4 },
+  weeks: { gap: 6, marginBottom: 6 },
+  bars: { flexDirection: 'row', gap: 10, height: 90, alignItems: 'stretch' },
+  bar: { flex: 1, borderRadius: 6, overflow: 'hidden', backgroundColor: c.line },
   track: { height: 10, borderRadius: 5, backgroundColor: c.line, flexDirection: 'row', overflow: 'hidden' },
 });

@@ -149,6 +149,7 @@ export interface Gauge {
   regression: boolean;
   uncategorized: number; // worries without an area; they can't count towards a pattern
   baselineHeld: boolean; // the level is "mid" only because of a recent starting test
+  weeks: { concerns: number; positives: number }[]; // last 4 weeks, oldest first
 }
 
 /**
@@ -184,6 +185,10 @@ export function computeGauge(
   return {
     ready: gaugeProgress(entries, today).ready,
     level, stats, repeating, baselineHeld,
+    weeks: [3, 2, 1, 0].map((w) => {
+      const days = win.filter((e) => { const ago = daysBetween(e.date, today); return ago >= w * 7 && ago < w * 7 + 7; });
+      return { concerns: days.filter((e) => e.kind === 'concern').length, positives: days.filter((e) => e.kind === 'positive').length };
+    }),
     regression: win.some((e) => e.regression),
     uncategorized: win.filter((e) => e.kind === 'concern' && !e.category).length,
   };

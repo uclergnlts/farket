@@ -110,4 +110,8 @@ assert.equal(computeGauge([], T, { date: '2026-10-01', risk: 'high' }).level, 'l
 const g = computeGauge([worry(T, null), worry(T, 'speech', { regression: true })], T);
 assert.equal(g.uncategorized, 1);
 assert.equal(g.regression, true);
+assert.equal(computeGauge([], T, { date: '2026-11-20', risk: 'high' }).baselineHeld, true);
+// weekly trend: 4 weeks, oldest first, today counts in the last one
+const w = computeGauge([worry(T, 'name'), good(addDays(T, -7), 'play'), worry(addDays(T, -27), 'name')], T).weeks;
+assert.deepEqual(w, [{ concerns: 1, positives: 0 }, { concerns: 0, positives: 0 }, { concerns: 0, positives: 1 }, { concerns: 1, positives: 0 }]);
 console.log('gauge tests passed');

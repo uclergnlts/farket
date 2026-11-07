@@ -8,8 +8,8 @@ import { LangPicker } from './Onboarding';
 
 const HOURS = [18, 19, 20, 21, 22];
 
-export function Settings({ s, settings, synced, onLang, onReminder, onEditChild, onDeleteAll, onBack }: {
-  s: DStrings; settings: SettingsT; synced: boolean;
+export function Settings({ s, settings, synced, premium, onPremium, onLang, onReminder, onEditChild, onDeleteAll, onBack }: {
+  s: DStrings; settings: SettingsT; synced: boolean; premium: boolean; onPremium: () => void;
   onLang: (l: DLang) => void; onReminder: (on: boolean, hour: number) => void;
   onEditChild: () => void; onDeleteAll: () => void; onBack: () => void;
 }) {
@@ -37,6 +37,10 @@ export function Settings({ s, settings, synced, onLang, onReminder, onEditChild,
             </Row>
           </>
         )}
+      </Card>
+      <Card>
+        <Text style={t.label}>{s.premiumTitle}</Text>
+        {premium ? <Text style={t.p}>{s.premiumActive}</Text> : <Btn label={s.premiumSee} outline onPress={onPremium} />}
       </Card>
       <Card>
         <Text style={t.label}>{s.profileTitle}</Text>
