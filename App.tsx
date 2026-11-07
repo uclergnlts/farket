@@ -13,6 +13,7 @@ import { Baseline } from './src/diary/screens/Baseline';
 import { canTakeBaseline } from './src/diary/baseline';
 import { Gauge } from './src/diary/screens/Gauge';
 import { Paywall } from './src/diary/screens/Paywall';
+import { Report } from './src/diary/screens/Report';
 import { isPremium, onPremiumChange } from './src/diary/premium';
 import { Home } from './src/diary/screens/Home';
 import { Consent, ProfileForm, Welcome } from './src/diary/screens/Onboarding';
@@ -22,7 +23,7 @@ import {
 } from './src/diary/storage';
 import { c } from './src/diary/theme';
 
-type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild' | 'gauge' | 'paywall' | 'baseline';
+type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild' | 'gauge' | 'paywall' | 'baseline' | 'report';
 
 const deviceLang = () => pickLang(getLocales().map((l) => l.languageCode));
 
@@ -176,6 +177,9 @@ export default function App() {
     body = <Baseline s={s} lang={state.settings.lang} ageMonths={correctedAgeMonths(state.child, today)} today={today}
       onDone={(b) => { commit({ ...(ref.current ?? state), baseline: b }); setScreen('home'); }}
       onCancel={() => setScreen('home')} />;
+  } else if (screen === 'report') {
+    body = <Report s={s} lang={state.settings.lang} child={state.child} entries={state.entries} baseline={state.baseline}
+      today={today} premium={premium} onPremium={() => openPaywall('report')} onBack={() => setScreen('home')} />;
   } else if (screen === 'paywall') {
     body = <Paywall s={s} premium={premium} onDone={() => { setPremium(true); setScreen(paywallFrom); }}
       onBack={() => setScreen(paywallFrom)} />;
@@ -189,7 +193,7 @@ export default function App() {
       onAdd={() => setScreen('add')} onDelete={deleteEntry} onSettings={() => setScreen('settings')} onGauge={() => setScreen('gauge')}
       baseline={state.baseline}
       offerBaseline={!state.baseline && !state.baselineSkipped && canTakeBaseline(correctedAgeMonths(state.child, today))}
-      onBaseline={() => setScreen('baseline')} onSkipBaseline={() => commit({ ...state, baselineSkipped: true })} />;
+      onBaseline={() => setScreen('baseline')} onReport={() => setScreen('report')} onSkipBaseline={() => commit({ ...state, baselineSkipped: true })} />;
   }
 
   return (

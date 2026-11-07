@@ -9,11 +9,11 @@ import { c, radius } from '../theme';
 import { Btn, Card, t } from '../ui';
 import { levelColor } from './Gauge';
 
-export function Home({ s, child, entries, today, synced, baseline, offerBaseline, onAdd, onDelete, onSettings, onGauge, onBaseline, onSkipBaseline }: {
+export function Home({ s, child, entries, today, synced, baseline, offerBaseline, onAdd, onDelete, onSettings, onGauge, onBaseline, onSkipBaseline, onReport }: {
   s: DStrings; child: Child; entries: Entry[]; today: string; synced: boolean;
   baseline: Baseline | null; offerBaseline: boolean;
   onAdd: () => void; onDelete: (id: string) => void; onSettings: () => void; onGauge: () => void;
-  onBaseline: () => void; onSkipBaseline: () => void;
+  onBaseline: () => void; onSkipBaseline: () => void; onReport: () => void;
 }) {
   const live = sortEntries(liveEntries(entries));
   const progress = gaugeProgress(entries, today);
@@ -81,6 +81,8 @@ export function Home({ s, child, entries, today, synced, baseline, offerBaseline
             </View>
           ))}
         </View>
+
+        {live.length > 0 && <Btn label={s.reportTitle} outline onPress={onReport} />}
 
         <Text style={t.label}>{s.recentNotes}</Text>
         {live.length === 0 && (

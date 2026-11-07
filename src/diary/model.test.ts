@@ -136,3 +136,17 @@ assert.equal(baselineResult(24, typical, T).risk, 'low');
 assert.equal(baselineResult(24, { ...typical, q23: 'yes' }, T).risk, 'high');
 assert.equal(baselineResult(24, { ...typical, q23: 'yes' }, T).regression, true);
 console.log('baseline tests passed');
+
+// ---- doctor summary ----
+import { buildReportHtml, reportEntries } from './report';
+{
+  const kid = { id: 'c', nickname: 'Ali <b>', birthYear: 2024, birthMonth: 12, sex: 'boy' as const, weeksEarly: 0 };
+  const notes = [worry(T, 'name'), worry(addDays(T, -40), 'speech', { regression: true }), worry(addDays(T, -100), 'social')];
+  assert.equal(reportEntries(notes, T, 30).length, 1);
+  assert.equal(reportEntries(notes, T, 60).length, 2);
+  const html = buildReportHtml({ s: dt.ar, lang: 'ar', child: kid, entries: notes, baseline: null, today: T, days: 60 });
+  assert.ok(html.includes('dir="rtl"') && html.includes('Ali &lt;b&gt;') && !html.includes('<b>'));
+  assert.ok(html.includes(dt.ar.pdf.lost) && html.includes(dt.ar.pdf.footer));
+  for (const l of LANGS) assert.ok(!banned.test(JSON.stringify(dt[l].pdf)), `pdf ${l}`);
+}
+console.log('report tests passed');

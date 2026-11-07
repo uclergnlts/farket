@@ -3,7 +3,7 @@
 // server (AI allowance) knows too. Nothing here ever gates the level or the doctor advice.
 import { Platform } from 'react-native';
 import Purchases, {
-  PACKAGE_TYPE, PURCHASES_ERROR_CODE, type CustomerInfo, type PurchasesPackage,
+  PACKAGE_TYPE, PRODUCT_CATEGORY, type PurchasesStoreProduct, PURCHASES_ERROR_CODE, type CustomerInfo, type PurchasesPackage,
 } from 'react-native-purchases';
 import { ensureSession, supabase } from '../supabase';
 
@@ -11,6 +11,8 @@ import { ensureSession, supabase } from '../supabase';
 const RC_KEYS = { ios: '', android: '' };
 export const ENTITLEMENT = 'premium';
 export const PRODUCT_IDS = { monthly: 'farket_premium_monthly', yearly: 'farket_premium_yearly' } as const;
+/** One doctor summary without a subscription (consumable: one purchase, one PDF). */
+export const REPORT_PRODUCT = 'farket_doctor_report';
 
 let ready: Promise<boolean> | null = null;
 
@@ -76,4 +78,23 @@ export async function subscribe(p: PurchasesPackage): Promise<BuyResult> {
 export async function restore(): Promise<boolean> {
   if (!(await initPremium())) return false;
   try { return active(await Purchases.restorePurchases()); } catch { return false; }
+}
+
+export async function getReportProduct(): Promise<PurchasesStoreProduct | null> {
+  if (!(await initPremium())) return null;
+  try {
+    const [p] = await Purchases.getProducts([REPORT_PRODUCT], PRODUCT_CATEGORY.NON_SUBSCRIPTION);
+    return p ?? null;
+  } catch {
+    return null;
+  }
+}
+
+export async function buyReport(p: PurchasesStoreProduct): Promise<BuyResult> {
+  try {
+    await Purchases.purchaseStoreProduct(p);
+    return 'ok';
+  } catch (e) {
+    return (e as { code?: string }).code === PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR ? 'cancelled' : 'failed';
+  }
 }
