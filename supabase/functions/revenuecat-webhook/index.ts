@@ -1,4 +1,5 @@
-// RevenueCat webhook: records verified store purchases as report credits.
+// RevenueCat webhook: records verified store purchases as report credits, and mirrors the
+// diary's Premium subscription into diary_subscriptions (the AI allowance reads it).
 // Configure in RevenueCat > Integrations > Webhooks with
 //   URL: https://<project>.supabase.co/functions/v1/revenuecat-webhook
 //   Authorization header: Bearer <REVENUECAT_WEBHOOK_SECRET>
@@ -9,6 +10,7 @@ const PRODUCTS: Record<string, "short_report" | "detailed_report"> = {
   farket_short_report: "short_report",
   farket_detailed_report: "detailed_report",
 };
+const SUBSCRIPTIONS = ["farket_premium_monthly", "farket_premium_yearly"];
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const ok = (msg: string, status = 200) => new Response(msg, { status });
@@ -24,6 +26,30 @@ Deno.serve(async (req) => {
   const userId = String(e.app_user_id ?? "");
   const product = PRODUCTS[String(e.product_id ?? "")];
   const transactionId = String(e.transaction_id ?? "");
+
+  const productId = String(e.product_id ?? "");
+  // Android ids can carry the base plan ("farket_premium_yearly:yearly").
+  if (SUBSCRIPTIONS.includes(productId.split(":")[0]) && UUID.test(userId)) {
+    const status = ({
+      INITIAL_PURCHASE: "active", RENEWAL: "active", PRODUCT_CHANGE: "active", UNCANCELLATION: "active",
+      SUBSCRIPTION_EXTENDED: "active", TEMPORARY_ENTITLEMENT_GRANT: "active",
+      CANCELLATION: e.cancel_reason === "CUSTOMER_SUPPORT" ? "expired" : "cancelled", // refund ends it now
+      BILLING_ISSUE: "billing_issue", EXPIRATION: "expired",
+    } as Record<string, string>)[type];
+    if (!status) return ok("ignored");
+    const at = new Date(typeof e.event_timestamp_ms === "number" ? e.event_timestamp_ms : Date.now()).toISOString();
+    const expires = typeof e.expiration_at_ms === "number" ? new Date(e.expiration_at_ms).toISOString() : null;
+    const admin = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    // Events can arrive out of order: never let an older one overwrite a newer state.
+    const { data: cur } = await admin.from("diary_subscriptions").select("updated_at").eq("user_id", userId).maybeSingle();
+    if (cur && new Date(cur.updated_at) > new Date(at)) return ok("stale");
+    const { error } = await admin.from("diary_subscriptions").upsert({
+      user_id: userId, product: productId.split(":")[0], status,
+      expires_at: status === "expired" ? at : expires, updated_at: at,
+    }, { onConflict: "user_id" });
+    if (error) return ok("db error", 500);
+    return ok(status);
+  }
 
   // Acknowledge events we don't act on so RevenueCat stops retrying them.
   if (!product || !UUID.test(userId) || !transactionId) return ok("ignored");

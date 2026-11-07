@@ -1,0 +1,285 @@
+{
+ "version": "0.1.0",
+ "note": "Generated from src/data/sorular.json (tr, en), web/src/data/questions.json (es, ar) and PT/FR translations. Scoring uses src/scoring.ts.",
+ "answers": {
+  "yes": {
+   "en": "Yes, usually",
+   "es": "Sí, normalmente",
+   "ar": "نعم، عادةً",
+   "pt": "Sim, geralmente",
+   "fr": "Oui, en général",
+   "tr": "Evet, genellikle"
+  },
+  "sometimes": {
+   "en": "Sometimes",
+   "es": "A veces",
+   "ar": "أحيانًا",
+   "pt": "Às vezes",
+   "fr": "Parfois",
+   "tr": "Bazen"
+  },
+  "no": {
+   "en": "No, rarely or never",
+   "es": "No, rara vez o nunca",
+   "ar": "لا، نادرًا أو أبدًا",
+   "pt": "Não, raramente ou nunca",
+   "fr": "Non, rarement ou jamais",
+   "tr": "Hayır, nadiren ya da hiç"
+  }
+ },
+ "questions": [
+  {
+   "id": "q01",
+   "text": {
+    "en": "Does your child look at your eyes when you talk or play with them?",
+    "es": "¿Su hijo le mira a los ojos cuando usted le habla o juega con él?",
+    "ar": "هل ينظر طفلك إلى عينيك عندما تتحدث إليه أو تلعب معه؟",
+    "pt": "Seu filho olha nos seus olhos quando você conversa ou brinca com ele?",
+    "fr": "Votre enfant vous regarde-t-il dans les yeux quand vous lui parlez ou jouez avec lui ?",
+    "tr": "Çocuğunuz onunla konuştuğunuzda ya da oynadığınızda gözlerinize bakar mı?"
+   }
+  },
+  {
+   "id": "q02",
+   "text": {
+    "en": "When you smile at your child, do they smile back at you?",
+    "es": "Cuando usted le sonríe, ¿su hijo le devuelve la sonrisa?",
+    "ar": "عندما تبتسم لطفلك، هل يبادلك الابتسامة؟",
+    "pt": "Quando você sorri para seu filho, ele sorri de volta?",
+    "fr": "Quand vous souriez à votre enfant, vous rend-il votre sourire ?",
+    "tr": "Siz ona gülümsediğinizde o da size gülümseyerek karşılık verir mi?"
+   }
+  },
+  {
+   "id": "q03",
+   "text": {
+    "en": "When you call your child's name (and they are not absorbed in something like TV), do they turn or respond?",
+    "es": "Cuando dice el nombre de su hijo (y no está absorto en algo como la televisión), ¿se gira o responde?",
+    "ar": "عندما تنادي طفلك باسمه (وهو غير منشغل بشيء مثل التلفاز)، هل يلتفت إليك أو يستجيب؟",
+    "pt": "Quando você chama seu filho pelo nome (e ele não está entretido com algo como a TV), ele se vira ou responde?",
+    "fr": "Quand vous appelez votre enfant par son prénom (et qu'il n'est pas absorbé par la télé, par exemple), se retourne-t-il ou réagit-il ?",
+    "tr": "Adını seslendiğinizde (televizyon gibi bir şeye dalmamışken) size döner ya da tepki verir mi?"
+   }
+  },
+  {
+   "id": "q04",
+   "text": {
+    "en": "Does your child babble with repeated syllables such as \"ba-ba\" or \"ma-ma\"?",
+    "es": "¿Su hijo balbucea con sílabas repetidas como \"ba-ba\" o \"ma-ma\"?",
+    "ar": "هل يناغي طفلك بمقاطع مكررة مثل \"با-با\" أو \"ما-ما\"؟",
+    "pt": "Seu filho balbucia sílabas repetidas como \"ba-ba\" ou \"ma-ma\"?",
+    "fr": "Votre enfant babille-t-il avec des syllabes répétées comme « ba-ba » ou « ma-ma » ?",
+    "tr": "\"ba-ba\", \"ma-ma\" gibi hece tekrarlarıyla agulama ya da babıldama yapar mı?"
+   }
+  },
+  {
+   "id": "q05",
+   "text": {
+    "en": "Does your child enjoy back-and-forth games like peekaboo and want them to continue?",
+    "es": "¿A su hijo le gustan los juegos de ida y vuelta como el cucú-tras y quiere que continúen?",
+    "ar": "هل يستمتع طفلك بالألعاب التبادلية مثل لعبة الاختباء (بيكابو) ويريد أن تستمر؟",
+    "pt": "Seu filho gosta de brincadeiras de ida e volta, como esconde-achou, e quer que continuem?",
+    "fr": "Votre enfant aime-t-il les jeux d'échange comme « coucou-caché » et veut-il qu'ils continuent ?",
+    "tr": "Ce-e gibi karşılıklı oyunlardan hoşlanır ve devam etmesini ister mi?"
+   }
+  },
+  {
+   "id": "q06",
+   "text": {
+    "en": "Does your child point with a finger to show you something interesting (not only to get something they want)?",
+    "es": "¿Su hijo señala con el dedo para mostrarle algo interesante (no solo para pedir algo que quiere)?",
+    "ar": "هل يشير طفلك بإصبعه ليريك شيئًا مثيرًا للاهتمام (وليس فقط ليطلب شيئًا يريده)؟",
+    "pt": "Seu filho aponta com o dedo para mostrar algo interessante a você (não só para pedir algo que quer)?",
+    "fr": "Votre enfant pointe-t-il du doigt pour vous montrer quelque chose d'intéressant (pas seulement pour obtenir ce qu'il veut) ?",
+    "tr": "İlginç bir şeyi size göstermek için parmağıyla işaret eder mi (sadece istediği bir şeyi almak için değil)?"
+   }
+  },
+  {
+   "id": "q07",
+   "text": {
+    "en": "Does your child use gestures like waving bye-bye or shaking their head?",
+    "es": "¿Su hijo usa gestos como decir adiós con la mano o negar con la cabeza?",
+    "ar": "هل يستخدم طفلك إيماءات مثل التلويح للوداع أو هز الرأس؟",
+    "pt": "Seu filho usa gestos como dar tchau ou balançar a cabeça?",
+    "fr": "Votre enfant utilise-t-il des gestes comme faire « au revoir » de la main ou secouer la tête ?",
+    "tr": "El sallamak (bay bay) ya da başını sallamak gibi jestler kullanır mı?"
+   }
+  },
+  {
+   "id": "q08",
+   "text": {
+    "en": "When you point at something, does your child look where you are pointing?",
+    "es": "Cuando usted señala algo, ¿su hijo mira hacia donde usted señala?",
+    "ar": "عندما تشير إلى شيء ما، هل ينظر طفلك إلى حيث تشير؟",
+    "pt": "Quando você aponta para algo, seu filho olha para onde você está apontando?",
+    "fr": "Quand vous montrez quelque chose du doigt, votre enfant regarde-t-il dans cette direction ?",
+    "tr": "Siz bir şeyi işaret ettiğinizde, o da baktığınız yere bakar mı?"
+   }
+  },
+  {
+   "id": "q09",
+   "text": {
+    "en": "Does your child bring or hold up objects just to show them to you?",
+    "es": "¿Su hijo le trae o le enseña objetos solo para mostrárselos?",
+    "ar": "هل يحضر طفلك الأشياء أو يرفعها فقط ليريك إياها؟",
+    "pt": "Seu filho traz ou levanta objetos só para mostrá-los a você?",
+    "fr": "Votre enfant vous apporte-t-il ou vous tend-il des objets juste pour vous les montrer ?",
+    "tr": "Sırf size göstermek için oyuncak ya da eşya getirip size uzatır mı?"
+   }
+  },
+  {
+   "id": "q10",
+   "text": {
+    "en": "Does your child copy what you do (clapping, pretending to talk on the phone, household tasks)?",
+    "es": "¿Su hijo imita lo que usted hace (aplaudir, fingir que habla por teléfono, tareas de la casa)?",
+    "ar": "هل يقلّد طفلك ما تفعله (التصفيق، التظاهر بالتحدث بالهاتف، أعمال المنزل)؟",
+    "pt": "Seu filho imita o que você faz (bater palmas, fingir falar ao telefone, tarefas de casa)?",
+    "fr": "Votre enfant imite-t-il ce que vous faites (taper des mains, faire semblant de téléphoner, tâches ménagères) ?",
+    "tr": "Yaptığınız hareketleri (alkışlamak, telefonla konuşur gibi yapmak, ev işleri) taklit eder mi?"
+   }
+  },
+  {
+   "id": "q11",
+   "text": {
+    "en": "Does your child use at least a few words with meaning?",
+    "es": "¿Su hijo usa al menos algunas palabras con significado?",
+    "ar": "هل يستخدم طفلك بضع كلمات على الأقل يفهم معناها؟",
+    "pt": "Seu filho usa pelo menos algumas palavras com significado?",
+    "fr": "Votre enfant utilise-t-il au moins quelques mots qui ont un sens ?",
+    "tr": "Anlamını bilerek kullandığı en az birkaç kelimesi var mı?"
+   }
+  },
+  {
+   "id": "q12",
+   "text": {
+    "en": "Does your child follow a simple request without gestures, like \"bring the ball\"?",
+    "es": "¿Su hijo sigue una petición sencilla sin gestos, como \"trae la pelota\"?",
+    "ar": "هل ينفّذ طفلك طلبًا بسيطًا دون إشارات، مثل \"أحضر الكرة\"؟",
+    "pt": "Seu filho atende a um pedido simples sem gestos, como \"traga a bola\"?",
+    "fr": "Votre enfant répond-il à une consigne simple sans geste, comme « apporte le ballon » ?",
+    "tr": "\"Topu getir\" gibi jest kullanmadan söylenen basit bir isteği anlayıp yerine getirir mi?"
+   }
+  },
+  {
+   "id": "q13",
+   "text": {
+    "en": "Does your child play pretend, such as feeding a doll or driving a toy car with \"vroom\" sounds?",
+    "es": "¿Su hijo juega a imaginar, como dar de comer a un muñeco o conducir un coche de juguete haciendo \"brum\"?",
+    "ar": "هل يلعب طفلك ألعابًا تخيلية، مثل إطعام دمية أو قيادة سيارة لعبة مع صوت \"بررم\"؟",
+    "pt": "Seu filho brinca de faz de conta, como dar comida a uma boneca ou empurrar um carrinho fazendo \"vrum\"?",
+    "fr": "Votre enfant joue-t-il à faire semblant, comme donner à manger à une poupée ou faire rouler une petite voiture en faisant « vroum » ?",
+    "tr": "Bebeğini beslemek, oyuncak arabayı \"vınnn\" diye sürmek gibi hayali (yalancı) oyunlar oynar mı?"
+   }
+  },
+  {
+   "id": "q14",
+   "text": {
+    "en": "Is your child interested in other children (watches them, approaches them, smiles at them)?",
+    "es": "¿Le interesan a su hijo otros niños (los observa, se acerca a ellos, les sonríe)?",
+    "ar": "هل يهتم طفلك بالأطفال الآخرين (يراقبهم، يقترب منهم، يبتسم لهم)؟",
+    "pt": "Seu filho se interessa por outras crianças (observa, se aproxima, sorri para elas)?",
+    "fr": "Votre enfant s'intéresse-t-il aux autres enfants (il les regarde, s'approche, leur sourit) ?",
+    "tr": "Diğer çocuklara ilgi gösterir mi (onları izler, yanlarına gider, gülümser)?"
+   }
+  },
+  {
+   "id": "q15",
+   "text": {
+    "en": "When something new or surprising happens, does your child look at your face to see how you react?",
+    "es": "Cuando ocurre algo nuevo o sorprendente, ¿su hijo mira su cara para ver cómo reacciona usted?",
+    "ar": "عندما يحدث شيء جديد أو مفاجئ، هل ينظر طفلك إلى وجهك ليرى كيف تتفاعل؟",
+    "pt": "Quando acontece algo novo ou surpreendente, seu filho olha para o seu rosto para ver como você reage?",
+    "fr": "Quand il se passe quelque chose de nouveau ou de surprenant, votre enfant regarde-t-il votre visage pour voir votre réaction ?",
+    "tr": "Yeni ya da şaşırtıcı bir şeyle karşılaştığında tepkinizi görmek için yüzünüze bakar mı?"
+   }
+  },
+  {
+   "id": "q16",
+   "text": {
+    "en": "Does your child spontaneously combine two words like \"more milk\" or \"mommy come\" (not just repeating what they heard)?",
+    "es": "¿Su hijo combina espontáneamente dos palabras, como \"más leche\" o \"mamá ven\" (no solo repitiendo lo que oyó)?",
+    "ar": "هل يجمع طفلك من تلقاء نفسه بين كلمتين مثل \"حليب أكثر\" أو \"ماما تعالي\" (وليس مجرد تكرار ما سمعه)؟",
+    "pt": "Seu filho junta duas palavras espontaneamente, como \"mais leite\" ou \"mamãe vem\" (não só repetindo o que ouviu)?",
+    "fr": "Votre enfant associe-t-il spontanément deux mots comme « encore lait » ou « maman viens » (pas seulement en répétant ce qu'il a entendu) ?",
+    "tr": "\"Su ver\", \"anne gel\" gibi iki kelimeyi birleştirerek kendiliğinden konuşur mu (duyduğunu tekrarlamadan)?"
+   }
+  },
+  {
+   "id": "q17",
+   "text": {
+    "en": "Does your child repeat words or phrases they heard over and over, regardless of meaning (e.g. lines from ads)?",
+    "es": "¿Su hijo repite una y otra vez palabras o frases que ha oído, sin importar su significado (por ejemplo, frases de anuncios)?",
+    "ar": "هل يكرر طفلك كلمات أو عبارات سمعها مرارًا وتكرارًا بغض النظر عن معناها (مثل عبارات الإعلانات)؟",
+    "pt": "Seu filho repete palavras ou frases que ouviu muitas vezes, sem relação com o momento (por exemplo, falas de propaganda)?",
+    "fr": "Votre enfant répète-t-il sans cesse des mots ou des phrases entendus, sans rapport avec le moment (par exemple des slogans de pub) ?",
+    "tr": "Duyduğu kelime ya da cümleleri anlamından bağımsız olarak tekrar tekrar söyler mi (örneğin reklam cümleleri)?"
+   }
+  },
+  {
+   "id": "q18",
+   "text": {
+    "en": "Does your child spend long periods doing the same thing repeatedly, like lining up toys or spinning wheels?",
+    "es": "¿Su hijo pasa mucho tiempo haciendo lo mismo una y otra vez, como poner juguetes en fila o hacer girar ruedas?",
+    "ar": "هل يقضي طفلك وقتًا طويلًا في فعل الشيء نفسه بشكل متكرر، مثل صفّ الألعاب أو تدوير العجلات؟",
+    "pt": "Seu filho passa muito tempo fazendo a mesma coisa repetidamente, como enfileirar brinquedos ou girar rodinhas?",
+    "fr": "Votre enfant passe-t-il de longs moments à faire la même chose encore et encore, comme aligner des jouets ou faire tourner des roues ?",
+    "tr": "Oyuncaklarını sıraya dizmek, tekerlekleri döndürmek gibi aynı şeyi uzun süre ve tekrar tekrar yapar mı?"
+   }
+  },
+  {
+   "id": "q19",
+   "text": {
+    "en": "Does your child often make unusual repeated movements like hand flapping, spinning, or rocking?",
+    "es": "¿Su hijo hace a menudo movimientos repetidos poco habituales, como aletear las manos, girar sobre sí mismo o balancearse?",
+    "ar": "هل يقوم طفلك كثيرًا بحركات متكررة غير معتادة مثل رفرفة اليدين أو الدوران حول نفسه أو التأرجح؟",
+    "pt": "Seu filho costuma fazer movimentos repetidos incomuns, como bater as mãos, girar ou se balançar?",
+    "fr": "Votre enfant fait-il souvent des mouvements répétés inhabituels, comme battre des mains, tourner sur lui-même ou se balancer ?",
+    "tr": "El çırpma, kendi etrafında dönme, sallanma gibi alışılmadık tekrarlayan hareketleri sık yapar mı?"
+   }
+  },
+  {
+   "id": "q20",
+   "text": {
+    "en": "Does your child overreact to everyday sounds (vacuum, hair dryer) or cover their ears?",
+    "es": "¿Su hijo reacciona en exceso a sonidos cotidianos (aspiradora, secador) o se tapa los oídos?",
+    "ar": "هل يتفاعل طفلك بشكل مبالغ فيه مع الأصوات اليومية (المكنسة الكهربائية، مجفف الشعر) أو يغطي أذنيه؟",
+    "pt": "Seu filho reage de forma exagerada a sons do dia a dia (aspirador, secador) ou tapa os ouvidos?",
+    "fr": "Votre enfant réagit-il très fortement aux bruits du quotidien (aspirateur, sèche-cheveux) ou se bouche-t-il les oreilles ?",
+    "tr": "Sıradan seslere (süpürge, saç kurutma makinesi) aşırı tepki verir, kulaklarını kapatır mı?"
+   }
+  },
+  {
+   "id": "q21",
+   "text": {
+    "en": "Does a small change in routine (a different route, a different cup) cause very long meltdowns?",
+    "es": "¿Un pequeño cambio en la rutina (otro camino, otro vaso) le provoca rabietas muy largas?",
+    "ar": "هل يسبب تغيير بسيط في الروتين (طريق مختلف، كوب مختلف) نوبات بكاء طويلة جدًا؟",
+    "pt": "Uma pequena mudança na rotina (outro caminho, outro copo) provoca crises muito longas?",
+    "fr": "Un petit changement de routine (un autre trajet, un autre gobelet) provoque-t-il de très longues crises ?",
+    "tr": "Rutindeki küçük bir değişiklikte (farklı yol, farklı bardak) çok uzun süren ağlama krizleri yaşar mı?"
+   }
+  },
+  {
+   "id": "q22",
+   "text": {
+    "en": "Is your child unusually intensely focused on parts of objects (spinning things, lights) or one particular topic?",
+    "es": "¿Su hijo se fija de forma inusualmente intensa en partes de objetos (cosas que giran, luces) o en un tema concreto?",
+    "ar": "هل يركّز طفلك بشكل مكثف وغير معتاد على أجزاء من الأشياء (أشياء تدور، أضواء) أو على موضوع واحد معين؟",
+    "pt": "Seu filho fica intensamente focado em partes de objetos (coisas que giram, luzes) ou em um único assunto, mais do que o comum?",
+    "fr": "Votre enfant est-il inhabituellement absorbé par des parties d'objets (choses qui tournent, lumières) ou par un seul sujet ?",
+    "tr": "Nesnelerin bir parçasına (dönen bir şey, ışıklar) ya da belirli bir konuya alışılmadık yoğunlukta ilgi duyar mı?"
+   }
+  },
+  {
+   "id": "q23",
+   "text": {
+    "en": "Has your child stopped doing something they used to do (words, eye contact, smiling, play)?",
+    "es": "¿Su hijo ha dejado de hacer algo que antes hacía (palabras, contacto visual, sonreír, jugar)?",
+    "ar": "هل توقف طفلك عن فعل شيء كان يفعله من قبل (كلمات، تواصل بصري، ابتسام، لعب)؟",
+    "pt": "Seu filho parou de fazer algo que fazia antes (palavras, olhar nos olhos, sorrir, brincar)?",
+    "fr": "Votre enfant a-t-il arrêté de faire quelque chose qu'il faisait avant (mots, regard, sourire, jeu) ?",
+    "tr": "Çocuğunuz daha önce yapabildiği bir şeyi (kelimeler, göz teması, gülümseme, oyun) yapmayı bıraktı mı?"
+   }
+  }
+ ]
+}

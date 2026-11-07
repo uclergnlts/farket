@@ -1,191 +1,215 @@
+// Farket Takip: a development diary for parents of children aged 0-4.
+// Phase 1: profile, notes (local first, backed up to Supabase), quick notes, reminder, 6 languages.
+import { getLocales } from 'expo-localization';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useMemo, useState } from 'react';
-import { Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { dt } from './src/diary/i18n';
+import { computeGauge, correctedAgeMonths, isRtl, pickLang, ymd, type Child, type DLang, type Entry } from './src/diary/model';
+import { allowNotifications, scheduleReminder } from './src/diary/reminder';
+import { AddNote } from './src/diary/screens/AddNote';
+import { Baseline } from './src/diary/screens/Baseline';
+import { canTakeBaseline } from './src/diary/baseline';
+import { Gauge } from './src/diary/screens/Gauge';
+import { Paywall } from './src/diary/screens/Paywall';
+import { Report } from './src/diary/screens/Report';
+import { isPremium, onPremiumChange } from './src/diary/premium';
+import { Home } from './src/diary/screens/Home';
+import { Consent, ProfileForm, Welcome } from './src/diary/screens/Onboarding';
+import { Settings } from './src/diary/screens/Settings';
 import {
-  answerLabels, domains, MAX_MONTHS, MIN_MONTHS, questionsForAge, score,
-  type Answer, type Lang, type Result,
-} from './src/scoring';
-import { t } from './src/i18n';
-import { fetchReport, saveScreening } from './src/supabase';
-import { buy, getPrices, type ReportKind } from './src/purchases';
-import type { PurchasesStoreProduct } from 'react-native-purchases';
+  deleteEverything, emptyState, isSynced, loadState, saveState, sync, type DiaryState,
+} from './src/diary/storage';
+import { c } from './src/diary/theme';
 
-const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
+type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild' | 'gauge' | 'paywall' | 'baseline' | 'report';
 
-type Step = 'consent' | 'age' | 'quiz' | 'result';
+const deviceLang = () => pickLang(getLocales().map((l) => l.languageCode));
 
 export default function App() {
-  const [lang, setLang] = useState<Lang>('tr');
-  const [step, setStep] = useState<Step>('consent');
-  const [monthsText, setMonthsText] = useState('');
-  const [months, setMonths] = useState(0);
-  const [index, setIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, Answer>>({});
-  const [result, setResult] = useState<Result | null>(null);
-  const [screeningId, setScreeningId] = useState<string | null>(null);
-  const [report, setReport] = useState<string | null>(null);
-  const [prices, setPrices] = useState<Partial<Record<ReportKind, PurchasesStoreProduct>>>({});
-  const [busy, setBusy] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const qs = useMemo(() => questionsForAge(months), [months]);
-  const s = t[lang];
+  const [state, setState] = useState<DiaryState | null>(null);
+  const [screen, setScreen] = useState<Screen>('welcome');
+  const [premium, setPremium] = useState(false);
+  const [paywallFrom, setPaywallFrom] = useState<Screen>('home');
+  const ref = useRef<DiaryState | null>(null);
+  const syncing = useRef(false);
 
-  const restart = () => {
-    setStep('age'); setIndex(0); setAnswers({}); setResult(null); setMonthsText('');
-    setScreeningId(null); setReport(null); setError(null);
-  };
+  const runSync = useCallback(async () => {
+    if (syncing.current || !ref.current) return;
+    syncing.current = true;
+    const before = ref.current;
+    const after = await sync(before);
+    syncing.current = false;
+    if (after === before || !ref.current) return;
+    // Merge: anything changed while we were syncing stays pending.
+    const cur = ref.current;
+    const cleared = before.pending.entryIds.filter((id) => !after.pending.entryIds.includes(id));
+    const merged: DiaryState = {
+      ...cur,
+      lastSyncAt: after.lastSyncAt,
+      pending: {
+        child: cur.child === before.child ? after.pending.child : cur.pending.child,
+        settings: cur.settings === before.settings ? after.pending.settings : cur.pending.settings,
+        entryIds: cur.pending.entryIds.filter((id) =>
+          !cleared.includes(id) || cur.entries.find((e) => e.id === id) !== before.entries.find((e) => e.id === id)),
+      },
+    };
+    ref.current = merged;
+    setState(merged);
+    await saveState(merged);
+    if (!isSynced(merged)) setTimeout(runSync, 0);
+  }, []);
 
-  const answer = (a: Answer) => {
-    const next = { ...answers, [qs[index].id]: a };
-    setAnswers(next);
-    if (index + 1 < qs.length) setIndex(index + 1);
-    else {
-      const r = score(months, next);
-      setResult(r); setStep('result');
-      saveScreening(months, next, r).then(setScreeningId).catch(() => setError(s.saveFailed));
-    }
-  };
+  const commit = useCallback((next: DiaryState) => {
+    ref.current = next;
+    setState(next);
+    saveState(next).catch(() => {});
+    runSync();
+  }, [runSync]);
 
   useEffect(() => {
-    if (screeningId) getPrices().then(setPrices).catch(() => setPrices({}));
-  }, [screeningId]);
+    loadState(deviceLang()).then((s) => {
+      ref.current = s;
+      setState(s);
+      setScreen(!s.settings.consentAt ? 'welcome' : s.child ? 'home' : 'profile');
+      runSync();
+      if (s.settings.consentAt) {
+        isPremium().then(setPremium);
+        onPremiumChange(setPremium);
+      }
+    });
+  }, [runSync]);
 
-  const getReport = async (kind: ReportKind) => {
-    if (!screeningId) return;
-    setError(null);
-    const product = prices[kind];
-    if (product) {
-      const paid = await buy(product);
-      if (paid === 'cancelled') return;
-      if (paid === 'failed') { setError(s.purchaseFailed); return; }
-    }
-    setBusy(true);
-    // The store confirms the purchase to our server a few seconds after payment.
-    let res = await fetchReport(screeningId, kind, lang);
-    for (let i = 0; i < 6 && 'error' in res && res.error === 'payment_required' && product; i++) {
-      await wait(2500);
-      res = await fetchReport(screeningId, kind, lang);
-    }
-    setBusy(false);
-    if ('content' in res) setReport(res.content);
-    else setError(res.error === 'busy' ? s.reportBusy : s.reportFailed);
+  if (!state) {
+    return <View style={[st.root, st.center]}><ActivityIndicator color={c.brand} /></View>;
+  }
+
+  const s = dt[state.settings.lang];
+  const rtl = isRtl(state.settings.lang);
+  const now = new Date();
+  const today = ymd(now);
+  const synced = isSynced(state);
+
+  const setLang = (lang: DLang) => {
+    const settings = { ...state.settings, lang };
+    commit({ ...state, settings, pending: { ...state.pending, settings: true } });
+    const r = settings.reminder;
+    if (r.on) scheduleReminder(true, r.hour, r.minute, dt[lang].reminderTitle, dt[lang].reminderBody).catch(() => {});
   };
 
-  const monthsNum = parseInt(monthsText, 10);
-  const ageMsg = !monthsText ? null
-    : isNaN(monthsNum) ? s.ageInvalid
-    : monthsNum < MIN_MONTHS ? s.ageTooYoung
-    : monthsNum > MAX_MONTHS ? s.ageTooOld : null;
+  const setReminder = async (on: boolean, hour: number) => {
+    const allowed = on ? await allowNotifications() : false;
+    const base = ref.current ?? state;
+    const reminder = { ...base.settings.reminder, on: on && allowed, hour };
+    const next = { ...base, settings: { ...base.settings, reminder, reminderAsked: true }, pending: { ...base.pending, settings: true } };
+    commit(next);
+    scheduleReminder(reminder.on, reminder.hour, reminder.minute, s.reminderTitle, s.reminderBody).catch(() => {});
+  };
+
+  const saveChild = (child: Child) => {
+    commit({ ...state, child, pending: { ...state.pending, child: true } });
+    setScreen('home');
+  };
+
+  const addEntry = (e: Entry) => {
+    const next: DiaryState = {
+      ...state, entries: [...state.entries, e],
+      pending: { ...state.pending, entryIds: [...state.pending.entryIds, e.id] },
+    };
+    commit(next);
+    setScreen('home');
+    if (e.regression) Alert.alert(s.regressionAlertTitle, s.regressionAlertText, [{ text: s.ok }]);
+    // Ask for the reminder after the first note, when its value is obvious.
+    else if (!next.settings.reminderAsked && Platform.OS !== 'web') {
+      Alert.alert(s.reminder, s.reminderAsk, [
+        { text: s.reminderAskNo, style: 'cancel', onPress: () => {
+          const cur = ref.current ?? next;
+          commit({ ...cur, settings: { ...cur.settings, reminderAsked: true } });
+        } },
+        { text: s.reminderAskYes, onPress: () => setReminder(true, 20) },
+      ]);
+    }
+  };
+
+  const deleteEntry = (id: string) => {
+    const stamp = new Date().toISOString();
+    commit({
+      ...state,
+      entries: state.entries.map((e) => (e.id === id ? { ...e, deletedAt: stamp, updatedAt: stamp } : e)),
+      pending: { ...state.pending, entryIds: [...new Set([...state.pending.entryIds, id])] },
+    });
+  };
+
+  const openPaywall = (from: Screen) => { setPaywallFrom(from); setScreen('paywall'); };
+
+  const deleteAll = async () => {
+    const ok = await deleteEverything(state);
+    if (!ok) { Alert.alert(s.deleteAll, s.notSynced); return; }
+    scheduleReminder(false, 0, 0, '', '').catch(() => {});
+    const fresh = emptyState(state.settings.lang);
+    ref.current = fresh;
+    setState(fresh);
+    setScreen('welcome');
+  };
+
+  let body: React.ReactNode = null;
+  if (screen === 'welcome') {
+    body = <Welcome s={s} lang={state.settings.lang} onLang={setLang} onNext={() => setScreen('consent')} />;
+  } else if (screen === 'consent') {
+    body = <Consent s={s} onAgree={() => {
+      commit({ ...state, settings: { ...state.settings, consentAt: new Date().toISOString() }, pending: { ...state.pending, settings: true } });
+      isPremium().then(setPremium);
+      onPremiumChange(setPremium);
+      setScreen(state.child ? 'home' : 'profile');
+    }} />;
+  } else if (screen === 'profile' || screen === 'editChild' || !state.child) {
+    body = <ProfileForm s={s} today={now} initial={state.child} onSave={saveChild}
+      onCancel={screen === 'editChild' ? () => setScreen('settings') : undefined} />;
+  } else if (screen === 'add') {
+    body = <AddNote s={s} lang={state.settings.lang} childId={state.child.id} rtl={rtl}
+      ageMonths={correctedAgeMonths(state.child, today)} today={today}
+      onSave={addEntry} onCancel={() => setScreen('home')} />;
+  } else if (screen === 'gauge') {
+    body = <Gauge s={s} gauge={computeGauge(state.entries, today, state.baseline)} premium={premium}
+      onPremium={() => openPaywall('gauge')} onBack={() => setScreen('home')} />;
+  } else if (screen === 'baseline') {
+    body = <Baseline s={s} lang={state.settings.lang} ageMonths={correctedAgeMonths(state.child, today)} today={today}
+      onDone={(b) => { commit({ ...(ref.current ?? state), baseline: b }); setScreen('home'); }}
+      onCancel={() => setScreen('home')} />;
+  } else if (screen === 'report') {
+    body = <Report s={s} lang={state.settings.lang} child={state.child} entries={state.entries} baseline={state.baseline}
+      today={today} premium={premium} onPremium={() => openPaywall('report')} onBack={() => setScreen('home')} />;
+  } else if (screen === 'paywall') {
+    body = <Paywall s={s} premium={premium} onDone={() => { setPremium(true); setScreen(paywallFrom); }}
+      onBack={() => setScreen(paywallFrom)} />;
+  } else if (screen === 'settings') {
+    body = <Settings s={s} settings={state.settings} entries={state.entries} synced={synced} premium={premium}
+      onPremium={() => openPaywall('settings')} onLang={setLang}
+      onReminder={(on, hour) => setReminder(on, hour)} onEditChild={() => setScreen('editChild')}
+      onDeleteAll={deleteAll} onBack={() => setScreen('home')} />;
+  } else {
+    body = <Home s={s} child={state.child} entries={state.entries} today={today} synced={synced}
+      onAdd={() => setScreen('add')} onDelete={deleteEntry} onSettings={() => setScreen('settings')} onGauge={() => setScreen('gauge')}
+      baseline={state.baseline}
+      offerBaseline={!state.baseline && !state.baselineSkipped && canTakeBaseline(correctedAgeMonths(state.child, today))}
+      onBaseline={() => setScreen('baseline')} onReport={() => setScreen('report')} onSkipBaseline={() => commit({ ...state, baselineSkipped: true })} />;
+  }
 
   return (
-    <SafeAreaView style={st.root}>
-      <StatusBar style="dark" />
-      <View style={st.langRow}>
-        {(['tr', 'en'] as Lang[]).map((l) => (
-          <Pressable key={l} onPress={() => setLang(l)}>
-            <Text style={[st.lang, lang === l && st.langOn]}>{l.toUpperCase()}</Text>
-          </Pressable>
-        ))}
-      </View>
-      <ScrollView contentContainerStyle={st.body}>
-        {step === 'consent' && (
-          <>
-            <Text style={st.h1}>{s.title}</Text>
-            <Text style={st.p}>{s.intro}</Text>
-            <Text style={st.note}>{s.disclaimer}</Text>
-            <Text style={st.note}>{s.consent}</Text>
-            <Btn label={s.agree} onPress={() => setStep('age')} />
-          </>
-        )}
-
-        {step === 'age' && (
-          <>
-            <Text style={st.h2}>{s.ageQ}</Text>
-            <TextInput style={st.input} keyboardType="number-pad" value={monthsText}
-              onChangeText={setMonthsText} placeholder="24" />
-            {ageMsg && <Text style={st.note}>{ageMsg}</Text>}
-            <Btn label={s.start} disabled={!monthsText || !!ageMsg}
-              onPress={() => { setMonths(monthsNum); setIndex(0); setStep('quiz'); }} />
-          </>
-        )}
-
-        {step === 'quiz' && qs[index] && (
-          <>
-            <Text style={st.progress}>{index + 1} / {qs.length} · {domains[qs[index].domain][lang]}</Text>
-            <Text style={st.h2}>{qs[index][lang]}</Text>
-            {(['yes', 'sometimes', 'no'] as Answer[]).map((a) => (
-              <Btn key={a} label={answerLabels[a][lang]} onPress={() => answer(a)} outline />
-            ))}
-            {index > 0 && <Pressable onPress={() => setIndex(index - 1)}><Text style={st.link}>{s.back}</Text></Pressable>}
-          </>
-        )}
-
-        {step === 'result' && result && (
-          <>
-            <View style={[st.badge, { backgroundColor: riskColor[result.risk] }]}>
-              <Text style={st.badgeText}>{s.risk[result.risk]}</Text>
-            </View>
-            <Text style={st.p}>{s.next[result.risk]}</Text>
-            {result.limitedAge && <Text style={st.note}>{s.limitedAge}</Text>}
-            {result.topDomains.length > 0 && (
-              <>
-                <Text style={st.h3}>{s.focus}</Text>
-                {result.topDomains.slice(0, 3).map((d) => (
-                  <Text key={d.domain} style={st.p}>• {domains[d.domain][lang]}</Text>
-                ))}
-              </>
-            )}
-            {report ? (
-              <View style={st.report}><Text style={st.p}>{report}</Text></View>
-            ) : (
-              <>
-                <Btn label={busy ? s.reportLoading : `${s.shortReport}${prices.short ? ` · ${prices.short.priceString}` : ''}`}
-                  onPress={() => getReport('short')} disabled={busy || !screeningId} />
-                <Btn label={`${s.detailedReport}${prices.detailed ? ` · ${prices.detailed.priceString}` : ''}`}
-                  onPress={() => getReport('detailed')} disabled={busy || !screeningId} outline />
-              </>
-            )}
-            {error && <Text style={st.error}>{error}</Text>}
-            <Text style={st.note}>{s.disclaimer}</Text>
-            <Btn label={s.again} onPress={restart} outline />
-          </>
-        )}
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const riskColor = { low: '#2e7d32', medium: '#ef8f00', high: '#c62828' };
-
-function Btn({ label, onPress, outline, disabled }: { label: string; onPress: () => void; outline?: boolean; disabled?: boolean }) {
-  return (
-    <Pressable onPress={onPress} disabled={disabled}
-      style={[st.btn, outline && st.btnOutline, disabled && { opacity: 0.4 }]}>
-      <Text style={[st.btnText, outline && st.btnOutlineText]}>{label}</Text>
-    </Pressable>
+    <SafeAreaProvider>
+      <SafeAreaView style={st.root} edges={['top', 'bottom']}>
+        <StatusBar style="dark" />
+        <KeyboardAvoidingView style={[st.root, { direction: rtl ? 'rtl' : 'ltr' }]}
+          behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+          {body}
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 
 const st = StyleSheet.create({
-  root: { flex: 1, backgroundColor: '#fffaf5' },
-  body: { padding: 20, gap: 14 },
-  langRow: { flexDirection: 'row', justifyContent: 'flex-end', gap: 12, paddingHorizontal: 20, paddingTop: 8 },
-  lang: { color: '#999', fontWeight: '600' },
-  langOn: { color: '#5b3cc4' },
-  h1: { fontSize: 26, fontWeight: '700', color: '#2b2350' },
-  h2: { fontSize: 20, fontWeight: '600', color: '#2b2350', lineHeight: 28 },
-  h3: { fontSize: 16, fontWeight: '700', color: '#2b2350', marginTop: 8 },
-  p: { fontSize: 16, color: '#333', lineHeight: 23 },
-  note: { fontSize: 13, color: '#666', lineHeight: 19 },
-  progress: { fontSize: 13, color: '#5b3cc4', fontWeight: '600' },
-  input: { borderWidth: 1, borderColor: '#ccc', borderRadius: 10, padding: 12, fontSize: 18, backgroundColor: '#fff' },
-  btn: { backgroundColor: '#5b3cc4', padding: 15, borderRadius: 12, alignItems: 'center' },
-  btnText: { color: '#fff', fontSize: 16, fontWeight: '600' },
-  btnOutline: { backgroundColor: '#fff', borderWidth: 1.5, borderColor: '#5b3cc4' },
-  btnOutlineText: { color: '#5b3cc4' },
-  link: { color: '#5b3cc4', textAlign: 'center', marginTop: 6 },
-  report: { backgroundColor: '#fff', borderRadius: 12, padding: 16, borderWidth: 1, borderColor: '#e6e0f7' },
-  error: { color: '#c62828', fontSize: 14 },
-  badge: { padding: 18, borderRadius: 14, alignItems: 'center' },
-  badgeText: { color: '#fff', fontSize: 20, fontWeight: '700' },
+  root: { flex: 1, backgroundColor: c.bg },
+  center: { alignItems: 'center', justifyContent: 'center' },
 });
