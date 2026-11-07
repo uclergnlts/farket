@@ -138,7 +138,7 @@ assert.equal(baselineResult(24, { ...typical, q23: 'yes' }, T).regression, true)
 console.log('baseline tests passed');
 
 // ---- doctor summary ----
-import { buildReportHtml, reportEntries } from './report';
+import { buildReportHtml, entriesCsv, reportEntries } from './report';
 {
   const kid = { id: 'c', nickname: 'Ali <b>', birthYear: 2024, birthMonth: 12, sex: 'boy' as const, weeksEarly: 0 };
   const notes = [worry(T, 'name'), worry(addDays(T, -40), 'speech', { regression: true }), worry(addDays(T, -100), 'social')];
@@ -150,3 +150,9 @@ import { buildReportHtml, reportEntries } from './report';
   for (const l of LANGS) assert.ok(!banned.test(JSON.stringify(dt[l].pdf)), `pdf ${l}`);
 }
 console.log('report tests passed');
+{
+  const csv = entriesCsv([worry('2026-11-01', 'name'), { ...worry('2026-11-02', null), text: 'said "hi", then left' }]);
+  assert.equal(csv.split('\n').length, 3);
+  assert.ok(csv.includes('"said ""hi"", then left"'));
+}
+console.log('export tests passed');

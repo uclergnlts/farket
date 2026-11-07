@@ -117,6 +117,9 @@ export interface DStrings {
   reminderAskYes: string;
   reminderAskNo: string;
   privacyNote: string;
+  privacyLink: string;
+  exportData: string;
+  exportHint: string;
   deleteAll: string;
   deleteAllConfirm: string;
   synced: string;
@@ -287,6 +290,9 @@ const en: DStrings = {
   reminderAskYes: 'Yes, remind me',
   reminderAskNo: 'Not now',
   privacyNote: 'Only you can see your notes. They are never used for advertising.',
+  privacyLink: 'Privacy policy',
+  exportData: 'Download my notes',
+  exportHint: 'A copy of all your notes as a table (CSV), free at any time.',
   deleteAll: 'Delete all my notes',
   deleteAllConfirm: 'This permanently deletes your child profile and all notes on this phone and on our server.',
   synced: 'Backed up',
@@ -457,6 +463,9 @@ const es: DStrings = {
   reminderAskYes: 'Sí, recuérdame',
   reminderAskNo: 'Ahora no',
   privacyNote: 'Solo tú puedes ver tus notas. Nunca se usan para publicidad.',
+  privacyLink: 'Política de privacidad',
+  exportData: 'Descargar mis notas',
+  exportHint: 'Una copia de todas tus notas en una tabla (CSV), gratis en cualquier momento.',
   deleteAll: 'Borrar todas mis notas',
   deleteAllConfirm: 'Esto borra para siempre el perfil de tu hijo y todas las notas en este teléfono y en nuestro servidor.',
   synced: 'Copia de seguridad hecha',
@@ -627,6 +636,9 @@ const pt: DStrings = {
   reminderAskYes: 'Sim, me lembre',
   reminderAskNo: 'Agora não',
   privacyNote: 'Só você pode ver suas notas. Elas nunca são usadas para publicidade.',
+  privacyLink: 'Política de privacidade',
+  exportData: 'Baixar minhas notas',
+  exportHint: 'Uma cópia de todas as suas notas em uma tabela (CSV), grátis a qualquer momento.',
   deleteAll: 'Apagar todas as minhas notas',
   deleteAllConfirm: 'Isso apaga para sempre o perfil do seu filho e todas as notas neste celular e no nosso servidor.',
   synced: 'Backup feito',
@@ -797,6 +809,9 @@ const fr: DStrings = {
   reminderAskYes: 'Oui, me le rappeler',
   reminderAskNo: 'Pas maintenant',
   privacyNote: 'Vous seul pouvez voir vos notes. Elles ne servent jamais à la publicité.',
+  privacyLink: 'Politique de confidentialité',
+  exportData: 'Télécharger mes notes',
+  exportHint: 'Une copie de toutes vos notes sous forme de tableau (CSV), gratuite à tout moment.',
   deleteAll: 'Supprimer toutes mes notes',
   deleteAllConfirm: "Cela supprime définitivement le profil de votre enfant et toutes les notes sur ce téléphone et sur notre serveur.",
   synced: 'Sauvegardé',
@@ -967,6 +982,9 @@ const tr: DStrings = {
   reminderAskYes: 'Evet, hatırlat',
   reminderAskNo: 'Şimdi değil',
   privacyNote: 'Notlarınızı yalnızca siz görebilirsiniz. Asla reklam için kullanılmaz.',
+  privacyLink: 'Gizlilik politikası',
+  exportData: 'Notlarımı indir',
+  exportHint: 'Tüm notlarınızın tablo (CSV) olarak bir kopyası, her zaman ücretsiz.',
   deleteAll: 'Tüm notlarımı sil',
   deleteAllConfirm: 'Bu işlem çocuğunuzun profilini ve tüm notları bu telefondan ve sunucumuzdan kalıcı olarak siler.',
   synced: 'Yedeklendi',
@@ -1141,6 +1159,9 @@ const ar: DStrings = {
   reminderAskYes: 'نعم، ذكّرني',
   reminderAskNo: 'ليس الآن',
   privacyNote: 'أنت وحدك من يرى ملاحظاتك. لا تُستخدم أبداً للإعلانات.',
+  privacyLink: 'سياسة الخصوصية',
+  exportData: 'تنزيل ملاحظاتي',
+  exportHint: 'نسخة من كل ملاحظاتك في جدول (CSV)، مجاناً في أي وقت.',
   deleteAll: 'احذف كل ملاحظاتي',
   deleteAllConfirm: 'سيحذف هذا نهائياً ملف طفلك وكل الملاحظات من هذا الهاتف ومن خادمنا.',
   synced: 'تم النسخ الاحتياطي',

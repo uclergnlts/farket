@@ -184,7 +184,7 @@ export default function App() {
     body = <Paywall s={s} premium={premium} onDone={() => { setPremium(true); setScreen(paywallFrom); }}
       onBack={() => setScreen(paywallFrom)} />;
   } else if (screen === 'settings') {
-    body = <Settings s={s} settings={state.settings} synced={synced} premium={premium}
+    body = <Settings s={s} settings={state.settings} entries={state.entries} synced={synced} premium={premium}
       onPremium={() => openPaywall('settings')} onLang={setLang}
       onReminder={(on, hour) => setReminder(on, hour)} onEditChild={() => setScreen('editChild')}
       onDeleteAll={deleteAll} onBack={() => setScreen('home')} />;

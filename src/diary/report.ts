@@ -79,3 +79,16 @@ ${notes.map((e) => `<tr><td>${esc(longDate(e.date, s))}</td><td><span class="${e
 <div class="foot">${esc(p.footer)}</div>
 </body></html>`;
 }
+
+const csvCell = (v: string | number | boolean | null) => {
+  const s = v === null ? '' : String(v);
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+};
+
+/** Every live note as CSV, oldest first: the free "download my data" copy. */
+export function entriesCsv(entries: Entry[]): string {
+  const head = ['date', 'type', 'how_often', 'area', 'lost_skill', 'note', 'created_at'];
+  const rows = sortEntries(liveEntries(entries)).reverse()
+    .map((e) => [e.date, e.kind, e.frequency, e.category, e.regression, e.text, e.createdAt].map(csvCell).join(','));
+  return [head.join(','), ...rows].join('\n');
+}
