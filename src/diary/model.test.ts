@@ -76,3 +76,38 @@ for (const l of LANGS) {
   assert.ok(!banned.test(all), `banned word in ${l}`);
 }
 console.log('diary model tests passed');
+
+// ---- gauge rule ----
+import { computeGauge } from './model';
+const T = '2026-11-30';
+const worry = (date: string, category: Entry['category'], extra: Partial<Entry> = {}) => entry(date, { category, ...extra });
+const good = (date: string, category: Entry['category']) => entry(date, { category, kind: 'positive' });
+
+// one note never changes anything
+assert.equal(computeGauge([worry(T, 'repetitive')], T).level, 'low');
+// same category on 3 different days -> mid
+const spin3 = [worry('2026-11-10', 'repetitive'), worry('2026-11-15', 'repetitive'), worry('2026-11-20', 'repetitive')];
+assert.equal(computeGauge(spin3, T).level, 'mid');
+assert.deepEqual(computeGauge(spin3, T).repeating, ['repetitive']);
+// 3 notes on the same day are not a pattern
+assert.equal(computeGauge([worry(T, 'repetitive'), worry(T, 'repetitive'), worry(T, 'repetitive')], T).level, 'low');
+// good signs in the same area cancel it out
+assert.equal(computeGauge([...spin3, good('2026-11-11', 'repetitive'), good('2026-11-12', 'repetitive'), good('2026-11-13', 'repetitive')], T).level, 'low');
+// older than 30 days doesn't count
+assert.equal(computeGauge([worry('2026-10-01', 'name'), worry('2026-10-02', 'name'), worry('2026-10-03', 'name')], T).level, 'low');
+// two of the core three -> high
+const name3 = ['2026-11-05', '2026-11-06', '2026-11-07'].map((d) => worry(d, 'name'));
+const joint3 = ['2026-11-05', '2026-11-08', '2026-11-09'].map((d) => worry(d, 'joint'));
+assert.equal(computeGauge([...name3, ...joint3], T).level, 'high');
+// three non-core categories -> high
+const sens3 = ['2026-11-05', '2026-11-06', '2026-11-07'].map((d) => worry(d, 'sensory'));
+const rout3 = ['2026-11-05', '2026-11-06', '2026-11-07'].map((d) => worry(d, 'routine'));
+assert.equal(computeGauge([...spin3, ...sens3, ...rout3], T).level, 'high');
+// a worrying starting test keeps it at mid for 30 days, then lets go
+assert.equal(computeGauge([], T, { date: '2026-11-20', risk: 'high' }).level, 'mid');
+assert.equal(computeGauge([], T, { date: '2026-10-01', risk: 'high' }).level, 'low');
+// uncategorised worries are counted separately, lost skills flagged
+const g = computeGauge([worry(T, null), worry(T, 'speech', { regression: true })], T);
+assert.equal(g.uncategorized, 1);
+assert.equal(g.regression, true);
+console.log('gauge tests passed');

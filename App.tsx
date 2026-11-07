@@ -6,9 +6,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { dt } from './src/diary/i18n';
-import { correctedAgeMonths, isRtl, pickLang, ymd, type Child, type DLang, type Entry } from './src/diary/model';
+import { computeGauge, correctedAgeMonths, isRtl, pickLang, ymd, type Child, type DLang, type Entry } from './src/diary/model';
 import { allowNotifications, scheduleReminder } from './src/diary/reminder';
 import { AddNote } from './src/diary/screens/AddNote';
+import { Gauge } from './src/diary/screens/Gauge';
 import { Home } from './src/diary/screens/Home';
 import { Consent, ProfileForm, Welcome } from './src/diary/screens/Onboarding';
 import { Settings } from './src/diary/screens/Settings';
@@ -17,7 +18,7 @@ import {
 } from './src/diary/storage';
 import { c } from './src/diary/theme';
 
-type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild';
+type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild' | 'gauge';
 
 const deviceLang = () => pickLang(getLocales().map((l) => l.languageCode));
 
@@ -154,13 +155,17 @@ export default function App() {
     body = <AddNote s={s} lang={state.settings.lang} childId={state.child.id} rtl={rtl}
       ageMonths={correctedAgeMonths(state.child, today)} today={today}
       onSave={addEntry} onCancel={() => setScreen('home')} />;
+  } else if (screen === 'gauge') {
+    // Premium and the paywall arrive with subscriptions; until then the breakdown stays locked.
+    body = <Gauge s={s} gauge={computeGauge(state.entries, today)} premium={false}
+      onPremium={() => {}} onBack={() => setScreen('home')} />;
   } else if (screen === 'settings') {
     body = <Settings s={s} settings={state.settings} synced={synced} onLang={setLang}
       onReminder={(on, hour) => setReminder(on, hour)} onEditChild={() => setScreen('editChild')}
       onDeleteAll={deleteAll} onBack={() => setScreen('home')} />;
   } else {
     body = <Home s={s} child={state.child} entries={state.entries} today={today} synced={synced}
-      onAdd={() => setScreen('add')} onDelete={deleteEntry} onSettings={() => setScreen('settings')} />;
+      onAdd={() => setScreen('add')} onDelete={deleteEntry} onSettings={() => setScreen('settings')} onGauge={() => setScreen('gauge')} />;
   }
 
   return (

@@ -2,15 +2,16 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { dayLabel } from '../format';
 import type { DStrings } from '../i18n';
 import {
-  correctedAgeMonths, gaugeProgress, GAUGE_MIN_DAYS, GAUGE_MIN_NOTES, liveEntries, parseYmd, sortEntries, weekStrip,
+  computeGauge, correctedAgeMonths, gaugeProgress, GAUGE_MIN_DAYS, GAUGE_MIN_NOTES, liveEntries, parseYmd, sortEntries, weekStrip,
   type Child, type Entry,
 } from '../model';
 import { c, radius } from '../theme';
 import { Btn, Card, t } from '../ui';
+import { levelColor } from './Gauge';
 
-export function Home({ s, child, entries, today, synced, onAdd, onDelete, onSettings }: {
+export function Home({ s, child, entries, today, synced, onAdd, onDelete, onSettings, onGauge }: {
   s: DStrings; child: Child; entries: Entry[]; today: string; synced: boolean;
-  onAdd: () => void; onDelete: (id: string) => void; onSettings: () => void;
+  onAdd: () => void; onDelete: (id: string) => void; onSettings: () => void; onGauge: () => void;
 }) {
   const live = sortEntries(liveEntries(entries));
   const progress = gaugeProgress(entries, today);
@@ -36,17 +37,30 @@ export function Home({ s, child, entries, today, synced, onAdd, onDelete, onSett
           </Pressable>
         </View>
 
-        <Card>
-          <Text style={t.label}>{s.gaugeTitle}</Text>
-          <View style={st.track}>
-            <View style={[st.fill, { flex: done }]} />
-            <View style={{ flex: 1 - done }} />
-          </View>
-          <Text style={t.p}>
-            {progress.ready ? s.gaugeReady : s.gaugeForming(progress.notesLeft, progress.daysLeft)}
-          </Text>
-          <Text style={t.small}>{s.notDiagnosis}</Text>
-        </Card>
+        {progress.ready ? (() => {
+          const g = computeGauge(entries, today);
+          return (
+            <Pressable accessibilityRole="button" onPress={onGauge}>
+              <Card style={{ borderColor: levelColor[g.level], borderWidth: 1.5 }}>
+                <Text style={t.label}>{s.gaugeTitle}</Text>
+                <Text style={[t.h1, { color: levelColor[g.level] }]}>{s.gaugeLevel[g.level]}</Text>
+                <Text style={t.p}>{s.gaugeLevelText[g.level]}</Text>
+                <Text style={[t.p, st.link]}>{s.gaugeOpen}</Text>
+                <Text style={t.small}>{s.notDiagnosis}</Text>
+              </Card>
+            </Pressable>
+          );
+        })() : (
+          <Card>
+            <Text style={t.label}>{s.gaugeTitle}</Text>
+            <View style={st.track}>
+              <View style={[st.fill, { flex: done }]} />
+              <View style={{ flex: 1 - done }} />
+            </View>
+            <Text style={t.p}>{s.gaugeForming(progress.notesLeft, progress.daysLeft)}</Text>
+            <Text style={t.small}>{s.notDiagnosis}</Text>
+          </Card>
+        )}
 
         <View style={st.week}>
           {weekStrip(entries, today).map((d) => (
@@ -102,5 +116,6 @@ const st = StyleSheet.create({
   notePos: { backgroundColor: c.goodSoft, borderColor: c.good },
   noteWorry: { backgroundColor: c.warnSoft, borderColor: c.warn },
   reg: { color: c.high, fontWeight: '600' },
+  link: { color: c.brand, fontWeight: '600' },
   footer: { padding: 16, paddingTop: 8, backgroundColor: c.bg, borderTopWidth: 1, borderTopColor: c.line },
 });

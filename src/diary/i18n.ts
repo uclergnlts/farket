@@ -1,4 +1,4 @@
-import type { Category, DLang, Frequency, Kind, Sex } from './model';
+import type { Category, DLang, Frequency, Kind, Level, Sex } from './model';
 
 export interface DStrings {
   appName: string;
@@ -26,6 +26,19 @@ export interface DStrings {
   gaugeTitle: string;
   gaugeForming: (notes: number, days: number) => string;
   gaugeReady: string;
+  gaugeOpen: string;
+  gaugeLevel: Record<Level, string>;
+  gaugeLevelText: Record<Level, string>;
+  gaugeWindow: string;
+  gaugeWhy: string;
+  gaugeWhyNone: string;
+  gaugeRepeat: (days: number) => string;
+  gaugeBaseline: string;
+  gaugeUncategorized: (n: number) => string;
+  gaugeAreas: string;
+  gaugeAreaLine: (worries: number, positives: number) => string;
+  premiumLocked: string;
+  premiumSee: string;
   addNote: string;
   emptyTitle: string;
   emptyText: string;
@@ -101,7 +114,24 @@ const en: DStrings = {
   gaugeTitle: 'Signs that need attention',
   gaugeForming: (notes, days) =>
     `Your chart is forming. ${notes > 0 ? `${notes} more notes` : ''}${notes > 0 && days > 0 ? ' and ' : ''}${days > 0 ? `${days} more days` : ''} to go.`,
-  gaugeReady: 'You have enough notes. The chart arrives in the next update.',
+  gaugeReady: 'Your chart is ready. Tap to see it.',
+  gaugeOpen: 'See the chart',
+  gaugeLevel: { low: 'Few', mid: 'Some', high: 'Many' },
+  gaugeLevelText: {
+    low: 'No sign is repeating right now. Keep writing notes, the good moments too.',
+    mid: "Some signs are repeating. Bring this record to your next visit with your child's doctor.",
+    high: 'Several signs are repeating. We suggest you see a specialist, and take this record with you.',
+  },
+  gaugeWindow: 'Based on your notes from the last 30 days.',
+  gaugeWhy: 'Why this level',
+  gaugeWhyNone: 'No area had worries on 3 or more different days.',
+  gaugeRepeat: (d) => `Worries on ${d} different days`,
+  gaugeBaseline: 'Your starting questionnaire suggested a closer look, so the level stays at least "Some" for its first 30 days.',
+  gaugeUncategorized: (n) => `${n} worry notes have no area, so they can't count towards a pattern. Picking an area helps.`,
+  gaugeAreas: 'All areas, last 30 days',
+  gaugeAreaLine: (w, p) => `${w} worries · ${p} good signs`,
+  premiumLocked: 'The breakdown by area is part of Premium.',
+  premiumSee: 'See Premium',
   addNote: '+ Add a note',
   emptyTitle: 'No notes yet',
   emptyText: 'Tap a quick note below or write your own. Good moments count too.',
@@ -181,7 +211,24 @@ const es: DStrings = {
   gaugeTitle: 'Señales que requieren atención',
   gaugeForming: (notes, days) =>
     `Tu gráfico se está formando. Faltan ${notes > 0 ? `${notes} notas` : ''}${notes > 0 && days > 0 ? ' y ' : ''}${days > 0 ? `${days} días` : ''}.`,
-  gaugeReady: 'Ya tienes suficientes notas. El gráfico llega en la próxima actualización.',
+  gaugeReady: 'Tu gráfico está listo. Tócalo para verlo.',
+  gaugeOpen: 'Ver el gráfico',
+  gaugeLevel: { low: 'Pocas', mid: 'Algunas', high: 'Muchas' },
+  gaugeLevelText: {
+    low: 'Ahora no se repite ninguna señal. Sigue anotando, también los buenos momentos.',
+    mid: 'Algunas señales se repiten. Lleva este registro a la próxima consulta con el pediatra.',
+    high: 'Varias señales se repiten. Te sugerimos consultar a un especialista y llevar este registro contigo.',
+  },
+  gaugeWindow: 'Según tus notas de los últimos 30 días.',
+  gaugeWhy: 'Por qué este nivel',
+  gaugeWhyNone: 'Ningún área tuvo preocupaciones en 3 o más días distintos.',
+  gaugeRepeat: (d) => `Preocupaciones en ${d} días distintos`,
+  gaugeBaseline: 'Tu cuestionario inicial sugirió mirar más de cerca, así que el nivel se queda al menos en "Algunas" durante los primeros 30 días.',
+  gaugeUncategorized: (n) => `${n} notas de preocupación no tienen área, así que no cuentan para un patrón. Elegir un área ayuda.`,
+  gaugeAreas: 'Todas las áreas, últimos 30 días',
+  gaugeAreaLine: (w, p) => `${w} preocupaciones · ${p} señales buenas`,
+  premiumLocked: 'El desglose por áreas es parte de Premium.',
+  premiumSee: 'Ver Premium',
   addNote: '+ Añadir nota',
   emptyTitle: 'Aún no hay notas',
   emptyText: 'Toca una nota rápida o escribe la tuya. Los buenos momentos también cuentan.',
@@ -261,7 +308,24 @@ const pt: DStrings = {
   gaugeTitle: 'Sinais que pedem atenção',
   gaugeForming: (notes, days) =>
     `Seu gráfico está se formando. Faltam ${notes > 0 ? `${notes} notas` : ''}${notes > 0 && days > 0 ? ' e ' : ''}${days > 0 ? `${days} dias` : ''}.`,
-  gaugeReady: 'Você já tem notas suficientes. O gráfico chega na próxima atualização.',
+  gaugeReady: 'Seu gráfico está pronto. Toque para ver.',
+  gaugeOpen: 'Ver o gráfico',
+  gaugeLevel: { low: 'Poucos', mid: 'Alguns', high: 'Muitos' },
+  gaugeLevelText: {
+    low: 'Nenhum sinal está se repetindo agora. Continue anotando, os bons momentos também.',
+    mid: 'Alguns sinais estão se repetindo. Leve este registro à próxima consulta com o pediatra.',
+    high: 'Vários sinais estão se repetindo. Sugerimos procurar um especialista e levar este registro com você.',
+  },
+  gaugeWindow: 'Com base nas suas notas dos últimos 30 dias.',
+  gaugeWhy: 'Por que este nível',
+  gaugeWhyNone: 'Nenhuma área teve preocupações em 3 ou mais dias diferentes.',
+  gaugeRepeat: (d) => `Preocupações em ${d} dias diferentes`,
+  gaugeBaseline: 'Seu questionário inicial sugeriu um olhar mais atento, então o nível fica pelo menos em "Alguns" nos primeiros 30 dias.',
+  gaugeUncategorized: (n) => `${n} notas de preocupação não têm área, então não contam para um padrão. Escolher uma área ajuda.`,
+  gaugeAreas: 'Todas as áreas, últimos 30 dias',
+  gaugeAreaLine: (w, p) => `${w} preocupações · ${p} sinais bons`,
+  premiumLocked: 'A divisão por áreas faz parte do Premium.',
+  premiumSee: 'Ver Premium',
   addNote: '+ Adicionar nota',
   emptyTitle: 'Ainda não há notas',
   emptyText: 'Toque numa nota rápida ou escreva a sua. Os bons momentos também contam.',
@@ -341,7 +405,24 @@ const fr: DStrings = {
   gaugeTitle: "Signes qui demandent de l'attention",
   gaugeForming: (notes, days) =>
     `Votre graphique se construit. Encore ${notes > 0 ? `${notes} notes` : ''}${notes > 0 && days > 0 ? ' et ' : ''}${days > 0 ? `${days} jours` : ''}.`,
-  gaugeReady: 'Vous avez assez de notes. Le graphique arrive dans la prochaine mise à jour.',
+  gaugeReady: 'Votre graphique est prêt. Touchez pour le voir.',
+  gaugeOpen: 'Voir le graphique',
+  gaugeLevel: { low: 'Peu', mid: 'Quelques-uns', high: 'Beaucoup' },
+  gaugeLevelText: {
+    low: "Aucun signe ne se répète pour l'instant. Continuez à noter, les bons moments aussi.",
+    mid: 'Certains signes se répètent. Apportez ce journal à votre prochain rendez-vous chez le pédiatre.',
+    high: 'Plusieurs signes se répètent. Nous vous conseillons de consulter un spécialiste et d\'emporter ce journal.',
+  },
+  gaugeWindow: "D'après vos notes des 30 derniers jours.",
+  gaugeWhy: 'Pourquoi ce niveau',
+  gaugeWhyNone: "Aucun domaine n'a eu d'inquiétudes sur 3 jours différents ou plus.",
+  gaugeRepeat: (d) => `Inquiétudes sur ${d} jours différents`,
+  gaugeBaseline: 'Votre questionnaire de départ suggérait de regarder de plus près, donc le niveau reste au moins à « Quelques-uns » pendant les 30 premiers jours.',
+  gaugeUncategorized: (n) => `${n} notes d'inquiétude n'ont pas de domaine, elles ne comptent donc pas pour un schéma. Choisir un domaine aide.`,
+  gaugeAreas: 'Tous les domaines, 30 derniers jours',
+  gaugeAreaLine: (w, p) => `${w} inquiétudes · ${p} bons signes`,
+  premiumLocked: 'La répartition par domaine fait partie de Premium.',
+  premiumSee: 'Voir Premium',
   addNote: '+ Ajouter une note',
   emptyTitle: 'Pas encore de notes',
   emptyText: 'Touchez une note rapide ou écrivez la vôtre. Les bons moments comptent aussi.',
@@ -421,7 +502,24 @@ const tr: DStrings = {
   gaugeTitle: 'Dikkat gerektiren işaretler',
   gaugeForming: (notes, days) =>
     `Tablonuz oluşuyor. ${notes > 0 ? `${notes} not` : ''}${notes > 0 && days > 0 ? ' ve ' : ''}${days > 0 ? `${days} gün` : ''} kaldı.`,
-  gaugeReady: 'Yeterli notunuz var. Gösterge bir sonraki güncellemeyle geliyor.',
+  gaugeReady: 'Göstergeniz hazır. Görmek için dokunun.',
+  gaugeOpen: 'Göstergeyi gör',
+  gaugeLevel: { low: 'Az', mid: 'Orta', high: 'Çok' },
+  gaugeLevelText: {
+    low: 'Şu an tekrarlayan bir işaret görünmüyor. Not almaya devam edin, güzel anları da yazın.',
+    mid: 'Bazı işaretler tekrarlıyor. Bu kaydı bir sonraki çocuk doktoru ziyaretinde konuşun.',
+    high: 'Birkaç işaret tekrarlıyor. Bir uzmana başvurmanızı öneririz; bu kaydı yanınızda götürün.',
+  },
+  gaugeWindow: 'Son 30 günlük notlarınıza göre.',
+  gaugeWhy: 'Neden bu seviye',
+  gaugeWhyNone: 'Hiçbir alanda 3 ya da daha fazla farklı günde endişe yazılmadı.',
+  gaugeRepeat: (d) => `${d} farklı günde endişe`,
+  gaugeBaseline: 'Başlangıç testiniz daha yakından bakmayı önerdi; bu yüzden seviye ilk 30 gün en az "Orta" kalır.',
+  gaugeUncategorized: (n) => `${n} endişe notunun alanı yok, bu yüzden bir tekrara sayılamıyor. Alan seçmek yardımcı olur.`,
+  gaugeAreas: 'Tüm alanlar, son 30 gün',
+  gaugeAreaLine: (w, p) => `${w} endişe · ${p} olumlu`,
+  premiumLocked: "Alanlara göre dağılım Premium'da.",
+  premiumSee: "Premium'u gör",
   addNote: '+ Not ekle',
   emptyTitle: 'Henüz not yok',
   emptyText: 'Aşağıdan hazır bir not seçin ya da kendiniz yazın. Güzel anlar da önemli.',
@@ -505,7 +603,24 @@ const ar: DStrings = {
   gaugeTitle: 'علامات تحتاج إلى انتباه',
   gaugeForming: (notes, days) =>
     `مخططك قيد التكوين. بقي ${notes > 0 ? `${notes} ${arPlural(notes, 'ملاحظة', 'ملاحظات', 'ملاحظة')}` : ''}${notes > 0 && days > 0 ? ' و' : ''}${days > 0 ? `${days} ${arPlural(days, 'يوم', 'أيام', 'يوماً')}` : ''}.`,
-  gaugeReady: 'لديك ملاحظات كافية. سيصل المخطط في التحديث القادم.',
+  gaugeReady: 'مخططك جاهز. اضغط لرؤيته.',
+  gaugeOpen: 'عرض المخطط',
+  gaugeLevel: { low: 'قليلة', mid: 'متوسطة', high: 'كثيرة' },
+  gaugeLevelText: {
+    low: 'لا تتكرر أي علامة الآن. استمر في التدوين، واللحظات الجميلة أيضاً.',
+    mid: 'بعض العلامات تتكرر. خذ هذا السجل معك في زيارتك القادمة لطبيب الأطفال.',
+    high: 'عدة علامات تتكرر. ننصحك بمراجعة مختص، وخذ هذا السجل معك.',
+  },
+  gaugeWindow: 'بناءً على ملاحظاتك في آخر 30 يوماً.',
+  gaugeWhy: 'لماذا هذا المستوى',
+  gaugeWhyNone: 'لم يُسجَّل قلق في أي مجال في 3 أيام مختلفة أو أكثر.',
+  gaugeRepeat: (d) => `أيام مختلفة ظهر فيها القلق: ${d}`,
+  gaugeBaseline: 'اقترح استبيانك الأولي نظرة أقرب، لذلك يبقى المستوى "متوسطة" على الأقل خلال أول 30 يوماً.',
+  gaugeUncategorized: (n) => `ملاحظات قلق بلا مجال: ${n}. لا تُحتسب ضمن نمط، واختيار مجال يساعد.`,
+  gaugeAreas: 'كل المجالات، آخر 30 يوماً',
+  gaugeAreaLine: (w, p) => `قلق: ${w} · علامات جيدة: ${p}`,
+  premiumLocked: 'التوزيع حسب المجال جزء من Premium.',
+  premiumSee: 'اطّلع على Premium',
   addNote: '+ أضف ملاحظة',
   emptyTitle: 'لا توجد ملاحظات بعد',
   emptyText: 'اختر ملاحظة سريعة من الأسفل أو اكتب ملاحظتك. اللحظات الجميلة مهمة أيضاً.',

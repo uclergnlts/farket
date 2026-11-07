@@ -123,3 +123,68 @@ export function pickLang(deviceCodes: (string | null | undefined)[]): DLang {
   }
   return 'en';
 }
+
+// ---- Gauge (phase 2). Rule-based on purpose: AI never sets the level. ----
+
+export type Level = 'low' | 'mid' | 'high';
+export const GAUGE_WINDOW_DAYS = 30;
+/** CDC's early signs centre on these three; two of them repeating together means "high". */
+export const CORE_CATEGORIES: Category[] = ['social', 'name', 'joint'];
+const FREQ_POINTS: Record<Frequency, number> = { once: 1, few: 2, daily: 3 };
+
+export interface CategoryStat {
+  category: Category;
+  concernDays: number;
+  concerns: number;
+  positives: number;
+  points: number;
+  repeating: boolean;
+}
+
+export interface Gauge {
+  ready: boolean;
+  level: Level;
+  stats: CategoryStat[]; // repeating first, then by points
+  repeating: Category[];
+  regression: boolean;
+  uncategorized: number; // worries without an area; they can't count towards a pattern
+  baselineHeld: boolean; // the level is "mid" only because of a recent starting test
+}
+
+/**
+ * A category "repeats" when worries about it were seen on at least 3 different days in
+ * the last 30, and there were fewer good signs than worries in it.
+ * low: nothing repeats · mid: 1-2 categories · high: 3+, or 2 of the core three.
+ * A medium/high starting test keeps the level at least "mid" for its first 30 days.
+ */
+export function computeGauge(
+  entries: Entry[], today: string, baseline?: { date: string; risk: 'low' | 'medium' | 'high' } | null,
+): Gauge {
+  const from = addDays(today, -(GAUGE_WINDOW_DAYS - 1));
+  const win = liveEntries(entries).filter((e) => e.date >= from && e.date <= today);
+  const stats: CategoryStat[] = CATEGORIES.map((category) => {
+    const inCat = win.filter((e) => e.category === category);
+    const worries = inCat.filter((e) => e.kind === 'concern');
+    const concernDays = new Set(worries.map((e) => e.date)).size;
+    const positives = inCat.length - worries.length;
+    return {
+      category, concernDays, concerns: worries.length, positives,
+      points: worries.reduce((s, e) => s + FREQ_POINTS[e.frequency] + (e.regression ? 3 : 0), 0),
+      repeating: concernDays >= 3 && positives < worries.length,
+    };
+  }).filter((s) => s.concerns + s.positives > 0)
+    .sort((a, b) => Number(b.repeating) - Number(a.repeating) || b.points - a.points);
+
+  const repeating = stats.filter((s) => s.repeating).map((s) => s.category);
+  const core = repeating.filter((c) => CORE_CATEGORIES.includes(c)).length;
+  let level: Level = repeating.length === 0 ? 'low' : repeating.length >= 3 || core >= 2 ? 'high' : 'mid';
+  const baselineHeld = level === 'low' && !!baseline && baseline.risk !== 'low'
+    && daysBetween(baseline.date, today) < GAUGE_WINDOW_DAYS;
+  if (baselineHeld) level = 'mid';
+  return {
+    ready: gaugeProgress(entries, today).ready,
+    level, stats, repeating, baselineHeld,
+    regression: win.some((e) => e.regression),
+    uncategorized: win.filter((e) => e.kind === 'concern' && !e.category).length,
+  };
+}
