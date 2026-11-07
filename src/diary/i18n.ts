@@ -56,6 +56,13 @@ export interface DStrings {
   premiumRestoreNone: string;
   premiumFreeNote: string;
   gaugeWeeks: string;
+  baselineOfferTitle: string;
+  baselineOfferText: string;
+  baselineStart: string;
+  baselineLater: string;
+  baselineResultTitle: string;
+  baselineResult: Record<'low' | 'medium' | 'high', string>;
+  baselineDone: string;
   addNote: string;
   emptyTitle: string;
   emptyText: string;
@@ -177,6 +184,17 @@ const en: DStrings = {
   premiumRestoreNone: 'No active subscription was found for this account.',
   premiumFreeNote: 'The level and the advice on when to see a doctor always stay free.',
   gaugeWeeks: 'Last 4 weeks',
+  baselineOfferTitle: 'A 3-minute starting questionnaire',
+  baselineOfferText: 'Answer a few questions about what your child does now. It gives your diary a starting point.',
+  baselineStart: 'Start',
+  baselineLater: 'Later',
+  baselineResultTitle: 'Your starting point',
+  baselineResult: {
+    low: 'Few signs need attention right now. Keep noting what you see; the diary will show if anything starts to repeat.',
+    medium: "Some signs are worth talking about. Mention them at your next visit with your child's doctor, and keep noting what you see.",
+    high: 'Several signs need attention. We suggest you see a specialist soon, and take your diary with you.',
+  },
+  baselineDone: 'Go to my diary',
   addNote: '+ Add a note',
   emptyTitle: 'No notes yet',
   emptyText: 'Tap a quick note below or write your own. Good moments count too.',
@@ -302,6 +320,17 @@ const es: DStrings = {
   premiumRestoreNone: 'No se encontró una suscripción activa para esta cuenta.',
   premiumFreeNote: 'El nivel y el consejo de cuándo ver a un médico siempre son gratis.',
   gaugeWeeks: 'Últimas 4 semanas',
+  baselineOfferTitle: 'Un cuestionario inicial de 3 minutos',
+  baselineOfferText: 'Responde unas preguntas sobre lo que tu hijo hace ahora. Le da a tu diario un punto de partida.',
+  baselineStart: 'Empezar',
+  baselineLater: 'Más tarde',
+  baselineResultTitle: 'Tu punto de partida',
+  baselineResult: {
+    low: 'Ahora hay pocas señales que requieran atención. Sigue anotando lo que ves; el diario mostrará si algo empieza a repetirse.',
+    medium: 'Algunas señales merecen una conversación. Coméntalas en la próxima consulta con el pediatra y sigue anotando lo que ves.',
+    high: 'Varias señales requieren atención. Te sugerimos consultar pronto a un especialista y llevar tu diario contigo.',
+  },
+  baselineDone: 'Ir a mi diario',
   addNote: '+ Añadir nota',
   emptyTitle: 'Aún no hay notas',
   emptyText: 'Toca una nota rápida o escribe la tuya. Los buenos momentos también cuentan.',
@@ -427,6 +456,17 @@ const pt: DStrings = {
   premiumRestoreNone: 'Nenhuma assinatura ativa foi encontrada para esta conta.',
   premiumFreeNote: 'O nível e a orientação sobre quando ir ao médico continuam sempre grátis.',
   gaugeWeeks: 'Últimas 4 semanas',
+  baselineOfferTitle: 'Um questionário inicial de 3 minutos',
+  baselineOfferText: 'Responda algumas perguntas sobre o que seu filho faz agora. Isso dá ao seu diário um ponto de partida.',
+  baselineStart: 'Começar',
+  baselineLater: 'Mais tarde',
+  baselineResultTitle: 'Seu ponto de partida',
+  baselineResult: {
+    low: 'Poucos sinais pedem atenção agora. Continue anotando o que você vê; o diário mostrará se algo começar a se repetir.',
+    medium: 'Alguns sinais merecem uma conversa. Fale sobre eles na próxima consulta com o pediatra e continue anotando o que você vê.',
+    high: 'Vários sinais pedem atenção. Sugerimos procurar um especialista em breve e levar seu diário com você.',
+  },
+  baselineDone: 'Ir para meu diário',
   addNote: '+ Adicionar nota',
   emptyTitle: 'Ainda não há notas',
   emptyText: 'Toque numa nota rápida ou escreva a sua. Os bons momentos também contam.',
@@ -552,6 +592,17 @@ const fr: DStrings = {
   premiumRestoreNone: 'Aucun abonnement actif trouvé pour ce compte.',
   premiumFreeNote: 'Le niveau et le conseil sur le moment de consulter restent toujours gratuits.',
   gaugeWeeks: '4 dernières semaines',
+  baselineOfferTitle: 'Un questionnaire de départ de 3 minutes',
+  baselineOfferText: "Répondez à quelques questions sur ce que fait votre enfant aujourd'hui. Cela donne un point de départ à votre journal.",
+  baselineStart: 'Commencer',
+  baselineLater: 'Plus tard',
+  baselineResultTitle: 'Votre point de départ',
+  baselineResult: {
+    low: "Peu de signes demandent de l'attention pour l'instant. Continuez à noter ce que vous voyez ; le journal montrera si quelque chose commence à se répéter.",
+    medium: "Certains signes méritent d'en parler. Évoquez-les au prochain rendez-vous chez le pédiatre et continuez à noter ce que vous voyez.",
+    high: "Plusieurs signes demandent de l'attention. Nous vous conseillons de consulter bientôt un spécialiste et d'emporter votre journal.",
+  },
+  baselineDone: 'Aller à mon journal',
   addNote: '+ Ajouter une note',
   emptyTitle: 'Pas encore de notes',
   emptyText: 'Touchez une note rapide ou écrivez la vôtre. Les bons moments comptent aussi.',
@@ -677,6 +728,17 @@ const tr: DStrings = {
   premiumRestoreNone: 'Bu hesap için etkin bir abonelik bulunamadı.',
   premiumFreeNote: 'Seviye ve ne zaman doktora gidileceği önerisi her zaman ücretsiz kalır.',
   gaugeWeeks: 'Son 4 hafta',
+  baselineOfferTitle: '3 dakikalık başlangıç testi',
+  baselineOfferText: 'Çocuğunuzun şu an yaptıklarıyla ilgili birkaç soruyu yanıtlayın. Günlüğünüze bir başlangıç noktası verir.',
+  baselineStart: 'Başla',
+  baselineLater: 'Sonra',
+  baselineResultTitle: 'Başlangıç noktanız',
+  baselineResult: {
+    low: 'Şu an dikkat gerektiren işaret az. Gördüklerinizi not etmeye devam edin; bir şey tekrarlamaya başlarsa günlük gösterir.',
+    medium: 'Bazı işaretler konuşulmaya değer. Bir sonraki çocuk doktoru ziyaretinde bunlardan bahsedin ve not almaya devam edin.',
+    high: 'Birkaç işaret dikkat gerektiriyor. Yakında bir uzmana başvurmanızı öneririz; günlüğünüzü yanınızda götürün.',
+  },
+  baselineDone: 'Günlüğüme git',
   addNote: '+ Not ekle',
   emptyTitle: 'Henüz not yok',
   emptyText: 'Aşağıdan hazır bir not seçin ya da kendiniz yazın. Güzel anlar da önemli.',
@@ -806,6 +868,17 @@ const ar: DStrings = {
   premiumRestoreNone: 'لم يُعثر على اشتراك نشط لهذا الحساب.',
   premiumFreeNote: 'المستوى والنصيحة بشأن موعد زيارة الطبيب مجانيان دائماً.',
   gaugeWeeks: 'آخر 4 أسابيع',
+  baselineOfferTitle: 'استبيان أولي في 3 دقائق',
+  baselineOfferText: 'أجب عن بعض الأسئلة حول ما يفعله طفلك الآن. يمنح ذلك مفكرتك نقطة بداية.',
+  baselineStart: 'ابدأ',
+  baselineLater: 'لاحقاً',
+  baselineResultTitle: 'نقطة البداية',
+  baselineResult: {
+    low: 'العلامات التي تحتاج إلى انتباه قليلة الآن. استمر في تدوين ما تراه، وستُظهر المفكرة إن بدأ شيء يتكرر.',
+    medium: 'بعض العلامات تستحق الحديث عنها. اذكرها في زيارتك القادمة لطبيب الأطفال، واستمر في تدوين ما تراه.',
+    high: 'عدة علامات تحتاج إلى انتباه. ننصحك بمراجعة مختص قريباً، وخذ مفكرتك معك.',
+  },
+  baselineDone: 'إلى مفكرتي',
   addNote: '+ أضف ملاحظة',
   emptyTitle: 'لا توجد ملاحظات بعد',
   emptyText: 'اختر ملاحظة سريعة من الأسفل أو اكتب ملاحظتك. اللحظات الجميلة مهمة أيضاً.',

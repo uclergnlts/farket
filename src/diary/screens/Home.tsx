@@ -3,15 +3,17 @@ import { dayLabel } from '../format';
 import type { DStrings } from '../i18n';
 import {
   computeGauge, correctedAgeMonths, gaugeProgress, GAUGE_MIN_DAYS, GAUGE_MIN_NOTES, liveEntries, parseYmd, sortEntries, weekStrip,
-  type Child, type Entry,
+  type Baseline, type Child, type Entry,
 } from '../model';
 import { c, radius } from '../theme';
 import { Btn, Card, t } from '../ui';
 import { levelColor } from './Gauge';
 
-export function Home({ s, child, entries, today, synced, onAdd, onDelete, onSettings, onGauge }: {
+export function Home({ s, child, entries, today, synced, baseline, offerBaseline, onAdd, onDelete, onSettings, onGauge, onBaseline, onSkipBaseline }: {
   s: DStrings; child: Child; entries: Entry[]; today: string; synced: boolean;
+  baseline: Baseline | null; offerBaseline: boolean;
   onAdd: () => void; onDelete: (id: string) => void; onSettings: () => void; onGauge: () => void;
+  onBaseline: () => void; onSkipBaseline: () => void;
 }) {
   const live = sortEntries(liveEntries(entries));
   const progress = gaugeProgress(entries, today);
@@ -38,7 +40,7 @@ export function Home({ s, child, entries, today, synced, onAdd, onDelete, onSett
         </View>
 
         {progress.ready ? (() => {
-          const g = computeGauge(entries, today);
+          const g = computeGauge(entries, today, baseline);
           return (
             <Pressable accessibilityRole="button" onPress={onGauge}>
               <Card style={{ borderColor: levelColor[g.level], borderWidth: 1.5 }}>
@@ -59,6 +61,15 @@ export function Home({ s, child, entries, today, synced, onAdd, onDelete, onSett
             </View>
             <Text style={t.p}>{s.gaugeForming(progress.notesLeft, progress.daysLeft)}</Text>
             <Text style={t.small}>{s.notDiagnosis}</Text>
+          </Card>
+        )}
+
+        {offerBaseline && (
+          <Card>
+            <Text style={t.h2}>{s.baselineOfferTitle}</Text>
+            <Text style={t.p}>{s.baselineOfferText}</Text>
+            <Btn label={s.baselineStart} onPress={onBaseline} />
+            <Btn label={s.baselineLater} outline onPress={onSkipBaseline} />
           </Card>
         )}
 

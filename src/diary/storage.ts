@@ -2,7 +2,7 @@
 // to Supabase when there is a connection. A note never waits for the network.
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ensureSession, supabase } from '../supabase';
-import type { Child, DLang, Entry } from './model';
+import type { Baseline, Child, DLang, Entry } from './model';
 
 export const CONSENT_VERSION = 'diary-1';
 const KEY = 'farket_diary_v1';
@@ -21,6 +21,9 @@ export interface DiaryState {
   /** What still has to reach the server. */
   pending: { child: boolean; settings: boolean; entryIds: string[] };
   lastSyncAt: string | null;
+  /** Starting questionnaire result, kept on the phone (null = not taken). */
+  baseline: Baseline | null;
+  baselineSkipped: boolean;
 }
 
 export const emptyState = (lang: DLang): DiaryState => ({
@@ -29,6 +32,8 @@ export const emptyState = (lang: DLang): DiaryState => ({
   entries: [],
   pending: { child: false, settings: false, entryIds: [] },
   lastSyncAt: null,
+  baseline: null,
+  baselineSkipped: false,
 });
 
 export async function loadState(fallbackLang: DLang): Promise<DiaryState> {

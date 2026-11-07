@@ -9,6 +9,8 @@ import { dt } from './src/diary/i18n';
 import { computeGauge, correctedAgeMonths, isRtl, pickLang, ymd, type Child, type DLang, type Entry } from './src/diary/model';
 import { allowNotifications, scheduleReminder } from './src/diary/reminder';
 import { AddNote } from './src/diary/screens/AddNote';
+import { Baseline } from './src/diary/screens/Baseline';
+import { canTakeBaseline } from './src/diary/baseline';
 import { Gauge } from './src/diary/screens/Gauge';
 import { Paywall } from './src/diary/screens/Paywall';
 import { isPremium, onPremiumChange } from './src/diary/premium';
@@ -20,7 +22,7 @@ import {
 } from './src/diary/storage';
 import { c } from './src/diary/theme';
 
-type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild' | 'gauge' | 'paywall';
+type Screen = 'welcome' | 'consent' | 'profile' | 'home' | 'add' | 'settings' | 'editChild' | 'gauge' | 'paywall' | 'baseline';
 
 const deviceLang = () => pickLang(getLocales().map((l) => l.languageCode));
 
@@ -168,8 +170,12 @@ export default function App() {
       ageMonths={correctedAgeMonths(state.child, today)} today={today}
       onSave={addEntry} onCancel={() => setScreen('home')} />;
   } else if (screen === 'gauge') {
-    body = <Gauge s={s} gauge={computeGauge(state.entries, today)} premium={premium}
+    body = <Gauge s={s} gauge={computeGauge(state.entries, today, state.baseline)} premium={premium}
       onPremium={() => openPaywall('gauge')} onBack={() => setScreen('home')} />;
+  } else if (screen === 'baseline') {
+    body = <Baseline s={s} lang={state.settings.lang} ageMonths={correctedAgeMonths(state.child, today)} today={today}
+      onDone={(b) => { commit({ ...(ref.current ?? state), baseline: b }); setScreen('home'); }}
+      onCancel={() => setScreen('home')} />;
   } else if (screen === 'paywall') {
     body = <Paywall s={s} premium={premium} onDone={() => { setPremium(true); setScreen(paywallFrom); }}
       onBack={() => setScreen(paywallFrom)} />;
@@ -180,7 +186,10 @@ export default function App() {
       onDeleteAll={deleteAll} onBack={() => setScreen('home')} />;
   } else {
     body = <Home s={s} child={state.child} entries={state.entries} today={today} synced={synced}
-      onAdd={() => setScreen('add')} onDelete={deleteEntry} onSettings={() => setScreen('settings')} onGauge={() => setScreen('gauge')} />;
+      onAdd={() => setScreen('add')} onDelete={deleteEntry} onSettings={() => setScreen('settings')} onGauge={() => setScreen('gauge')}
+      baseline={state.baseline}
+      offerBaseline={!state.baseline && !state.baselineSkipped && canTakeBaseline(correctedAgeMonths(state.child, today))}
+      onBaseline={() => setScreen('baseline')} onSkipBaseline={() => commit({ ...state, baselineSkipped: true })} />;
   }
 
   return (

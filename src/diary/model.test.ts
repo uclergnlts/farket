@@ -115,3 +115,24 @@ assert.equal(computeGauge([], T, { date: '2026-11-20', risk: 'high' }).baselineH
 const w = computeGauge([worry(T, 'name'), good(addDays(T, -7), 'play'), worry(addDays(T, -27), 'name')], T).weeks;
 assert.deepEqual(w, [{ concerns: 1, positives: 0 }, { concerns: 0, positives: 0 }, { concerns: 0, positives: 1 }, { concerns: 1, positives: 0 }]);
 console.log('gauge tests passed');
+
+// ---- starting questionnaire ----
+import { ANSWERS, answerText, baselineQuestions, baselineResult, canTakeBaseline } from './baseline';
+import baselineData from './data/baseline.json';
+assert.equal(baselineData.questions.length, 23);
+for (const l of LANGS) {
+  for (const q of baselineData.questions) {
+    const text = (q.text as Record<string, string>)[l];
+    assert.ok(text?.trim() && !banned.test(text), `${q.id}.${l}`);
+  }
+  for (const a of ANSWERS) assert.ok(answerText(a, l)?.trim(), `answer ${a}.${l}`);
+  assert.ok(!banned.test(JSON.stringify(dt[l].baselineResult)), `baseline result ${l}`);
+}
+assert.ok(!canTakeBaseline(4) && canTakeBaseline(6) && !canTakeBaseline(49));
+// "yes" is the good answer except for reverse items; a lost skill makes it high
+const rev = new Set(['q17', 'q18', 'q19', 'q20', 'q21', 'q22', 'q23']);
+const typical = Object.fromEntries(baselineQuestions(24, 'en').map((q) => [q.id, rev.has(q.id) ? 'no' as const : 'yes' as const]));
+assert.equal(baselineResult(24, typical, T).risk, 'low');
+assert.equal(baselineResult(24, { ...typical, q23: 'yes' }, T).risk, 'high');
+assert.equal(baselineResult(24, { ...typical, q23: 'yes' }, T).regression, true);
+console.log('baseline tests passed');

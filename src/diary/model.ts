@@ -141,6 +141,9 @@ export interface CategoryStat {
   repeating: boolean;
 }
 
+/** Result of the starting questionnaire (risk from src/scoring.ts). */
+export interface Baseline { date: string; risk: 'low' | 'medium' | 'high'; regression: boolean }
+
 export interface Gauge {
   ready: boolean;
   level: Level;
@@ -159,7 +162,7 @@ export interface Gauge {
  * A medium/high starting test keeps the level at least "mid" for its first 30 days.
  */
 export function computeGauge(
-  entries: Entry[], today: string, baseline?: { date: string; risk: 'low' | 'medium' | 'high' } | null,
+  entries: Entry[], today: string, baseline?: Pick<Baseline, 'date' | 'risk'> | null,
 ): Gauge {
   const from = addDays(today, -(GAUGE_WINDOW_DAYS - 1));
   const win = liveEntries(entries).filter((e) => e.date >= from && e.date <= today);
