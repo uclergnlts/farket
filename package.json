@@ -7,11 +7,14 @@
     "@supabase/supabase-js": "^2.118.0",
     "expo": "~58.0.22",
     "expo-dev-client": "^58.0.18",
+    "expo-localization": "~58.0.5",
+    "expo-notifications": "~58.1.7",
     "expo-status-bar": "~58.0.4",
     "react": "19.3.0",
     "react-dom": "^19.3.0",
     "react-native": "0.88.1",
     "react-native-purchases": "^11.0.0",
+    "react-native-safe-area-context": "~5.10.1",
     "react-native-web": "^0.21.4"
   },
   "devDependencies": {
@@ -25,7 +28,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "tsx src/scoring.test.ts",
+    "test": "tsx src/scoring.test.ts && tsx src/diary/model.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "private": true

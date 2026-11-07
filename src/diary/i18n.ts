@@ -1,0 +1,558 @@
+import type { Category, DLang, Frequency, Kind, Sex } from './model';
+
+export interface DStrings {
+  appName: string;
+  welcomeTitle: string;
+  welcomePoints: string[];
+  notDiagnosis: string;
+  start: string;
+  consentTitle: string;
+  consentText: string;
+  consentAi: string;
+  adultConfirm: string;
+  agree: string;
+  profileTitle: string;
+  nicknameLabel: string;
+  nicknameHint: string;
+  birthLabel: string;
+  sexLabel: string;
+  sex: Record<Sex, string>;
+  pretermLabel: string;
+  pretermNo: string;
+  weeksEarly: (n: number) => string;
+  save: string;
+  cancel: string;
+  ageMonths: (n: number) => string;
+  gaugeTitle: string;
+  gaugeForming: (notes: number, days: number) => string;
+  gaugeReady: string;
+  addNote: string;
+  emptyTitle: string;
+  emptyText: string;
+  recentNotes: string;
+  today: string;
+  yesterday: string;
+  newNote: string;
+  whatDidYouSee: string;
+  notePlaceholder: string;
+  dictateHint: string;
+  dateLabel: string;
+  frequencyLabel: string;
+  frequency: Record<Frequency, string>;
+  kindLabel: string;
+  kind: Record<Kind, string>;
+  regressionLabel: string;
+  categoryLabel: string;
+  categoryOptional: string;
+  category: Record<Category, string>;
+  quickNotes: string;
+  deleteNote: string;
+  deleteNoteConfirm: string;
+  regressionAlertTitle: string;
+  regressionAlertText: string;
+  ok: string;
+  settings: string;
+  language: string;
+  reminder: string;
+  reminderOn: string;
+  reminderOff: string;
+  reminderTime: string;
+  reminderTitle: string;
+  reminderBody: string;
+  reminderAsk: string;
+  reminderAskYes: string;
+  reminderAskNo: string;
+  privacyNote: string;
+  deleteAll: string;
+  deleteAllConfirm: string;
+  synced: string;
+  notSynced: string;
+  back: string;
+  months: string[];
+}
+
+const en: DStrings = {
+  appName: 'Farket Diary',
+  welcomeTitle: "A calm diary for your child's development",
+  welcomePoints: [
+    'Write down what you notice in 10 seconds, the worrying and the wonderful.',
+    'After two weeks of notes you see which signs keep coming back.',
+    'Take a clear, dated record to your doctor instead of trying to remember.',
+  ],
+  notDiagnosis: 'Farket is not a diagnosis. It helps you notice and talk to a professional at the right time.',
+  start: 'Get started',
+  consentTitle: 'Your data stays yours',
+  consentText: "Your notes about your child are health-related information. We keep them only to run your diary, we never use them for advertising, and you can download or delete them at any time.",
+  consentAi: 'In a later version, AI will suggest a category for each note. Only the note text and age are sent, never your child\'s name.',
+  adultConfirm: 'I am 18 or older and the parent or caregiver of this child.',
+  agree: 'I agree',
+  profileTitle: 'About your child',
+  nicknameLabel: 'Name or nickname',
+  nicknameHint: 'A nickname is enough. Only you will see it.',
+  birthLabel: 'Born in',
+  sexLabel: 'Sex',
+  sex: { boy: 'Boy', girl: 'Girl', unspecified: 'Prefer not to say' },
+  pretermLabel: 'Born early?',
+  pretermNo: 'No, on time',
+  weeksEarly: (n) => `${n} weeks early`,
+  save: 'Save',
+  cancel: 'Cancel',
+  ageMonths: (n) => `${n} months`,
+  gaugeTitle: 'Signs that need attention',
+  gaugeForming: (notes, days) =>
+    `Your chart is forming. ${notes > 0 ? `${notes} more notes` : ''}${notes > 0 && days > 0 ? ' and ' : ''}${days > 0 ? `${days} more days` : ''} to go.`,
+  gaugeReady: 'You have enough notes. The chart arrives in the next update.',
+  addNote: '+ Add a note',
+  emptyTitle: 'No notes yet',
+  emptyText: 'Tap a quick note below or write your own. Good moments count too.',
+  recentNotes: 'Notes',
+  today: 'Today',
+  yesterday: 'Yesterday',
+  newNote: 'New note',
+  whatDidYouSee: 'What did you notice?',
+  notePlaceholder: 'For example: spun around in circles after lunch',
+  dictateHint: 'Tip: tap the microphone on your keyboard to speak instead of typing.',
+  dateLabel: 'When',
+  frequencyLabel: 'How often',
+  frequency: { once: 'Once', few: 'A few times', daily: 'Every day' },
+  kindLabel: 'Type',
+  kind: { concern: 'Worry', positive: 'Good sign' },
+  regressionLabel: 'My child could do this before but has stopped',
+  categoryLabel: 'Area',
+  categoryOptional: '(optional)',
+  category: {
+    social: 'Social connection', name: 'Response to name', joint: 'Shared attention',
+    speech: 'Speech and language', play: 'Play and imitation', repetitive: 'Repetitive movements',
+    sensory: 'Sensory reactions', routine: 'Routines and change',
+  },
+  quickNotes: 'Quick notes for this age',
+  deleteNote: 'Delete',
+  deleteNoteConfirm: 'Delete this note?',
+  regressionAlertTitle: 'Talk to your doctor about this',
+  regressionAlertText: 'Losing a skill a child already had is worth discussing with a doctor at any age, without waiting for the chart. This is not a diagnosis.',
+  ok: 'OK',
+  settings: 'Settings',
+  language: 'Language',
+  reminder: 'Evening reminder',
+  reminderOn: 'On',
+  reminderOff: 'Off',
+  reminderTime: 'Time',
+  reminderTitle: 'A moment for your diary',
+  reminderBody: 'Did anything catch your eye today? Good moments count too.',
+  reminderAsk: 'Want a gentle reminder each evening at 8 pm?',
+  reminderAskYes: 'Yes, remind me',
+  reminderAskNo: 'Not now',
+  privacyNote: 'Only you can see your notes. They are never used for advertising.',
+  deleteAll: 'Delete all my notes',
+  deleteAllConfirm: 'This permanently deletes your child profile and all notes on this phone and on our server.',
+  synced: 'Backed up',
+  notSynced: 'Saved on this phone, will back up when online',
+  back: 'Back',
+  months: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+};
+
+const es: DStrings = {
+  appName: 'Farket Diario',
+  welcomeTitle: 'Un diario tranquilo para el desarrollo de tu hijo',
+  welcomePoints: [
+    'Anota en 10 segundos lo que observas, lo que preocupa y lo que alegra.',
+    'Tras dos semanas de notas verás qué señales se repiten.',
+    'Lleva a tu médico un registro claro y con fechas, sin tener que recordar.',
+  ],
+  notDiagnosis: 'Farket no es un diagnóstico. Te ayuda a observar y a hablar con un profesional a tiempo.',
+  start: 'Empezar',
+  consentTitle: 'Tus datos son tuyos',
+  consentText: 'Tus notas sobre tu hijo son información relacionada con la salud. Las guardamos solo para tu diario, nunca las usamos para publicidad y puedes descargarlas o borrarlas cuando quieras.',
+  consentAi: 'En una próxima versión, la IA sugerirá un área para cada nota. Solo se envían el texto y la edad, nunca el nombre de tu hijo.',
+  adultConfirm: 'Soy mayor de 18 años y madre, padre o cuidador de este niño.',
+  agree: 'Acepto',
+  profileTitle: 'Sobre tu hijo',
+  nicknameLabel: 'Nombre o apodo',
+  nicknameHint: 'Basta con un apodo. Solo tú lo verás.',
+  birthLabel: 'Nació en',
+  sexLabel: 'Sexo',
+  sex: { boy: 'Niño', girl: 'Niña', unspecified: 'Prefiero no decirlo' },
+  pretermLabel: '¿Nació prematuro?',
+  pretermNo: 'No, a término',
+  weeksEarly: (n) => `${n} semanas antes`,
+  save: 'Guardar',
+  cancel: 'Cancelar',
+  ageMonths: (n) => `${n} meses`,
+  gaugeTitle: 'Señales que requieren atención',
+  gaugeForming: (notes, days) =>
+    `Tu gráfico se está formando. Faltan ${notes > 0 ? `${notes} notas` : ''}${notes > 0 && days > 0 ? ' y ' : ''}${days > 0 ? `${days} días` : ''}.`,
+  gaugeReady: 'Ya tienes suficientes notas. El gráfico llega en la próxima actualización.',
+  addNote: '+ Añadir nota',
+  emptyTitle: 'Aún no hay notas',
+  emptyText: 'Toca una nota rápida o escribe la tuya. Los buenos momentos también cuentan.',
+  recentNotes: 'Notas',
+  today: 'Hoy',
+  yesterday: 'Ayer',
+  newNote: 'Nueva nota',
+  whatDidYouSee: '¿Qué observaste?',
+  notePlaceholder: 'Por ejemplo: dio vueltas sobre sí mismo después de comer',
+  dictateHint: 'Consejo: toca el micrófono del teclado para dictar en vez de escribir.',
+  dateLabel: 'Cuándo',
+  frequencyLabel: 'Con qué frecuencia',
+  frequency: { once: 'Una vez', few: 'Varias veces', daily: 'Cada día' },
+  kindLabel: 'Tipo',
+  kind: { concern: 'Preocupación', positive: 'Buena señal' },
+  regressionLabel: 'Antes podía hacerlo y ha dejado de hacerlo',
+  categoryLabel: 'Área',
+  categoryOptional: '(opcional)',
+  category: {
+    social: 'Conexión social', name: 'Respuesta a su nombre', joint: 'Atención compartida',
+    speech: 'Habla y lenguaje', play: 'Juego e imitación', repetitive: 'Movimientos repetitivos',
+    sensory: 'Reacciones sensoriales', routine: 'Rutinas y cambios',
+  },
+  quickNotes: 'Notas rápidas para esta edad',
+  deleteNote: 'Borrar',
+  deleteNoteConfirm: '¿Borrar esta nota?',
+  regressionAlertTitle: 'Coméntalo con tu médico',
+  regressionAlertText: 'Perder una habilidad que el niño ya tenía merece consultarse con un médico a cualquier edad, sin esperar al gráfico. Esto no es un diagnóstico.',
+  ok: 'De acuerdo',
+  settings: 'Ajustes',
+  language: 'Idioma',
+  reminder: 'Recordatorio por la noche',
+  reminderOn: 'Activado',
+  reminderOff: 'Desactivado',
+  reminderTime: 'Hora',
+  reminderTitle: 'Un momento para tu diario',
+  reminderBody: '¿Te llamó la atención algo hoy? Los buenos momentos también cuentan.',
+  reminderAsk: '¿Quieres un recordatorio cada noche a las 20:00?',
+  reminderAskYes: 'Sí, recuérdame',
+  reminderAskNo: 'Ahora no',
+  privacyNote: 'Solo tú puedes ver tus notas. Nunca se usan para publicidad.',
+  deleteAll: 'Borrar todas mis notas',
+  deleteAllConfirm: 'Esto borra para siempre el perfil de tu hijo y todas las notas en este teléfono y en nuestro servidor.',
+  synced: 'Copia de seguridad hecha',
+  notSynced: 'Guardado en este teléfono, se copiará al tener conexión',
+  back: 'Atrás',
+  months: ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+};
+
+const pt: DStrings = {
+  appName: 'Farket Diário',
+  welcomeTitle: 'Um diário tranquilo para o desenvolvimento do seu filho',
+  welcomePoints: [
+    'Anote em 10 segundos o que você percebe, o que preocupa e o que encanta.',
+    'Depois de duas semanas de notas, você vê quais sinais se repetem.',
+    'Leve ao médico um registro claro e com datas, sem depender da memória.',
+  ],
+  notDiagnosis: 'Farket não é um diagnóstico. Ele ajuda você a observar e a falar com um profissional na hora certa.',
+  start: 'Começar',
+  consentTitle: 'Seus dados são seus',
+  consentText: 'Suas notas sobre seu filho são informações de saúde. Nós as guardamos só para o seu diário, nunca as usamos para publicidade, e você pode baixá-las ou apagá-las quando quiser.',
+  consentAi: 'Numa próxima versão, a IA vai sugerir uma área para cada nota. Só o texto e a idade são enviados, nunca o nome do seu filho.',
+  adultConfirm: 'Tenho 18 anos ou mais e sou mãe, pai ou cuidador desta criança.',
+  agree: 'Concordo',
+  profileTitle: 'Sobre seu filho',
+  nicknameLabel: 'Nome ou apelido',
+  nicknameHint: 'Um apelido basta. Só você vai ver.',
+  birthLabel: 'Nasceu em',
+  sexLabel: 'Sexo',
+  sex: { boy: 'Menino', girl: 'Menina', unspecified: 'Prefiro não dizer' },
+  pretermLabel: 'Nasceu prematuro?',
+  pretermNo: 'Não, no tempo certo',
+  weeksEarly: (n) => `${n} semanas antes`,
+  save: 'Salvar',
+  cancel: 'Cancelar',
+  ageMonths: (n) => `${n} meses`,
+  gaugeTitle: 'Sinais que pedem atenção',
+  gaugeForming: (notes, days) =>
+    `Seu gráfico está se formando. Faltam ${notes > 0 ? `${notes} notas` : ''}${notes > 0 && days > 0 ? ' e ' : ''}${days > 0 ? `${days} dias` : ''}.`,
+  gaugeReady: 'Você já tem notas suficientes. O gráfico chega na próxima atualização.',
+  addNote: '+ Adicionar nota',
+  emptyTitle: 'Ainda não há notas',
+  emptyText: 'Toque numa nota rápida ou escreva a sua. Os bons momentos também contam.',
+  recentNotes: 'Notas',
+  today: 'Hoje',
+  yesterday: 'Ontem',
+  newNote: 'Nova nota',
+  whatDidYouSee: 'O que você percebeu?',
+  notePlaceholder: 'Por exemplo: ficou girando em círculos depois do almoço',
+  dictateHint: 'Dica: toque no microfone do teclado para ditar em vez de digitar.',
+  dateLabel: 'Quando',
+  frequencyLabel: 'Com que frequência',
+  frequency: { once: 'Uma vez', few: 'Algumas vezes', daily: 'Todo dia' },
+  kindLabel: 'Tipo',
+  kind: { concern: 'Preocupação', positive: 'Bom sinal' },
+  regressionLabel: 'Meu filho fazia isso antes e parou',
+  categoryLabel: 'Área',
+  categoryOptional: '(opcional)',
+  category: {
+    social: 'Conexão social', name: 'Resposta ao nome', joint: 'Atenção compartilhada',
+    speech: 'Fala e linguagem', play: 'Brincadeira e imitação', repetitive: 'Movimentos repetitivos',
+    sensory: 'Reações sensoriais', routine: 'Rotinas e mudanças',
+  },
+  quickNotes: 'Notas rápidas para esta idade',
+  deleteNote: 'Apagar',
+  deleteNoteConfirm: 'Apagar esta nota?',
+  regressionAlertTitle: 'Converse com o médico sobre isso',
+  regressionAlertText: 'Perder uma habilidade que a criança já tinha merece ser conversado com um médico em qualquer idade, sem esperar o gráfico. Isto não é um diagnóstico.',
+  ok: 'OK',
+  settings: 'Ajustes',
+  language: 'Idioma',
+  reminder: 'Lembrete à noite',
+  reminderOn: 'Ligado',
+  reminderOff: 'Desligado',
+  reminderTime: 'Horário',
+  reminderTitle: 'Um momento para o seu diário',
+  reminderBody: 'Algo chamou sua atenção hoje? Os bons momentos também contam.',
+  reminderAsk: 'Quer um lembrete toda noite às 20h?',
+  reminderAskYes: 'Sim, me lembre',
+  reminderAskNo: 'Agora não',
+  privacyNote: 'Só você pode ver suas notas. Elas nunca são usadas para publicidade.',
+  deleteAll: 'Apagar todas as minhas notas',
+  deleteAllConfirm: 'Isso apaga para sempre o perfil do seu filho e todas as notas neste celular e no nosso servidor.',
+  synced: 'Backup feito',
+  notSynced: 'Salvo neste celular, o backup será feito quando houver internet',
+  back: 'Voltar',
+  months: ['jan', 'fev', 'mar', 'abr', 'mai', 'jun', 'jul', 'ago', 'set', 'out', 'nov', 'dez'],
+};
+
+const fr: DStrings = {
+  appName: 'Farket Journal',
+  welcomeTitle: 'Un journal apaisant pour le développement de votre enfant',
+  welcomePoints: [
+    'Notez en 10 secondes ce que vous remarquez, les inquiétudes comme les jolis moments.',
+    'Après deux semaines de notes, vous voyez quels signes reviennent.',
+    'Apportez à votre médecin un suivi clair et daté, sans devoir tout retenir.',
+  ],
+  notDiagnosis: "Farket n'est pas un diagnostic. Il vous aide à observer et à consulter un professionnel au bon moment.",
+  start: 'Commencer',
+  consentTitle: 'Vos données vous appartiennent',
+  consentText: "Vos notes sur votre enfant sont des informations de santé. Nous les conservons uniquement pour votre journal, nous ne les utilisons jamais pour la publicité, et vous pouvez les télécharger ou les supprimer à tout moment.",
+  consentAi: "Dans une prochaine version, l'IA proposera un domaine pour chaque note. Seuls le texte et l'âge sont envoyés, jamais le prénom de votre enfant.",
+  adultConfirm: "J'ai 18 ans ou plus et je suis le parent ou la personne qui s'occupe de cet enfant.",
+  agree: "J'accepte",
+  profileTitle: 'À propos de votre enfant',
+  nicknameLabel: 'Prénom ou surnom',
+  nicknameHint: 'Un surnom suffit. Vous seul le verrez.',
+  birthLabel: 'Né(e) en',
+  sexLabel: 'Sexe',
+  sex: { boy: 'Garçon', girl: 'Fille', unspecified: 'Je préfère ne pas le dire' },
+  pretermLabel: 'Né(e) prématuré(e) ?',
+  pretermNo: 'Non, à terme',
+  weeksEarly: (n) => `${n} semaines plus tôt`,
+  save: 'Enregistrer',
+  cancel: 'Annuler',
+  ageMonths: (n) => `${n} mois`,
+  gaugeTitle: "Signes qui demandent de l'attention",
+  gaugeForming: (notes, days) =>
+    `Votre graphique se construit. Encore ${notes > 0 ? `${notes} notes` : ''}${notes > 0 && days > 0 ? ' et ' : ''}${days > 0 ? `${days} jours` : ''}.`,
+  gaugeReady: 'Vous avez assez de notes. Le graphique arrive dans la prochaine mise à jour.',
+  addNote: '+ Ajouter une note',
+  emptyTitle: 'Pas encore de notes',
+  emptyText: 'Touchez une note rapide ou écrivez la vôtre. Les bons moments comptent aussi.',
+  recentNotes: 'Notes',
+  today: "Aujourd'hui",
+  yesterday: 'Hier',
+  newNote: 'Nouvelle note',
+  whatDidYouSee: "Qu'avez-vous remarqué ?",
+  notePlaceholder: 'Par exemple : a tourné sur lui-même après le déjeuner',
+  dictateHint: 'Astuce : touchez le micro du clavier pour dicter au lieu de taper.',
+  dateLabel: 'Quand',
+  frequencyLabel: 'À quelle fréquence',
+  frequency: { once: 'Une fois', few: 'Plusieurs fois', daily: 'Tous les jours' },
+  kindLabel: 'Type',
+  kind: { concern: 'Inquiétude', positive: 'Bon signe' },
+  regressionLabel: "Mon enfant savait le faire avant mais a arrêté",
+  categoryLabel: 'Domaine',
+  categoryOptional: '(facultatif)',
+  category: {
+    social: 'Lien social', name: 'Réaction au prénom', joint: 'Attention partagée',
+    speech: 'Parole et langage', play: 'Jeu et imitation', repetitive: 'Mouvements répétitifs',
+    sensory: 'Réactions sensorielles', routine: 'Routines et changements',
+  },
+  quickNotes: 'Notes rapides pour cet âge',
+  deleteNote: 'Supprimer',
+  deleteNoteConfirm: 'Supprimer cette note ?',
+  regressionAlertTitle: 'Parlez-en à votre médecin',
+  regressionAlertText: "Perdre une compétence que l'enfant avait déjà mérite d'en parler à un médecin à tout âge, sans attendre le graphique. Ce n'est pas un diagnostic.",
+  ok: 'OK',
+  settings: 'Réglages',
+  language: 'Langue',
+  reminder: 'Rappel du soir',
+  reminderOn: 'Activé',
+  reminderOff: 'Désactivé',
+  reminderTime: 'Heure',
+  reminderTitle: 'Un moment pour votre journal',
+  reminderBody: "Quelque chose vous a marqué aujourd'hui ? Les bons moments comptent aussi.",
+  reminderAsk: 'Voulez-vous un petit rappel chaque soir à 20 h ?',
+  reminderAskYes: 'Oui, me le rappeler',
+  reminderAskNo: 'Pas maintenant',
+  privacyNote: 'Vous seul pouvez voir vos notes. Elles ne servent jamais à la publicité.',
+  deleteAll: 'Supprimer toutes mes notes',
+  deleteAllConfirm: "Cela supprime définitivement le profil de votre enfant et toutes les notes sur ce téléphone et sur notre serveur.",
+  synced: 'Sauvegardé',
+  notSynced: 'Enregistré sur ce téléphone, sauvegarde dès que vous serez en ligne',
+  back: 'Retour',
+  months: ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'],
+};
+
+const tr: DStrings = {
+  appName: 'Farket Takip',
+  welcomeTitle: 'Çocuğunuzun gelişimi için sakin bir günlük',
+  welcomePoints: [
+    'Gördüğünüzü 10 saniyede not edin; endişe verenleri de sevindirenleri de.',
+    'İki haftalık nottan sonra hangi işaretlerin tekrar ettiğini görürsünüz.',
+    'Doktora hafızanıza güvenmek yerine tarihli, düzenli bir kayıt götürün.',
+  ],
+  notDiagnosis: 'Farket bir tanı aracı değildir. Gözlem yapmanıza ve doğru zamanda bir uzmanla konuşmanıza yardımcı olur.',
+  start: 'Başla',
+  consentTitle: 'Verileriniz size ait',
+  consentText: 'Çocuğunuzla ilgili notlarınız sağlıkla ilgili bilgidir. Onları yalnızca günlüğünüz için saklarız, asla reklam için kullanmayız; istediğiniz zaman indirebilir ya da silebilirsiniz.',
+  consentAi: 'Sonraki bir sürümde yapay zeka her not için bir alan önerecek. Yalnızca not metni ve yaş gönderilir, çocuğunuzun adı asla gönderilmez.',
+  adultConfirm: '18 yaşından büyüğüm ve bu çocuğun ebeveyni ya da bakıcısıyım.',
+  agree: 'Kabul ediyorum',
+  profileTitle: 'Çocuğunuz hakkında',
+  nicknameLabel: 'Adı ya da takma adı',
+  nicknameHint: 'Takma ad yeterli. Yalnızca siz göreceksiniz.',
+  birthLabel: 'Doğum tarihi',
+  sexLabel: 'Cinsiyet',
+  sex: { boy: 'Erkek', girl: 'Kız', unspecified: 'Belirtmek istemiyorum' },
+  pretermLabel: 'Erken mi doğdu?',
+  pretermNo: 'Hayır, zamanında',
+  weeksEarly: (n) => `${n} hafta erken`,
+  save: 'Kaydet',
+  cancel: 'Vazgeç',
+  ageMonths: (n) => `${n} aylık`,
+  gaugeTitle: 'Dikkat gerektiren işaretler',
+  gaugeForming: (notes, days) =>
+    `Tablonuz oluşuyor. ${notes > 0 ? `${notes} not` : ''}${notes > 0 && days > 0 ? ' ve ' : ''}${days > 0 ? `${days} gün` : ''} kaldı.`,
+  gaugeReady: 'Yeterli notunuz var. Gösterge bir sonraki güncellemeyle geliyor.',
+  addNote: '+ Not ekle',
+  emptyTitle: 'Henüz not yok',
+  emptyText: 'Aşağıdan hazır bir not seçin ya da kendiniz yazın. Güzel anlar da önemli.',
+  recentNotes: 'Notlar',
+  today: 'Bugün',
+  yesterday: 'Dün',
+  newNote: 'Yeni not',
+  whatDidYouSee: 'Ne gördünüz?',
+  notePlaceholder: 'Örneğin: öğleden sonra kendi etrafında döndü',
+  dictateHint: 'İpucu: yazmak yerine klavyedeki mikrofona dokunup söyleyebilirsiniz.',
+  dateLabel: 'Ne zaman',
+  frequencyLabel: 'Ne sıklıkla',
+  frequency: { once: 'Bir kez', few: 'Birkaç kez', daily: 'Her gün' },
+  kindLabel: 'Tür',
+  kind: { concern: 'Endişe', positive: 'Olumlu' },
+  regressionLabel: 'Bunu daha önce yapabiliyordu, artık yapmıyor',
+  categoryLabel: 'Alan',
+  categoryOptional: '(isteğe bağlı)',
+  category: {
+    social: 'Sosyal iletişim', name: 'İsmine tepki', joint: 'Ortak dikkat',
+    speech: 'Konuşma ve dil', play: 'Oyun ve taklit', repetitive: 'Tekrarlayan hareketler',
+    sensory: 'Duyusal tepkiler', routine: 'Rutin ve değişim',
+  },
+  quickNotes: 'Bu yaş için hazır notlar',
+  deleteNote: 'Sil',
+  deleteNoteConfirm: 'Bu not silinsin mi?',
+  regressionAlertTitle: 'Bunu doktorunuzla konuşun',
+  regressionAlertText: 'Çocuğun daha önce kazandığı bir beceriyi kaybetmesi, göstergeyi beklemeden her yaşta bir doktora sorulmalıdır. Bu bir tanı değildir.',
+  ok: 'Tamam',
+  settings: 'Ayarlar',
+  language: 'Dil',
+  reminder: 'Akşam hatırlatıcısı',
+  reminderOn: 'Açık',
+  reminderOff: 'Kapalı',
+  reminderTime: 'Saat',
+  reminderTitle: 'Günlüğünüz için bir dakika',
+  reminderBody: 'Bugün dikkatinizi çeken bir şey oldu mu? Güzel anlar da önemli.',
+  reminderAsk: 'Her akşam 20:00\'de nazik bir hatırlatma ister misiniz?',
+  reminderAskYes: 'Evet, hatırlat',
+  reminderAskNo: 'Şimdi değil',
+  privacyNote: 'Notlarınızı yalnızca siz görebilirsiniz. Asla reklam için kullanılmaz.',
+  deleteAll: 'Tüm notlarımı sil',
+  deleteAllConfirm: 'Bu işlem çocuğunuzun profilini ve tüm notları bu telefondan ve sunucumuzdan kalıcı olarak siler.',
+  synced: 'Yedeklendi',
+  notSynced: 'Bu telefona kaydedildi, internet gelince yedeklenecek',
+  back: 'Geri',
+  months: ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'],
+};
+
+/** Arabic number agreement: 1-2 and 11+ take the singular, 3-10 the plural. */
+const arPlural = (n: number, one: string, few: string, many: string) =>
+  n <= 2 ? one : n <= 10 ? few : many;
+
+const ar: DStrings = {
+  appName: 'فارقِت',
+  welcomeTitle: 'مفكرة هادئة لمتابعة نمو طفلك',
+  welcomePoints: [
+    'دوّن ما تلاحظه في 10 ثوانٍ، ما يقلقك وما يسعدك.',
+    'بعد أسبوعين من الملاحظات سترى أي العلامات تتكرر.',
+    'خذ إلى طبيبك سجلاً واضحاً ومؤرخاً بدلاً من الاعتماد على الذاكرة.',
+  ],
+  notDiagnosis: 'فارقِت ليس تشخيصاً. إنه يساعدك على الملاحظة والتحدث إلى مختص في الوقت المناسب.',
+  start: 'ابدأ',
+  consentTitle: 'بياناتك ملكك',
+  consentText: 'ملاحظاتك عن طفلك معلومات صحية. نحتفظ بها فقط لتشغيل مفكرتك، ولا نستخدمها أبداً للإعلانات، ويمكنك تنزيلها أو حذفها في أي وقت.',
+  consentAi: 'في إصدار قادم سيقترح الذكاء الاصطناعي مجالاً لكل ملاحظة. يُرسل نص الملاحظة والعمر فقط، ولا يُرسل اسم طفلك أبداً.',
+  adultConfirm: 'عمري 18 عاماً أو أكثر وأنا أحد والدي هذا الطفل أو من يرعاه.',
+  agree: 'أوافق',
+  profileTitle: 'عن طفلك',
+  nicknameLabel: 'الاسم أو اسم التدليل',
+  nicknameHint: 'يكفي اسم التدليل. أنت وحدك من سيراه.',
+  birthLabel: 'تاريخ الولادة',
+  sexLabel: 'الجنس',
+  sex: { boy: 'ولد', girl: 'بنت', unspecified: 'أفضّل عدم القول' },
+  pretermLabel: 'هل وُلد مبكراً؟',
+  pretermNo: 'لا، في موعده',
+  weeksEarly: (n) => `قبل موعده بـ ${n} ${arPlural(n, 'أسبوع', 'أسابيع', 'أسبوعاً')}`,
+  save: 'حفظ',
+  cancel: 'إلغاء',
+  ageMonths: (n) => `${n} ${arPlural(n, 'شهر', 'أشهر', 'شهراً')}`,
+  gaugeTitle: 'علامات تحتاج إلى انتباه',
+  gaugeForming: (notes, days) =>
+    `مخططك قيد التكوين. بقي ${notes > 0 ? `${notes} ${arPlural(notes, 'ملاحظة', 'ملاحظات', 'ملاحظة')}` : ''}${notes > 0 && days > 0 ? ' و' : ''}${days > 0 ? `${days} ${arPlural(days, 'يوم', 'أيام', 'يوماً')}` : ''}.`,
+  gaugeReady: 'لديك ملاحظات كافية. سيصل المخطط في التحديث القادم.',
+  addNote: '+ أضف ملاحظة',
+  emptyTitle: 'لا توجد ملاحظات بعد',
+  emptyText: 'اختر ملاحظة سريعة من الأسفل أو اكتب ملاحظتك. اللحظات الجميلة مهمة أيضاً.',
+  recentNotes: 'الملاحظات',
+  today: 'اليوم',
+  yesterday: 'أمس',
+  newNote: 'ملاحظة جديدة',
+  whatDidYouSee: 'ماذا لاحظت؟',
+  notePlaceholder: 'مثلاً: دار حول نفسه بعد الغداء',
+  dictateHint: 'نصيحة: اضغط على الميكروفون في لوحة المفاتيح لتتحدث بدلاً من الكتابة.',
+  dateLabel: 'متى',
+  frequencyLabel: 'كم مرة',
+  frequency: { once: 'مرة واحدة', few: 'عدة مرات', daily: 'كل يوم' },
+  kindLabel: 'النوع',
+  kind: { concern: 'قلق', positive: 'علامة جيدة' },
+  regressionLabel: 'كان طفلي يفعل هذا من قبل وتوقف',
+  categoryLabel: 'المجال',
+  categoryOptional: '(اختياري)',
+  category: {
+    social: 'التواصل الاجتماعي', name: 'الاستجابة للاسم', joint: 'الانتباه المشترك',
+    speech: 'الكلام واللغة', play: 'اللعب والتقليد', repetitive: 'الحركات المتكررة',
+    sensory: 'ردود الفعل الحسية', routine: 'الروتين والتغيير',
+  },
+  quickNotes: 'ملاحظات سريعة لهذا العمر',
+  deleteNote: 'حذف',
+  deleteNoteConfirm: 'حذف هذه الملاحظة؟',
+  regressionAlertTitle: 'تحدث مع طبيبك بشأن هذا',
+  regressionAlertText: 'فقدان مهارة كان الطفل يتقنها يستحق استشارة طبيب في أي عمر، دون انتظار المخطط. هذا ليس تشخيصاً.',
+  ok: 'حسناً',
+  settings: 'الإعدادات',
+  language: 'اللغة',
+  reminder: 'تذكير مسائي',
+  reminderOn: 'مفعّل',
+  reminderOff: 'متوقف',
+  reminderTime: 'الوقت',
+  reminderTitle: 'لحظة لمفكرتك',
+  reminderBody: 'هل لفت انتباهك شيء اليوم؟ اللحظات الجميلة مهمة أيضاً.',
+  reminderAsk: 'هل تريد تذكيراً لطيفاً كل مساء في الساعة 8؟',
+  reminderAskYes: 'نعم، ذكّرني',
+  reminderAskNo: 'ليس الآن',
+  privacyNote: 'أنت وحدك من يرى ملاحظاتك. لا تُستخدم أبداً للإعلانات.',
+  deleteAll: 'احذف كل ملاحظاتي',
+  deleteAllConfirm: 'سيحذف هذا نهائياً ملف طفلك وكل الملاحظات من هذا الهاتف ومن خادمنا.',
+  synced: 'تم النسخ الاحتياطي',
+  notSynced: 'محفوظة على هذا الهاتف، وسيتم نسخها احتياطياً عند الاتصال',
+  back: 'رجوع',
+  months: ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'],
+};
+
+export const dt: Record<DLang, DStrings> = { en, es, pt, fr, tr, ar };
