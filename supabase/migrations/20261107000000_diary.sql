@@ -47,3 +47,36 @@ create policy "own diary entries" on public.diary_entries
 create policy "own diary profile" on public.diary_profiles
   for all to authenticated
   using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+
+-- Premium state, written only by the RevenueCat webhook (service role). The app reads its own row.
+create table public.diary_subscriptions (
+  user_id uuid primary key references auth.users(id) on delete cascade,
+  product text not null,
+  status text not null check (status in ('active', 'cancelled', 'billing_issue', 'expired')),
+  expires_at timestamptz,
+  updated_at timestamptz not null default now()
+);
+alter table public.diary_subscriptions enable row level security;
+create policy "own diary subscription" on public.diary_subscriptions
+  for select to authenticated using ((select auth.uid()) = user_id);
+
+-- AI area suggestions per user per day, to cap cost. Only the edge function touches it.
+create table public.diary_ai_usage (
+  user_id uuid not null references auth.users(id) on delete cascade,
+  day date not null,
+  count integer not null default 0,
+  primary key (user_id, day)
+);
+alter table public.diary_ai_usage enable row level security;
+
+-- Takes one suggestion from today's allowance; false when the limit is reached.
+create function public.diary_ai_take(p_user uuid, p_limit integer) returns boolean
+language sql security definer set search_path = '' as $$
+  with t as (
+    insert into public.diary_ai_usage as u (user_id, day, count) values (p_user, current_date, 1)
+    on conflict (user_id, day) do update set count = u.count + 1 where u.count < p_limit
+    returning 1
+  ) select exists (select 1 from t);
+$$;
+revoke execute on function public.diary_ai_take(uuid, integer) from public, anon, authenticated;
+grant execute on function public.diary_ai_take(uuid, integer) to service_role;

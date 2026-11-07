@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { suggestCategory } from '../ai';
 import { dayLabel } from '../format';
 import type { DStrings } from '../i18n';
 import {
@@ -22,6 +23,8 @@ export function AddNote({ s, lang, childId, ageMonths, today, rtl, onSave, onCan
   const [frequency, setFrequency] = useState<Frequency>('once');
   const [category, setCategory] = useState<Category | null>(null);
   const [regression, setRegression] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
+  const [aiMsg, setAiMsg] = useState<string | null>(null);
   const templates = templatesForAge(ageMonths);
   const oldest = addDays(today, -MAX_DAYS_BACK);
 
@@ -30,6 +33,17 @@ export function AddNote({ s, lang, childId, ageMonths, today, rtl, onSave, onCan
     setKind(tp.kind);
     setCategory(tp.category);
     setRegression(!!tp.regression);
+  };
+
+  // Only fills the area chip; the parent can change it and the level never depends on it.
+  const suggest = async () => {
+    setAiBusy(true);
+    setAiMsg(null);
+    const r = await suggestCategory(text.trim(), ageMonths);
+    setAiBusy(false);
+    if ('error' in r) { setAiMsg(r.error === 'limit' ? s.aiLimit : s.aiOffline); return; }
+    if (r.category) setCategory(r.category); else setAiMsg(s.aiNone);
+    if (r.urgent) Alert.alert(s.urgentTitle, s.urgentText, [{ text: s.ok }]);
   };
 
   const save = () => {
@@ -102,6 +116,10 @@ export function AddNote({ s, lang, childId, ageMonths, today, rtl, onSave, onCan
 
       <Card>
         <Text style={t.label}>{s.categoryLabel} {s.categoryOptional}</Text>
+        {text.trim().length >= 8 && (
+          <Row><Chip label={aiBusy ? s.aiSuggesting : s.aiSuggest} onPress={() => { if (!aiBusy) suggest(); }} /></Row>
+        )}
+        {aiMsg && <Text style={t.small}>{aiMsg}</Text>}
         <Row>
           {CATEGORIES.map((k) => (
             <Chip key={k} label={s.category[k]} on={category === k} onPress={() => setCategory(category === k ? null : k)} />
